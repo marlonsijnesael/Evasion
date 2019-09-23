@@ -38,7 +38,7 @@ InputManager:
     axis: 1
     joyNum: 1
   - serializedVersion: 3
-    m_Name: rightstickhorizontal
+    m_Name: J1rightHorizontal
     descriptiveName: 
     descriptiveNegativeName: 
     negativeButton: 
@@ -46,7 +46,7 @@ InputManager:
     altNegativeButton: 
     altPositiveButton: 
     gravity: 0
-    dead: 0.19
+    dead: 0.03
     sensitivity: 1
     snap: 1
     invert: 0
@@ -54,7 +54,7 @@ InputManager:
     axis: 3
     joyNum: 1
   - serializedVersion: 3
-    m_Name: rightstickvertical
+    m_Name: J1rightVertical
     descriptiveName: 
     descriptiveNegativeName: 
     negativeButton: 
@@ -62,7 +62,7 @@ InputManager:
     altNegativeButton: 
     altPositiveButton: 
     gravity: 0
-    dead: 0.19
+    dead: 0.03
     sensitivity: 1
     snap: 1
     invert: 0
