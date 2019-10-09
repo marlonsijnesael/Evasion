@@ -173,8 +173,8 @@ MonoBehaviour:
     m_OverrideState: 1
     m_Value: 2
   skyAmbientMode:
-    m_OverrideState: 0
-    m_Value: 0
+    m_OverrideState: 1
+    m_Value: 1
   fogType:
     m_OverrideState: 1
     m_Value: 3
@@ -248,7 +248,7 @@ MonoBehaviour:
     m_OverrideState: 1
     m_Value: 12
   multiplier:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: 1
     min: 0
   upperHemisphereLuxValue:
@@ -269,32 +269,32 @@ MonoBehaviour:
     m_OverrideState: 0
     m_Value: 0
   sunSize:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: 0.04
     min: 0
     max: 1
   sunSizeConvergence:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: 5
     min: 1
     max: 10
   atmosphereThickness:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: 1
     min: 0
     max: 5
   skyTint:
-    m_OverrideState: 0
-    m_Value: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+    m_OverrideState: 1
+    m_Value: {r: 1, g: 0, b: 0, a: 1}
     hdr: 0
     showAlpha: 1
     showEyeDropper: 1
   groundColor:
-    m_OverrideState: 0
-    m_Value: {r: 0.369, g: 0.349, b: 0.341, a: 1}
+    m_OverrideState: 1
+    m_Value: {r: 1, g: 0.30256066, b: 0.023584902, a: 1}
     hdr: 0
     showAlpha: 1
     showEyeDropper: 1
   enableSunDisk:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 1
