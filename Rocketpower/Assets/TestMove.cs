@@ -1,9 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class TestMove : MonoBehaviour
 {
+
     [Header("Acceleration Settings: ")]
     [SerializeField] private float maxSpeed = 5f;
     [SerializeField] private float timeZeroToMax = 2.5f;
@@ -25,28 +24,45 @@ public class TestMove : MonoBehaviour
 
     public static Vector3 velocity = new Vector3();
     private Quaternion targetRot;
-    private Animator anim;
+    [SerializeField] private Animator anim;
     private float inputX, inputZ;
     private float angle;
-   
+
+    private Vector3 CalcForward
+    {
+        get
+        {
+            if (collision.isGrounded)
+            {
+                return Vector3.Cross(collision.verticalHit.normal, -playerCam.transform.right);
+            }
+            return playerCam.transform.forward;
+        }
+    }
+
+    private float GetCalcGroundAngle()
+    {
+        if (!collision.isGrounded)
+        {
+            return Vector3.Angle(new Vector3(0, 1, 0), foot.transform.forward);
+        }
+        return Vector3.Angle(collision.verticalHit.normal, foot.transform.forward);
+    }
+
     private void Awake()
     {
         accelRatePerSec = maxSpeed / timeZeroToMax;
         decelRatePerSec = -maxSpeed / timeMaxToZero;
     }
 
-    private void FixedUpdate()
+    public void Act()
     {
         if (collision.overrideForce)
             return;
         Move(0);
-        Rotate();
     }
 
-    private void Rotate()
-    {
-        body.localRotation = Quaternion.Euler(transform.localEulerAngles.x, playerCam.transform.localEulerAngles.y, transform.localEulerAngles.z);
-    }
+    private void Rotate() => body.localRotation = Quaternion.Euler(transform.localEulerAngles.x, playerCam.transform.localEulerAngles.y, transform.localEulerAngles.z);
 
     private void Accelerate(float rate)
     {
@@ -56,46 +72,39 @@ public class TestMove : MonoBehaviour
 
     private void CorrectGround()
     {
-        if (Vector3.Distance(foot.transform.position, collision.verticalHit.point) < height && collision.isGrounded)
+        if (Vector3.Distance(foot.transform.position, collision.verticalHit.point) >= height || !collision.isGrounded)
         {
-            transform.position = Vector3.Lerp(transform.position, transform.position + Vector3.up * height, 5 * Time.deltaTime);
+            return;
         }
+        transform.position = Vector3.Lerp(transform.position, transform.position + Vector3.up * height, 5 * Time.deltaTime);
     }
 
-    private Vector3 CalcForward()
-    {
-        if (!collision.isGrounded)
-        {
-            return playerCam.transform.forward;
-        }
-        return Vector3.Cross(collision.verticalHit.normal, -playerCam.transform.right);
 
-    }
-
-    private float CalcGroundAngle()
+    private void CalcPlayerRot()
     {
-        if (!collision.isGrounded)
-        {
-            return Vector3.Angle(new Vector3(0, 1, 0), foot.transform.forward);
-        }
-        return Vector3.Angle(collision.verticalHit.normal, foot.transform.forward);
+        body.transform.rotation = Quaternion.FromToRotation(body.transform.up, collision.verticalHit.normal) * body.transform.rotation;
+        body.localRotation = Quaternion.Euler(body.transform.localEulerAngles.x, playerCam.transform.localEulerAngles.y, body.transform.localEulerAngles.z);
     }
 
     public void Move(int _playerID)
     {
         bool moveVertical = Input.GetKey(KeyCode.UpArrow);// InputCatcher.GetAxis("vertical", _playerID);
-        if (moveVertical)
+        anim.SetBool("isRunning", Mathf.Abs(velocity.z) > 0);
+
+        CalcPlayerRot();
+        if (!moveVertical)
         {
-            Accelerate(accelRatePerSec);
+            Accelerate(decelRatePerSec);
         }
 
         else
         {
-            Accelerate(decelRatePerSec);
+            Accelerate(accelRatePerSec);
         }
+
         if (!collision.horizontalStop)
         {
-            velocity = (CalcForward() * forwardVelocity) + collision.downwardForce + collision.upwardForce + collision.stopForce;
+            velocity = (CalcForward * forwardVelocity) + collision.downwardForce + collision.upwardForce + collision.stopForce;
             transform.Translate(velocity * Time.deltaTime);
         }
     }

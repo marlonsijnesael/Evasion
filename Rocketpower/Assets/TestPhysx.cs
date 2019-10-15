@@ -6,20 +6,20 @@ public class TestPhysx : MonoBehaviour
 {
 
     [Header("Collision settings: ")]
-    [SerializeField] private  LayerMask collisionMask;
+    [SerializeField] private LayerMask collisionMask;
     [SerializeField] private BoxCollider col;
     [SerializeField] private float maxAngle = 65f;
     [SerializeField] private int horizontalRayCount = 4;
     [SerializeField] private int verticalRayCount = 4;
     [SerializeField] private float padding = 0.05f;
     [SerializeField] private float height = 0.5f;
-    
+
     [Header("Scene objects: ")]
     public Transform parent;
     public Transform cam;
-    public Transform foot;
-    
-    [Header ("Debug variables: ")]
+    public Transform root;
+
+    [Header("Debug variables: ")]
     public bool isGrounded = false;
     public bool horizontalStop = false;
     public bool jumping = false;
@@ -49,31 +49,30 @@ public class TestPhysx : MonoBehaviour
         jumpVelocity = gravity * timeToJumpApex;
     }
 
-    private void FixedUpdate()
+    public void Act()
     {
-        UpdateRaycastOrigins();
-        ApplyGravity();
-        Vector3 velocity = TestMove.velocity;
-        HorizontalCollisions(ref velocity);
-        VerticalCollisions(ref velocity);
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (!overrideForce)
         {
-         StartCoroutine( Jump()); 
+            UpdateRaycastOrigins();
+            ApplyGravity();
+            Vector3 velocity = TestMove.velocity;
+            HorizontalCollisions(ref velocity);
+            VerticalCollisions(ref velocity);
         }
     }
 
     private void UpdateRaycastOrigins()
     {
-        Bounds bounds = col.bounds;
-        raycastOrigins.topLeft = new Vector3(bounds.min.x, bounds.max.y, bounds.max.z);
-        raycastOrigins.topRight = new Vector3(bounds.max.x, bounds.max.y, bounds.max.z);
+        raycastOrigins.topLeft = new Vector3(col.bounds.min.x, col.bounds.max.y, col.bounds.max.z);
+        raycastOrigins.topRight = new Vector3(col.bounds.max.x, col.bounds.max.y, col.bounds.max.z);
     }
 
     private void ApplyGravity()
     {
-        if (!isGrounded && !jumping)
+        if (!isGrounded && !jumping && !overrideForce)
         {
             downwardForce += Physics.gravity * Time.deltaTime;
+
         }
         else
         {
@@ -83,7 +82,7 @@ public class TestPhysx : MonoBehaviour
 
     private void CalculateRaySpacing()
     {
-        Bounds bounds = col.bounds;
+        var bounds = col.bounds;
         bounds.Expand(skinWidth * -2);
 
         horizontalRayCount = Mathf.Clamp(horizontalRayCount, 2, int.MaxValue);
@@ -96,29 +95,26 @@ public class TestPhysx : MonoBehaviour
     private void HorizontalCollisions(ref Vector3 velocity)
     {
 
-        float rayLength = 1 + skinWidth;
         int half = verticalRayCount / 2;
         for (int i = -half; i < half; i++)
         {
-            Vector3 rayOrigin = foot.position;
-            rayOrigin += foot.transform.right * (horizontalRaySpacing * i);
+            Vector3 rayOrigin = root.position;
+            rayOrigin += root.transform.right * (horizontalRaySpacing * i);
 
-            Debug.DrawRay(rayOrigin, foot.forward, Color.red);
-
-            if (Physics.Raycast(rayOrigin, foot.forward, out horizontalHit, rayLength, collisionMask))
+            if (!Physics.Raycast(rayOrigin, cam.forward, out horizontalHit, 1 + skinWidth, collisionMask))
             {
-                float angle = Vector3.Angle(horizontalHit.normal, foot.transform.up);
+                stopForce = Vector3.zero;
+                horizontalStop = false;
+            }
+
+            else
+            {
+                float angle = Vector3.Angle(horizontalHit.normal, root.transform.up);
                 if (angle > maxAngle)
                 {
                     stopForce = velocity;
                     horizontalStop = true;
                 }
-            }
-
-            else
-            {
-                stopForce = Vector3.zero;
-                horizontalStop = false;
             }
         }
     }
@@ -130,42 +126,45 @@ public class TestPhysx : MonoBehaviour
         int half = verticalRayCount / 2;
         for (int i = -half; i < half; i++)
         {
-            Vector3 rayOrigin = foot.transform.position;
-            rayOrigin += foot.transform.right * (verticalRaySpacing * i);
+            Vector3 rayOrigin = root.transform.position;
+            rayOrigin += root.transform.right * (verticalRaySpacing * i);
 
-            Debug.DrawRay(rayOrigin, -foot.up, Color.red);
-
-            if (Physics.Raycast(rayOrigin, -foot.up, out verticalHit, height + padding, collisionMask))
-            {
-                if (verticalHit.transform.CompareTag("Action")) {
-                    verticalHit.collider.GetComponent<PhysicsAction>().Act(this);
-                        }
-                isGrounded = true;
-            }
-            else
+            Debug.DrawRay(rayOrigin, -root.up, Color.red);
+            Debug.DrawRay(cam.transform.position, cam.transform.forward, Color.green);
+            if (!Physics.Raycast(rayOrigin, -root.up, out verticalHit, height + padding, collisionMask))
             {
                 isGrounded = false;
             }
+            else
+            {
+                if (verticalHit.transform.CompareTag("Action"))
+                {
+                    verticalHit.collider.GetComponent<PhysicsAction>().Act(this);
+                }
+                isGrounded = true;
+            }
         }
     }
 
-    public IEnumerator Jump()
+    public IEnumerator Jump
     {
-        jumping = true;
-        gravity = 2 * jumpheight / Mathf.Pow(timeToJumpApex, 2);
-        jumpVelocity = gravity * timeToJumpApex;
-        upwardForce = new Vector3(0, jumpVelocity, 0);
-      
-        yield return new WaitForSeconds(timeToJumpApex);
-        while (upwardForce.y > 0)
+        get
         {
-            upwardForce.y -= gravity * Time.deltaTime;
-        }
-        jumping = false;
-        upwardForce = Vector3.zero;
-        yield return null;
-    }
+            jumping = true;
+            gravity = 2 * jumpheight / Mathf.Pow(timeToJumpApex, 2);
+            jumpVelocity = gravity * timeToJumpApex;
+            upwardForce = new Vector3(0, jumpVelocity, 0);
 
+            yield return new WaitForSeconds(timeToJumpApex);
+            while (upwardForce.y > 0)
+            {
+                upwardForce.y -= gravity * Time.deltaTime;
+            }
+            jumping = false;
+            upwardForce = Vector3.zero;
+            yield return null;
+        }
+    }
 }
 
 struct RaycastOrigins
