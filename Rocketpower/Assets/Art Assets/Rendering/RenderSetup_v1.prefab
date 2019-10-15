@@ -415,7 +415,7 @@ MonoBehaviour:
   shadowTint: {r: 0, g: 0, b: 0, a: 1}
   viewBiasMin: 0.2
   viewBiasMax: 100
-  viewBiasScale: 1
+  viewBiasScale: 1.3
   normalBiasMin: 0.5
   normalBiasMax: 0.5
   normalBiasScale: 1
