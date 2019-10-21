@@ -65,19 +65,6 @@ public class PlayerMove : MonoBehaviour
         forwardVelocity = Mathf.Clamp(forwardVelocity, 0, maxSpeed);
     }
 
-    //private void CheckGround()
-    //{
-    //    if (Physics.Raycast(foot.transform.position, Vector3.down, out hitInfo, height + padding, ground))
-    //    {
-    //        CorrectGround();
-    //        grounded = true;
-    //    }
-    //    else
-    //    {
-    //        grounded = false;
-    //    }
-    //}
-
     private void CorrectGround()
     {
         if (Vector3.Distance(transform.position, hitInfo.point) < height)

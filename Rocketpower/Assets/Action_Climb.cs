@@ -6,6 +6,4 @@ public class Action_Climb : PhysicsAction
     {
         throw new System.NotImplementedException();
     }
-
-
 }

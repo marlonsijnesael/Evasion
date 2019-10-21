@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-
+using System.Collections;
 public class TestMove : MonoBehaviour
 {
 
@@ -10,23 +10,25 @@ public class TestMove : MonoBehaviour
     private float accelRatePerSec;
     private float decelRatePerSec;
     private float forwardVelocity = 0;
-    private float speed = 5;
-    private float moveHorizontal = 0f;
 
     [Header("Scene objects: ")]
-    [SerializeField] private Camera playerCam;
+    [SerializeField] private Camera head;
+
     [SerializeField] private Transform body;
-    [SerializeField] private Transform foot;
 
     [Header("collision settings: ")]
-    [SerializeField] private float height = 0.5f;
     public TestPhysx collision;
-
     public static Vector3 velocity = new Vector3();
     private Quaternion targetRot;
     [SerializeField] private Animator anim;
-    private float inputX, inputZ;
-    private float angle;
+
+    [SerializeField] private float sensitivity = 5;
+    [SerializeField] private float maxLookUpDownAngle = 60; // can't look up/down more than 60 dgs
+
+    private float upDownRotation = 0.0f;
+    private float rightLeftRotation = 0.0f;
+
+    public AnimContrller.animations JumpAnimation;
 
     private Vector3 CalcForward
     {
@@ -34,20 +36,12 @@ public class TestMove : MonoBehaviour
         {
             if (collision.isGrounded)
             {
-                return Vector3.Cross(collision.verticalHit.normal, -playerCam.transform.right);
+                return Vector3.Cross(collision.verticalHit.normal, -head.transform.right);
             }
-            return playerCam.transform.forward;
+            return head.transform.forward;
         }
     }
 
-    private float GetCalcGroundAngle()
-    {
-        if (!collision.isGrounded)
-        {
-            return Vector3.Angle(new Vector3(0, 1, 0), foot.transform.forward);
-        }
-        return Vector3.Angle(collision.verticalHit.normal, foot.transform.forward);
-    }
 
     private void Awake()
     {
@@ -62,29 +56,30 @@ public class TestMove : MonoBehaviour
         Move(0);
     }
 
-    private void Rotate() => body.localRotation = Quaternion.Euler(transform.localEulerAngles.x, playerCam.transform.localEulerAngles.y, transform.localEulerAngles.z);
-
     private void Accelerate(float rate)
     {
         forwardVelocity += rate * Time.deltaTime;
         forwardVelocity = Mathf.Clamp(forwardVelocity, 0, maxSpeed);
     }
 
-    private void CorrectGround()
-    {
-        if (Vector3.Distance(foot.transform.position, collision.verticalHit.point) >= height || !collision.isGrounded)
-        {
-            return;
-        }
-        transform.position = Vector3.Lerp(transform.position, transform.position + Vector3.up * height, 5 * Time.deltaTime);
-    }
-
-
     private void CalcPlayerRot()
     {
-        body.transform.rotation = Quaternion.FromToRotation(body.transform.up, collision.verticalHit.normal) * body.transform.rotation;
-        body.localRotation = Quaternion.Euler(body.transform.localEulerAngles.x, playerCam.transform.localEulerAngles.y, body.transform.localEulerAngles.z);
+        if (collision.isGrounded)
+        {
+            Quaternion newRot = Quaternion.FromToRotation(body.transform.up, collision.verticalHit.normal) * body.transform.rotation;
+            body.transform.rotation = Quaternion.Slerp(body.transform.rotation, newRot, Time.deltaTime);
+            head.transform.rotation = Quaternion.Slerp(head.transform.rotation, newRot, Time.deltaTime);
+        }
+
+        else
+        {
+            body.transform.rotation = new Quaternion(0, 0, 0, 0);//Quaternion.Slerp(body.transform.rotation, new Quaternion(0, 0, 0, 0), Time.deltaTime);
+            head.transform.rotation = new Quaternion(0, 0, 0, 0);//Quaternion.Slerp(head.transform.rotation, new Quaternion(0, 0, 0, 0), Time.deltaTime);
+        }
+
+
     }
+
 
     public void Move(int _playerID)
     {
@@ -92,6 +87,8 @@ public class TestMove : MonoBehaviour
         anim.SetBool("isRunning", Mathf.Abs(velocity.z) > 0);
 
         CalcPlayerRot();
+
+
         if (!moveVertical)
         {
             Accelerate(decelRatePerSec);
@@ -110,4 +107,28 @@ public class TestMove : MonoBehaviour
     }
 }
 
+
+
+// private float GetCalcGroundAngle()
+// {
+//     if (!collision.isGrounded)
+//     {
+//         return 0;
+//     }
+//     return Vector3.Angle(collision.verticalHit.normal, root.transform.forward);
+// }
+
+
+// private IEnumerator SmoothRot(float time, Quaternion newRot)
+// {
+//     float elapsedTime = 0;
+//     while (elapsedTime < time)
+//     {
+//         Quaternion.Slerp(transform.rotation, newRot, (elapsedTime / time));
+//         elapsedTime += Time.deltaTime;
+
+//         yield return new WaitForEndOfFrame();
+//     }
+//     yield return null;
+// }
 
