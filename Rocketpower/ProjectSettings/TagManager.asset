@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - LaunchPad
+  - Fire
+  - Start
+  - Fin
   layers:
   - Default
   - TransparentFX
