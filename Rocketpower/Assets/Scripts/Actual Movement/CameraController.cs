@@ -20,16 +20,21 @@ public class CameraController : MonoBehaviour
 
     private void Start()
     {
-        if (firstPerson)
+        transform.position = firstPersonPos.position;
+    }
+    private void ChangeCam()
+    {
+        if (!firstPerson)
         {
             transform.position = firstPersonPos.position;
+            firstPerson = true;
         }
         else
         {
             transform.position = thirdPersonPos.position;
+            firstPerson = false;
         }
     }
-
 
     private void LockCursor()
     {
@@ -39,6 +44,11 @@ public class CameraController : MonoBehaviour
     private void Update()
     {
         CameraRotation();
+
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            ChangeCam();
+        }
     }
 
     private void CameraRotation()
