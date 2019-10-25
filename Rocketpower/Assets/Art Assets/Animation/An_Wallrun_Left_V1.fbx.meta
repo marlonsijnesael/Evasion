@@ -1,11 +1,11 @@
 fileFormatVersion: 2
-guid: f85dd9faeace59e4c867ed4434337a14
+guid: 41ad0ed7c08ab0b4faa2a2700bd257ab
 ModelImporter:
   serializedVersion: 26
   internalIDToNameTable:
   - first:
       74: 1827226128182048838
-    second: An_WallrunRight_v1
+    second: An_Wallrun_Left_v1
   externalObjects: {}
   materials:
     importMaterials: 1
@@ -23,8 +23,9 @@ ModelImporter:
     animationImportErrors: 
     animationImportWarnings: "\nClip 'Take 001' has import animation warnings that
       might lower retargeting quality:\nNote: Activate translation DOF on avatar to
-      improve retargeting quality.\n\t'spine_02' has translation animation that will
-      be discarded.\n\t'spine_03' has translation animation that will be discarded.\n"
+      improve retargeting quality.\n\t'ball_r' has translation animation that will
+      be discarded.\n\t'spine_02' has translation animation that will be discarded.\n\t'spine_03'
+      has translation animation that will be discarded.\n"
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
@@ -38,11 +39,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: An_WallrunRight_v1
+      name: An_Wallrun_Left_v1
       takeName: Take 001
       internalID: 0
-      firstFrame: 112
-      lastFrame: 140
+      firstFrame: 143
+      lastFrame: 172
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
