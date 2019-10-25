@@ -16,7 +16,10 @@ public class CameraController : MonoBehaviour
     {
         // LockCursor();
         xAxisClamp = 0.0f;
+    }
 
+    private void Start()
+    {
         if (firstPerson)
         {
             transform.position = firstPersonPos.position;
