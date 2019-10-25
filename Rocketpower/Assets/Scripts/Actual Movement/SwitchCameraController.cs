@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class CameraController : MonoBehaviour
+public class SwitchCameraController : MonoBehaviour
 {
     public bool firstPerson = true;
     public Transform firstPersonPos, thirdPersonPos;
