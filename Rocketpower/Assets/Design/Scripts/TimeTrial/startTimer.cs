@@ -39,9 +39,9 @@ public class startTimer : MonoBehaviour
             //other.gameObject.SetActive(false);
         }
 
-        if (other.gameObject.tag == "Fin" && playerManager._Instance.checkPointsDict.Count == 0)
+        if (other.gameObject.tag == "Fin" && playerManager._Instance.isFinishActive)
         {
-            Debug.Log("True");
+            Debug.Log("Finish Time");
             isTimer = false;
             timerLabel.color = Color.green;
         }

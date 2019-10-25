@@ -8,6 +8,7 @@ TagManager:
   - Fire
   - Start
   - Fin
+  - Checkpoint
   layers:
   - Default
   - TransparentFX

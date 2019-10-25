@@ -35,12 +35,6 @@ sysinfo.txt
 # Builds
 *.apk
 *.unitypackage
-Rocketpower/Assets/Design/Level.prefab
-Rocketpower/Assets/Design/Level.prefab.meta
-Rocketpower/Assets/Design/Scripts.meta
-Rocketpower/Assets/Design/Scripts/LaunchPad.cs
-Rocketpower/Assets/Design/Scripts/LaunchPad.cs.meta
-Rocketpower/Assets/Scenes/TimeTrial_Level_v1.unity
 Rocketpower/Assets/Standard Assets.meta
 Rocketpower/Assets/Standard Assets/Cameras.meta
 Rocketpower/Assets/Standard Assets/Cameras/CameraGuidelines.txt

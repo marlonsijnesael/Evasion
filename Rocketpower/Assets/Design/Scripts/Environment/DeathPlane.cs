@@ -9,7 +9,7 @@ public class DeathPlane : MonoBehaviour
     [SerializeField] private Transform respawn;
 
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerStay(Collider other)
     {
         Debug.Log("Hit");
         player.transform.position = respawn.transform.position;
@@ -22,7 +22,6 @@ public class DeathPlane : MonoBehaviour
             startTimer._Instance.timerLabel.color = Color.red;
             startTimer._Instance.isTimer = false;
         }
-        playerManager._Instance.ResetCheckpointPlace();
     }
 
 }
