@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-
+using UnityEditor.Animations;
 public class AnimContrller : MonoBehaviour
 {
     [Header("Animator variable names")]
@@ -9,13 +9,15 @@ public class AnimContrller : MonoBehaviour
     [SerializeField] private string animWallrunRight = "wallrun_right";
     [SerializeField] private string animAirtime = "isGrounded";
     [SerializeField] private string animSliding = "sliding";
+    [SerializeField] private string animClimbing = "climbing";
 
     public enum animations
     {
-        idle = 0, running = 1, wallrun_left = 2, wallrun_right = 3, airtime = 4, jumping = 5, sliding = 6
+        idle = 0, running = 1, wallrun_left = 2, wallrun_right = 3, airtime = 4, jumping = 5, sliding = 6, climbing = 7
     }
 
-    public animations animationStates = new animations();
+
+    [HideInInspector] public animations animationStates = new animations();
 
 
     private string getAnimationName(string name)
@@ -36,6 +38,8 @@ public class AnimContrller : MonoBehaviour
                 return animAirtime;
             case "sliding":
                 return animSliding;
+            case "climbing":
+                return animClimbing;
             default:
                 return animIdle;
         }
