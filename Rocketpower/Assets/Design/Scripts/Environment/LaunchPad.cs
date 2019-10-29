@@ -21,8 +21,6 @@ public class LaunchPad : MonoBehaviour
 
             other.gameObject.GetComponent<CharacterController>().Move(moveDir * JumpVelocity);
                 
-            
-
             yield return new WaitForEndOfFrame();
         }        
     }

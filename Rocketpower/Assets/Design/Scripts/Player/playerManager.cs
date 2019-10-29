@@ -138,7 +138,7 @@ public class playerManager : MonoBehaviour
             checkpoints[checkpointIndex].SetActive(true);
             checkpoints[checkpointIndex].gameObject.GetComponent<Renderer>().material = blueCheckpoint;
             checkpoints[checkpointIndex].gameObject.GetComponent<Collider>().enabled = true;
-            checkpointHeight = new Vector3(60, 80, 60);
+            checkpointHeight = new Vector3(60, 70, 60);
             checkpoints[checkpointIndex].gameObject.transform.localScale = checkpointHeight;
         }
 
@@ -146,13 +146,13 @@ public class playerManager : MonoBehaviour
             checkpoints[checkpointNextIndex].SetActive(true);
             checkpoints[checkpointNextIndex].gameObject.GetComponent<Renderer>().material = orangeCheckpoint;
             checkpoints[checkpointNextIndex].gameObject.GetComponent<Collider>().enabled = false;
-            checkpointHeight = new Vector3(60, 40, 60);
+            checkpointHeight = new Vector3(60, 55, 60);
             checkpoints[checkpointNextIndex].gameObject.transform.localScale = checkpointHeight;
         }
         else if (checkpointIndex < checkpoints.Length){
             Finish.SetActive(true);
             Finish.gameObject.GetComponent<Renderer>().material = nonactiveFinish;
-            finishHeight = new Vector3(60, 40, 60);
+            finishHeight = new Vector3(60, 50, 60);
             Finish.gameObject.transform.localScale = finishHeight;
         }
     }
