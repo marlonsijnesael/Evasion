@@ -100,7 +100,7 @@ public class GroundChecker : MonoBehaviour
         }
     }
 
-    void OnDrawGizmosSelected()
+    void OnDrawGizmosSelectedx()
     {
         if (showDebug)
         {

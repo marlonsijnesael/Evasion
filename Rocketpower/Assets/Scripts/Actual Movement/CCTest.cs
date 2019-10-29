@@ -77,14 +77,14 @@ public class CCTest : MonoBehaviour
     #region  Input functions
     private void CheckInput()
     {
-        if (Input.GetAxisRaw("Vertical") == 0)
+        if (Input.GetAxisRaw("Vertical") == 1)
         {
-            Accelerate(decelRatePerSec);
+            Accelerate(accelRatePerSec);
         }
 
         else
         {
-            Accelerate(accelRatePerSec);
+            Accelerate(decelRatePerSec);
         }
 
         if (Input.GetButton("Slide"))
@@ -201,7 +201,8 @@ public class CCTest : MonoBehaviour
             }
         }
         animationController.SetBool(anim, AnimContrller.animations.climbing.ToString(), climbing);
-        yield return null;
+        yield return new WaitForSeconds(1);
+
     }
 
     private void Jump()

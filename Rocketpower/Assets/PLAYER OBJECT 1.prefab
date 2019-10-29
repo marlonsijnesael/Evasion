@@ -3954,8 +3954,7 @@ GameObject:
   - component: {fileID: 5142600934832459519}
   - component: {fileID: 5142600934832459518}
   - component: {fileID: 5142600934832459513}
-  - component: {fileID: 5585165242709760592}
-  - component: {fileID: 860930288491647599}
+  - component: {fileID: 8118183742907874836}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -4127,7 +4126,7 @@ MonoBehaviour:
       enableFptlForForwardOpaque: 0
       enableBigTilePrepass: 0
       isFptlEnabled: 0
---- !u!114 &5585165242709760592
+--- !u!114 &8118183742907874836
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -4136,35 +4135,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 5142600934832459517}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5d90b39675c18474a83d5a63c261991c, type: 3}
+  m_Script: {fileID: 11500000, guid: ff8da9c117f6833468861c9e61c64317, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  firstPerson: 1
+  firstPerson: 0
   firstPersonPos: {fileID: 5142600934820247311}
   thirdPersonPos: {fileID: 5142600935561978617}
-  mouseXInputName: Horizontal
-  mouseYInputName: Vertical
-  mouseSensitivity: 40
+  mouseSensitivity: 75
   playerBody: {fileID: 5142600935094134522}
---- !u!114 &860930288491647599
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5142600934832459517}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5d90b39675c18474a83d5a63c261991c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  firstPerson: 1
-  firstPersonPos: {fileID: 0}
-  thirdPersonPos: {fileID: 0}
-  mouseXInputName: 
-  mouseYInputName: 
-  mouseSensitivity: 0
-  playerBody: {fileID: 0}
+  lockCam: 0
 --- !u!1 &5142600935094134521
 GameObject:
   m_ObjectHideFlags: 0
@@ -4177,6 +4156,7 @@ GameObject:
   - component: {fileID: 5142600934579028961}
   - component: {fileID: 5142600934579028963}
   - component: {fileID: 5142600934579028988}
+  - component: {fileID: 3918030504700893195}
   m_Layer: 0
   m_Name: PLAYER OBJECT 1
   m_TagString: Untagged
@@ -4229,17 +4209,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c9eb799bb868e04eab5d9f151294873, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  groundChecker: {fileID: 0}
+  climbSpeed: 20
+  head: {fileID: 5142600934832459517}
+  headRot: {x: 0, y: 0, z: 45}
   controller: {fileID: 5142600934579028961}
-  startPoint: {fileID: 5142600935094134522}
-  maxSpeed: 10
-  timeZeroToMax: 2.5
-  timeMaxToZero: 2.5
   anim: {fileID: 7831345523793341397}
-  wallrunDir: {x: 0, y: 0, z: 0}
   animationController: {fileID: 5142600934579028988}
+  maxSpeed: 15
+  timeZeroToMax: 3
+  timeMaxToZero: 3
   gravity: 30
   jumpVel: 12
   slideForce: 10
+  prefab: {fileID: 0}
+  cc: {fileID: 5142600934579028961}
+  cameraLook: {fileID: 8118183742907874836}
 --- !u!114 &5142600934579028988
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4258,7 +4243,32 @@ MonoBehaviour:
   animWallrunRight: wallrun_right
   animAirtime: grounded
   animSliding: sliding
+  animClimbing: climbing
   animationStates: 0
+--- !u!114 &3918030504700893195
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5142600935094134521}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a0433a0d37b90c47bc43d47f82de14b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  groundSlopeAngle: 0
+  groundSlopeDir: {x: 0, y: 0, z: 0}
+  showDebug: 1
+  castingMask:
+    serializedVersion: 2
+    m_Bits: 2871
+  startDistanceFromBottom: 0.2
+  sphereCastRadius: 0.25
+  sphereCastDistance: 0.75
+  raycastLength: 0.75
+  rayOriginOffset1: {x: -0.2, y: 0, z: 0.16}
+  rayOriginOffset2: {x: 0.2, y: 0, z: -0.16}
 --- !u!1 &5142600935221200375
 GameObject:
   m_ObjectHideFlags: 0
