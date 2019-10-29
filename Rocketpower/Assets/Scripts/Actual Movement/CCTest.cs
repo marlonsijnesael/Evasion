@@ -202,6 +202,7 @@ public class CCTest : MonoBehaviour
         }
         animationController.SetBool(anim, AnimContrller.animations.climbing.ToString(), climbing);
         yield return new WaitForSeconds(1);
+        vel = Vector3.zero;
 
     }
 
