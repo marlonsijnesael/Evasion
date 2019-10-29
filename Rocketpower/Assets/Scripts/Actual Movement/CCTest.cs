@@ -158,6 +158,7 @@ public class CCTest : MonoBehaviour
                 cameraLook.lockCam = true;
                 wallrunning_right = true;
 
+
                 WallRun();
             }
         }
