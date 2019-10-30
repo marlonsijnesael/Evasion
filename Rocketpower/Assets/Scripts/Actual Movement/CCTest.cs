@@ -31,19 +31,21 @@ public class CCTest : MonoBehaviour
     #region private variables
     private Vector3 wallrunDir = Vector3.zero;
     private Vector3 vel = Vector3.zero;
-    private bool wallrunning_right;
     private bool grounded;
     private RaycastHit verticalTest;
     private Vector3 verticalVel, horizontalVel;
-    private bool sliding;
-    private bool climbing;
     private Vector3 initVelocity = new Vector3(0, -1, 0);
     private Vector3 tmpVel = Vector3.zero;
     public GameObject prefab;
     public CharacterController cc;
     public CameraLook cameraLook;
+    #endregion
 
-    private bool wallrunning_left;
+    #region animator booleans
+    [HideInInspector] public bool isSliding;
+    [HideInInspector] public bool isClimbing;
+    [HideInInspector] public bool isWallrun_Right;
+    [HideInInspector] public bool isWallrun_Left;
     #endregion
 
 
@@ -59,7 +61,7 @@ public class CCTest : MonoBehaviour
         vel = initVelocity;
 
         GroundTest();
-        if (!grounded && !wallrunning_right && !wallrunning_left)
+        if (!grounded && !isWallrun_Right && !isWallrun_Left)
         {
             verticalVel.y -= gravity * Time.deltaTime;
         }
@@ -69,7 +71,7 @@ public class CCTest : MonoBehaviour
 
         Jump();
         LeftRightCollisionsTest();
-        if (!wallrunning_right && !wallrunning_left && !sliding && !climbing)
+        if (!isWallrun_Right && !isWallrun_Left && !isSliding && !isClimbing)
             Run();
     }
     #endregion
@@ -77,7 +79,7 @@ public class CCTest : MonoBehaviour
     #region  Input functions
     private void CheckInput()
     {
-        if (Input.GetAxisRaw("Vertical") == 1)
+        if (Input.GetAxis("Vertical") > 0)
         {
             Accelerate(accelRatePerSec);
         }
@@ -89,11 +91,11 @@ public class CCTest : MonoBehaviour
 
         if (Input.GetButton("Slide"))
         {
-            sliding = true;
+            isSliding = true;
         }
         else
         {
-            sliding = false;
+            isSliding = false;
         }
     }
     private void Accelerate(float rate)
@@ -111,36 +113,35 @@ public class CCTest : MonoBehaviour
 
     private void FrontCollisionTest()
     {
-        if (wallrunning_right || wallrunning_left)
+        if (isWallrun_Right || isWallrun_Left)
             return;
         RaycastHit hit;
         if (Physics.Raycast(transform.position, transform.forward, out hit, 1 + controller.skinWidth))
         {
             var maxBounds = GetBounds.GetMaxBounds(hit.transform.gameObject);
-            Debug.Log(maxBounds.max.y - transform.position.y);
+            //Debug.Log(maxBounds.max.y - transform.position.y);
             if (maxBounds.max.y - transform.position.y > 1)
             {
                 if (Vector3.Dot(hit.normal, Vector3.up) == 0)
                 {
                     if (hit.normal.y - transform.position.y > 1) { }
                     Debug.DrawRay(hit.point, Vector3.up, Color.blue, 10f);
-                    print(hit.transform.name + " climbable");
-                    if (!climbing)
+                    //print(hit.transform.name + " climbable");
+                    if (!isClimbing)
                     {
-                        climbing = true;
-
+                        isClimbing = true;
                         StartCoroutine(Climb(Vector3.up * forwardVelocity));
                     }
                 }
             }
             else
             {
-                climbing = false;
+                isClimbing = false;
             }
         }
         else
         {
-            climbing = false;
+            isClimbing = false;
         }
     }
 
@@ -150,13 +151,12 @@ public class CCTest : MonoBehaviour
         if (Physics.Raycast(transform.position, transform.right, out hit, 1 + controller.skinWidth))
         {
             float dot = Vector3.Dot(hit.normal, Vector3.up);
-            Debug.Log(dot + ": dot");
+            //Debug.Log(dot + ": dot");
             if (dot == 0)
             {
                 wallrunDir = Vector3.Cross(hit.normal, Vector3.up);
                 Debug.DrawRay(hit.point, wallrunDir, Color.red, 10f);
-                cameraLook.lockCam = true;
-                wallrunning_right = true;
+                isWallrun_Right = true;
 
 
                 WallRun();
@@ -170,8 +170,7 @@ public class CCTest : MonoBehaviour
 
                 wallrunDir = Vector3.Cross(hit.transform.up, hit.normal);
                 Debug.DrawRay(hit.point, wallrunDir, Color.red, 10f);
-                cameraLook.lockCam = true;
-                wallrunning_left = true;
+                isWallrun_Left = true;
                 WallRun();
             }
         }
@@ -179,9 +178,8 @@ public class CCTest : MonoBehaviour
         {
             //  head.transform.rotation = Quaternion.Euler(0, 0, 0);
             wallrunDir = Vector3.zero;
-            wallrunning_right = false;
-            wallrunning_left = false;
-            cameraLook.lockCam = false;
+            isWallrun_Right = false;
+            isWallrun_Left = false;
         }
     }
     #endregion
@@ -190,9 +188,10 @@ public class CCTest : MonoBehaviour
     private IEnumerator Climb(Vector3 wallUp)
     {
         vel = Vector3.zero;
-        Vector3 force = wallUp * Time.deltaTime * climbSpeed;
-        animationController.SetBool(anim, AnimContrller.animations.climbing.ToString(), climbing);
-        while (climbing)
+        Vector3 force = Vector3.up;
+        force.y += climbSpeed;
+        animationController.SetBool(anim, AnimContrller.animations.climbing.ToString(), isClimbing);
+        while (isClimbing)
         {
             {
                 vel += force;
@@ -200,7 +199,7 @@ public class CCTest : MonoBehaviour
                 yield return null;
             }
         }
-        animationController.SetBool(anim, AnimContrller.animations.climbing.ToString(), climbing);
+        animationController.SetBool(anim, AnimContrller.animations.climbing.ToString(), isClimbing);
         yield return new WaitForSeconds(1);
         vel = Vector3.zero;
 
@@ -208,12 +207,12 @@ public class CCTest : MonoBehaviour
 
     private void Jump()
     {
-        if (wallrunning_right && Input.GetButtonDown("Jump"))
+        if (isWallrun_Right && Input.GetButtonDown("Jump"))
         {
             horizontalVel.x = jumpVel;
         }
 
-        if (wallrunning_left && Input.GetButtonDown("Jump"))
+        if (isWallrun_Left && Input.GetButtonDown("Jump"))
         {
             horizontalVel.x = -jumpVel;
         }
@@ -229,15 +228,15 @@ public class CCTest : MonoBehaviour
     {
         // vel = Vector3.zero;
         // Vector3 force = Vector3.zero;
-        if (wallrunning_right || wallrunning_left)
+        if (isWallrun_Right || isWallrun_Left)
         {
             // head.transform.rotation = Quaternion.Slerp(head.transform.rotation, Quaternion.Euler(headRot), 5 * Time.deltaTime);
             vel = tmpVel + horizontalVel + (transform.rotation * Vector3.forward - wallrunDir.normalized);
             controller.Move((vel) * Time.deltaTime);
         }
 
-        animationController.SetBool(anim, AnimContrller.animations.wallrun_right.ToString(), wallrunning_right);
-        animationController.SetBool(anim, AnimContrller.animations.wallrun_left.ToString(), wallrunning_left);
+        animationController.SetBool(anim, AnimContrller.animations.wallrun_right.ToString(), isWallrun_Right);
+        animationController.SetBool(anim, AnimContrller.animations.wallrun_left.ToString(), isWallrun_Left);
         controller.Move((vel) * Time.deltaTime);
 
     }
@@ -246,21 +245,20 @@ public class CCTest : MonoBehaviour
     {
         vel = Vector3.zero;
         Vector3 force = Vector3.zero;
-        if (sliding)
+        if (isSliding)
         {
             vel += (transform.rotation * Vector3.forward) * slideForce + groundChecker.groundSlopeDir.normalized;
             controller.Move((vel + verticalVel) * Time.deltaTime);
         }
-        animationController.SetBool(anim, AnimContrller.animations.sliding.ToString(), sliding);
+        animationController.SetBool(anim, AnimContrller.animations.sliding.ToString(), isSliding);
     }
 
     private void Run()
     {
-
         vel += (transform.rotation * Vector3.forward) * forwardVelocity;
         animationController.SetBool(anim, AnimContrller.animations.running.ToString(), vel.z != 0);
-        animationController.SetBool(anim, AnimContrller.animations.wallrun_right.ToString(), wallrunning_right);
-        animationController.SetBool(anim, AnimContrller.animations.wallrun_left.ToString(), wallrunning_left);
+        animationController.SetBool(anim, AnimContrller.animations.wallrun_right.ToString(), isWallrun_Right);
+        animationController.SetBool(anim, AnimContrller.animations.wallrun_left.ToString(), isWallrun_Left);
         tmpVel = vel;
         controller.Move((vel + verticalVel) * Time.deltaTime);
     }

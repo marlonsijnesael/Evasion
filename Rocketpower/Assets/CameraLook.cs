@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class CameraLook : MonoBehaviour
 {
+    public CCTest ccTest;
+
     public bool firstPerson = true;
     public Transform firstPersonPos, thirdPersonPos;
     public float mouseSensitivity = 100f;
     public Transform playerBody;
     private float xRotation = 0f;
-
-    public bool lockCam = false;
 
     private void Start()
     {
@@ -33,20 +33,22 @@ public class CameraLook : MonoBehaviour
 
     private void Update()
     {
-        if (lockCam)
-            return;
-        if (Input.GetKeyDown(KeyCode.LeftShift))
-        {
+        if (Input.GetKeyDown(KeyCode.LeftShift)) {
             ChangeCam();
         }
-        float mouseX = Input.GetAxis("Horizontal") * mouseSensitivity * Time.deltaTime;
-        float mouseY = Input.GetAxis("Vertical") * mouseSensitivity * Time.deltaTime;
+        if (ccTest.isSliding || ccTest.isClimbing || ccTest.isWallrun_Left || ccTest.isWallrun_Right) {
+            return;
+        }
+        else {
+            float mouseX = Input.GetAxis("HorizontalLook") * mouseSensitivity * Time.deltaTime;
+            float mouseY = Input.GetAxis("VerticalLook") * mouseSensitivity * Time.deltaTime;
 
-        xRotation -= mouseY;
-        xRotation = Mathf.Clamp(xRotation, -90f, 90f);
+            xRotation -= mouseY;
+            xRotation = Mathf.Clamp(xRotation, -90f, 90f);
 
-        //transform.Rotate(Vector3.left * mouseY);
-        playerBody.Rotate(Vector3.up, mouseX);
+            //transform.Rotate(Vector3.left * mouseY);
+            playerBody.Rotate(Vector3.up, mouseX);
+        }
     }
 
 }
