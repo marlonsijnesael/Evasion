@@ -8,7 +8,6 @@ public class StateMachine : MonoBehaviour
     public enum State { IDLE, RUN, WALLRUN_RIGHT, WALLRUN_LEFT, CLIMB, SLIDE, AIRBORNE }
     public State playerState = new State();
     public CharacterController cc;
-
     public Vector3 verticalDir = Vector3.zero;
     public Vector3 initVelocity = new Vector3(0, -1, 0);
     public Vector3 moveDir = Vector3.zero;

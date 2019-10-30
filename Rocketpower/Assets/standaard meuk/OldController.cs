@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CCTest : MonoBehaviour
+public class OldController : MonoBehaviour
 {
     public GroundChecker groundChecker;
 
@@ -33,7 +33,7 @@ public class CCTest : MonoBehaviour
     private Vector3 vel = Vector3.zero;
     private bool grounded;
     private RaycastHit verticalTest;
-    public Vector3 verticalVel, horizontalVel;
+    private Vector3 verticalVel, horizontalVel;
     private Vector3 initVelocity = new Vector3(0, -1, 0);
     private Vector3 tmpVel = Vector3.zero;
     public GameObject prefab;
@@ -47,7 +47,7 @@ public class CCTest : MonoBehaviour
     [HideInInspector] public bool isWallrun_Right;
     [HideInInspector] public bool isWallrun_Left;
     #endregion
-    private Transform lastClimbedWall;
+
 
     #region  monobehaviour functions
     private void Awake()
@@ -61,7 +61,7 @@ public class CCTest : MonoBehaviour
         vel = initVelocity;
 
         GroundTest();
-        if (!grounded && !isWallrun_Right && !isWallrun_Left && !isClimbing)
+        if (!grounded && !isWallrun_Right && !isWallrun_Left)
         {
             verticalVel.y -= gravity * Time.deltaTime;
         }
@@ -116,25 +116,32 @@ public class CCTest : MonoBehaviour
         if (isWallrun_Right || isWallrun_Left)
             return;
         RaycastHit hit;
-        Debug.DrawRay(transform.position + Vector3.up, transform.forward);//, wallrunDir, Color.red, 10f);
         if (Physics.Raycast(transform.position, transform.forward, out hit, 1 + controller.skinWidth))
         {
-            if (lastClimbedWall == null || hit.transform == lastClimbedWall)
-
-
+            var maxBounds = GetBounds.GetMaxBounds(hit.transform.gameObject);
+            //Debug.Log(maxBounds.max.y - transform.position.y);
+            if (maxBounds.max.y - transform.position.y > 1)
+            {
                 if (Vector3.Dot(hit.normal, Vector3.up) == 0)
                 {
-                    isClimbing = true;
-                    WallClimb(hit);
-                }
-        }
-        else
-        {
 
-            // isClimbing = false;
+                    isClimbing = true;
+                    WallClimb();
+
+                    Debug.DrawRay(hit.point, Vector3.up, Color.blue, 10f);
+
+                }
+                else
+                {
+                    isClimbing = false;
+                }
+            }
+            else
+            {
+                isClimbing = false;
+            }
         }
     }
-
 
     private void LeftRightCollisionsTest()
     {
@@ -175,38 +182,38 @@ public class CCTest : MonoBehaviour
     #endregion
 
     #region movement functions
+    private IEnumerator Climb(Vector3 wallUp)
+    {
+        vel = Vector3.zero;
+        Vector3 force = Vector3.up;
+        force.y += climbSpeed;
+        animationController.SetBool(anim, AnimContrller.animations.climbing.ToString(), isClimbing);
+        while (isClimbing)
+        {
+            {
+                vel += force;
+                controller.Move((vel) * Time.deltaTime);
+                yield return null;
+            }
+        }
+        animationController.SetBool(anim, AnimContrller.animations.climbing.ToString(), isClimbing);
+        yield return new WaitForSeconds(1);
+        vel = Vector3.zero;
 
-    private void WallClimb(RaycastHit hit)
+    }
+
+
+    private void WallClimb()
     {
         if (isClimbing)
         {
-            var maxBounds = GetBounds.GetMaxBounds(hit.transform.gameObject);
-            Debug.Log(maxBounds.max.y - transform.position.y);
-            if (maxBounds.max.y - transform.position.y > 0.1f)
-            {
-                isClimbing = true;
-                vel = Vector3.up * 5;
-
-                Debug.DrawRay(hit.point, Vector3.up, Color.blue, 10f);
-                controller.Move((vel) * Time.deltaTime);
-
-            }
-            else
-            {
-                transform.position = new Vector3(transform.position.x, maxBounds.max.y + 0.1f, transform.position.z) + transform.forward;
-                lastClimbedWall = hit.transform;
-                if (tmpVel.y != jumpVel)
-                {
-                    tmpVel.y = jumpVel;
-                }
-                controller.Move((tmpVel) * Time.deltaTime);
-                isClimbing = false;
-            }
-
+            vel = tmpVel + (transform.rotation * Vector3.forward - Vector3.up);
+            controller.Move((vel) * Time.deltaTime);
         }
 
         animationController.SetBool(anim, AnimContrller.animations.climbing.ToString(), isClimbing);
-        //  controller.Move((vel) * Time.deltaTime);
+        animationController.SetBool(anim, AnimContrller.animations.wallrun_left.ToString(), isWallrun_Left);
+        controller.Move((vel) * Time.deltaTime);
 
     }
 
@@ -261,7 +268,6 @@ public class CCTest : MonoBehaviour
         animationController.SetBool(anim, AnimContrller.animations.running.ToString(), vel.z != 0);
         animationController.SetBool(anim, AnimContrller.animations.wallrun_right.ToString(), isWallrun_Right);
         animationController.SetBool(anim, AnimContrller.animations.wallrun_left.ToString(), isWallrun_Left);
-        animationController.SetBool(anim, AnimContrller.animations.climbing.ToString(), isClimbing);
         tmpVel = vel;
         controller.Move((vel + verticalVel) * Time.deltaTime);
     }

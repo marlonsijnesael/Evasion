@@ -33,13 +33,16 @@ public class CameraLook : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.LeftShift)) {
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
             ChangeCam();
         }
-        if (ccTest.isSliding || ccTest.isClimbing || ccTest.isWallrun_Left || ccTest.isWallrun_Right) {
+        if (ccTest.isSliding || ccTest.isClimbing || ccTest.isWallrun_Left || ccTest.isWallrun_Right)
+        {
             return;
         }
-        else {
+        else
+        {
             float mouseX = Input.GetAxis("HorizontalLook") * mouseSensitivity * Time.deltaTime;
             float mouseY = Input.GetAxis("VerticalLook") * mouseSensitivity * Time.deltaTime;
 
