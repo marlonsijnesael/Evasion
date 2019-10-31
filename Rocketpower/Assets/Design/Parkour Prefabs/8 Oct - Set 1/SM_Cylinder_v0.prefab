@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 8264465045331318776}
   - component: {fileID: 2417815352350141185}
   - component: {fileID: -5639465068567713375}
+  - component: {fileID: 2290914979550791802}
   m_Layer: 0
   m_Name: SM_Cylinder_v0
   m_TagString: Untagged
@@ -26,7 +27,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4157130645950357469}
-  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -94,3 +95,18 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 14
   m_Mesh: {fileID: -3288256880115304689, guid: 2639d7fa5c494414487adbc03fd06983, type: 3}
+--- !u!114 &2290914979550791802
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4157130645950357469}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 385f348efa318214f86fcfe8eaf35037, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rainbowMaterial: {fileID: 2100000, guid: 54428a0b197f93b459e3096912329c6a, type: 2}
+  officialYellowMaterial: {fileID: 2100000, guid: 6daa47b7692d48c42b90572938437d2d,
+    type: 2}
