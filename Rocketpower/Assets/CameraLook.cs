@@ -8,9 +8,16 @@ public class CameraLook : MonoBehaviour
 
     public bool firstPerson = true;
     public Transform firstPersonPos, thirdPersonPos;
-    public float mouseSensitivity = 100f;
+    public float lookSensitivity = 100f;
     public Transform playerBody;
     private float xRotation = 0f;
+    private float yRotation = 0f;
+    private float xRotationV;
+    private float yRotationV;
+    private float LookSmoothDamp = 0.1f;
+
+    private float currentXRotation;
+    private float currentYRotation;
 
     private void Start()
     {
@@ -31,26 +38,48 @@ public class CameraLook : MonoBehaviour
         }
     }
 
-    private void Update()
-    {
+    private void Update() {
         if (Input.GetKeyDown(KeyCode.LeftShift))
         {
             ChangeCam();
         }
-        if (ccTest.isSliding || ccTest.isClimbing || ccTest.isWallrun_Left || ccTest.isWallrun_Right)
-        {
+        if (ccTest.isSliding || ccTest.isClimbing || ccTest.isWallrun_Left || ccTest.isWallrun_Right) {
             return;
         }
-        else
+        else if(firstPerson == true)
         {
-            float mouseX = Input.GetAxis("HorizontalLook") * mouseSensitivity * Time.deltaTime;
-            float mouseY = Input.GetAxis("VerticalLook") * mouseSensitivity * Time.deltaTime;
+            float rStickX = Input.GetAxis("HorizontalLook") * lookSensitivity /** Time.deltaTime*/;
+            float rStickY = Input.GetAxis("VerticalLook") * lookSensitivity /** Time.deltaTime*/;
 
-            xRotation -= mouseY;
-            xRotation = Mathf.Clamp(xRotation, -90f, 90f);
+            yRotation += rStickY;
+            if (yRotation > 60.0f) {
+                yRotation = 60.0f;
+                rStickY = 0.0f;
+            }
+            if (yRotation < -40.0f) {
+                yRotation = -40.0f;
+                rStickY = 0.0f;
+            }
 
-            //transform.Rotate(Vector3.left * mouseY);
-            playerBody.Rotate(Vector3.up, mouseX);
+            transform.Rotate(Vector3.left * rStickY);
+            playerBody.Rotate(Vector3.up, rStickX);
+        }
+        else {
+            float rStickX = Input.GetAxis("HorizontalLook") * lookSensitivity /** Time.deltaTime*/;
+            float rStickY = Input.GetAxis("VerticalLook") * lookSensitivity /** Time.deltaTime*/;
+
+            yRotation += rStickY;
+            if (yRotation > 50.0f) {
+                yRotation = 50.0f;
+                rStickY = 0.0f;
+            }
+            if (yRotation < -30.0f) {
+                yRotation = -30.0f;
+                rStickY = 0.0f;
+            }
+
+            transform.Rotate(Vector3.left * rStickY);
+            playerBody.Rotate(Vector3.up, rStickX);
         }
     }
 

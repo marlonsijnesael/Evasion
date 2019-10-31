@@ -6,6 +6,7 @@ using UnityEngine;
 public class CCTest : MonoBehaviour
 {
     public GroundChecker groundChecker;
+    public Canvas canvasUI;
 
     public float climbSpeed;
     public GameObject head;
@@ -54,6 +55,7 @@ public class CCTest : MonoBehaviour
     {
         accelRatePerSec = maxSpeed / timeZeroToMax;
         decelRatePerSec = -maxSpeed / timeMaxToZero;
+        canvasUI.gameObject.SetActive(true);
     }
 
     public void FixedUpdate()
@@ -117,9 +119,9 @@ public class CCTest : MonoBehaviour
             return;
         RaycastHit hit;
         Debug.DrawRay(transform.position + Vector3.up, transform.forward);//, wallrunDir, Color.red, 10f);
-        if (Physics.Raycast(transform.position, transform.forward, out hit, 1 + controller.skinWidth))
+        if (Physics.Raycast(transform.position, transform.forward, out hit, 1 + controller.skinWidth, 1<<12))
         {
-            if (lastClimbedWall == null || hit.transform == lastClimbedWall)
+            if (lastClimbedWall == null || hit.transform != lastClimbedWall)
 
 
                 if (Vector3.Dot(hit.normal, Vector3.up) == 0)
@@ -139,7 +141,7 @@ public class CCTest : MonoBehaviour
     private void LeftRightCollisionsTest()
     {
         RaycastHit hit;
-        if (Physics.Raycast(transform.position, transform.right, out hit, 1 + controller.skinWidth))
+        if (Physics.Raycast(transform.position, transform.right, out hit, 1 + controller.skinWidth, 1<<12))
         {
             float dot = Vector3.Dot(hit.normal, Vector3.up);
             //Debug.Log(dot + ": dot");
@@ -153,7 +155,7 @@ public class CCTest : MonoBehaviour
                 WallRun();
             }
         }
-        else if (Physics.Raycast(transform.position, -transform.right, out hit, 1 + controller.skinWidth))
+        else if (Physics.Raycast(transform.position, -transform.right, out hit, 1 + controller.skinWidth, 1 << 12))
         {
             if (Vector3.Dot(hit.normal, Vector3.up) == 0)
             {

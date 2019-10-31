@@ -38,11 +38,11 @@ public class RainbowStripes : MonoBehaviour {
 	private void RandomColor() {
 		System.DateTime epochStart = new System.DateTime(1970, 1, 1, 0, 0, 0, System.DateTimeKind.Utc);
 		int unixTime = (int)(System.DateTime.UtcNow - epochStart).TotalSeconds;
-		Debug.Log(unixTime);
+		//Debug.Log(unixTime);
 
 		//make the number somewhat smaller for the sine to work with (the factor is 1/3600 so that it changes approximately 120 degrees over the colour wheel per hour)
 		float t = (unixTime % 1000000) * 0.00027777777f;
-		Debug.Log(t);
+		//Debug.Log(t);
 
 		randomColor.r = Mathf.Sin(t) * .5f + .5f;
 		randomColor.g = Mathf.Sin(t + 1) * .5f + .5f;
@@ -51,7 +51,7 @@ public class RainbowStripes : MonoBehaviour {
 		rainbowMaterial.SetColor("_BaseColor", randomColor);
 		rainbowMaterial.SetColor("_EmissiveColor", randomColor);
 		rainbowMaterial.SetColor("_EmissiveColorLDR", randomColor);
-		Debug.Log("set M_YellowLights colour to " + randomColor);
+		//Debug.Log("set M_YellowLights colour to " + randomColor);
 	}
 
 	private void SetYellow() {
