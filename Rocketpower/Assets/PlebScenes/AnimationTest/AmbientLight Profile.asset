@@ -63,7 +63,7 @@ MonoBehaviour:
     m_Value: 0
   sunSize:
     m_OverrideState: 1
-    m_Value: 0.106
+    m_Value: 0
     min: 0
     max: 1
   sunSizeConvergence:
@@ -73,24 +73,24 @@ MonoBehaviour:
     max: 10
   atmosphereThickness:
     m_OverrideState: 1
-    m_Value: 0.47
+    m_Value: 0
     min: 0
     max: 5
   skyTint:
     m_OverrideState: 1
-    m_Value: {r: 1, g: 1, b: 1, a: 1}
+    m_Value: {r: 0.14117648, g: 0.14117648, b: 0.14117648, a: 1}
     hdr: 0
     showAlpha: 1
     showEyeDropper: 1
   groundColor:
     m_OverrideState: 1
-    m_Value: {r: 0.70928264, g: 0.7264151, b: 0.7248493, a: 1}
+    m_Value: {r: 0.14117648, g: 0.14117648, b: 0.14117648, a: 1}
     hdr: 0
     showAlpha: 1
     showEyeDropper: 1
   enableSunDisk:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: 0
 --- !u!114 &7569496219257241238
 MonoBehaviour:
   m_ObjectHideFlags: 3

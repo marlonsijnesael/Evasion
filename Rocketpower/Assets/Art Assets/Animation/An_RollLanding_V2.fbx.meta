@@ -1,11 +1,11 @@
 fileFormatVersion: 2
-guid: 996c09a27b8712843845f6edbbd0ba6d
+guid: 567497cc08667514e85c89cf1b090556
 ModelImporter:
   serializedVersion: 26
   internalIDToNameTable:
   - first:
       74: 1827226128182048838
-    second: VaultSpeed_v1
+    second: RollLanding_v2
   externalObjects: {}
   materials:
     importMaterials: 1
@@ -21,14 +21,17 @@ ModelImporter:
     rigImportErrors: 
     rigImportWarnings: "Copied Avatar Rig Configuration mis-match. Bone length in
       copied configuration does not match position in animation file:\n\t'ball_l'
-      : position error = 7.436032 mm\n\t'thumb_01_r' : position error = 13.211419
+      : position error = 7.433859 mm\n\t'spine_02' : position error = 10.301325 mm\n\t'spine_03'
+      : position error = 1.047056 mm\n\t'thumb_01_r' : position error = 12.550850
       mm\n"
     animationImportErrors: 
     animationImportWarnings: "\nClip 'Take 001' has import animation warnings that
       might lower retargeting quality:\nNote: Activate translation DOF on avatar to
-      improve retargeting quality.\n\t'ball_l' has translation animation that will
-      be discarded.\n\t'spine_02' has translation animation that will be discarded.\n\t'spine_03'
-      has translation animation that will be discarded.\n"
+      improve retargeting quality.\n\t'ball_r' has translation animation that will
+      be discarded.\n\t'ball_l' has translation animation that will be discarded.\n\t'spine_02'
+      has translation animation that will be discarded.\n\t'spine_03' has translation
+      animation that will be discarded.\n\t'thumb_01_r' has translation animation
+      that will be discarded.\n"
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
@@ -42,18 +45,18 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: VaultSpeed_v1
+      name: RollLanding_v2
       takeName: Take 001
       internalID: 0
-      firstFrame: 218
-      lastFrame: 233
+      firstFrame: 291
+      lastFrame: 320
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 1
+      loopTime: 0
       loopBlend: 0
       loopBlendOrientation: 1
       loopBlendPositionY: 1
