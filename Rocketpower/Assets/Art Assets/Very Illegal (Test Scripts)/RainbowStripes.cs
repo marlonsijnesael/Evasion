@@ -5,7 +5,7 @@ using UnityEngine;
 [ExecuteInEditMode]
 public class RainbowStripes : MonoBehaviour {
 
-	private static bool hasBeenInitialised = false;
+	public bool setToYellow = false;
 
 	public Material rainbowMaterial;
 	public Material officialYellowMaterial;
@@ -14,24 +14,13 @@ public class RainbowStripes : MonoBehaviour {
 	private Color randomColor = new Color(0, 0, 0, 1);
 
 	private void Awake() {
-		if (Application.isEditor) {
+		if (Application.isEditor && !setToYellow) {
 			//Debug.Log("We are running this from inside of the editor!");
 			RandomColor();
 		}
 		else {
 			//Debug.Log("this is a build");
 			SetYellow();
-		}
-	}
-
-	private void Start() {
-		if (Application.isEditor) {
-			//Debug.Log("We are running this from inside of the editor!");
-			RandomColor();
-		}
-		else {
-			//Debug.Log("this is a build");
-
 		}
 	}
 
