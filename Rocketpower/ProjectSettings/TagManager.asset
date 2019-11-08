@@ -12,6 +12,8 @@ TagManager:
   - Start
   - Fin
   - Checkpoint
+  - ColorPlatform
+  - Flux
   layers:
   - Default
   - TransparentFX
