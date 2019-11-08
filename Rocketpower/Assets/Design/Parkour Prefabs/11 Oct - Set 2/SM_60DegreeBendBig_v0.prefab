@@ -59,7 +59,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: f24a7ce024e56c14283bc7a594801b7b, type: 2}
+  - {fileID: 2100000, guid: 73177a19012978e41897e7d64777e8c1, type: 2}
   - {fileID: 2100000, guid: 54428a0b197f93b459e3096912329c6a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
@@ -107,6 +107,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 385f348efa318214f86fcfe8eaf35037, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  setToYellow: 0
   rainbowMaterial: {fileID: 2100000, guid: 54428a0b197f93b459e3096912329c6a, type: 2}
   officialYellowMaterial: {fileID: 2100000, guid: 6daa47b7692d48c42b90572938437d2d,
     type: 2}
