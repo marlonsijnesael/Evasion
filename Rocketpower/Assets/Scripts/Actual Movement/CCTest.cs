@@ -109,7 +109,7 @@ public class CCTest : MonoBehaviour
     private void GroundTest()
     {
         grounded = controller.isGrounded;
-        animationController.SetBool(anim, AnimContrller.animations.airtime.ToString(), grounded);
+        animationController.SetBool(anim, AnimContrller.AnimationStates.airtime.ToString(), grounded);
         Physics.Raycast(transform.position, -transform.up, out verticalTest);
     }
 
@@ -119,7 +119,7 @@ public class CCTest : MonoBehaviour
             return;
         RaycastHit hit;
         Debug.DrawRay(transform.position + Vector3.up, transform.forward);//, wallrunDir, Color.red, 10f);
-        if (Physics.Raycast(transform.position, transform.forward, out hit, 1 + controller.skinWidth, 1<<12))
+        if (Physics.Raycast(transform.position, transform.forward, out hit, 1 + controller.skinWidth, 1 << 12))
         {
             if (lastClimbedWall == null || hit.transform != lastClimbedWall)
 
@@ -141,7 +141,7 @@ public class CCTest : MonoBehaviour
     private void LeftRightCollisionsTest()
     {
         RaycastHit hit;
-        if (Physics.Raycast(transform.position, transform.right, out hit, 1 + controller.skinWidth, 1<<12))
+        if (Physics.Raycast(transform.position, transform.right, out hit, 1 + controller.skinWidth, 1 << 12))
         {
             float dot = Vector3.Dot(hit.normal, Vector3.up);
             //Debug.Log(dot + ": dot");
@@ -207,7 +207,7 @@ public class CCTest : MonoBehaviour
 
         }
 
-        animationController.SetBool(anim, AnimContrller.animations.climbing.ToString(), isClimbing);
+        animationController.SetBool(anim, AnimContrller.AnimationStates.climbing.ToString(), isClimbing);
         //  controller.Move((vel) * Time.deltaTime);
 
     }
@@ -239,8 +239,8 @@ public class CCTest : MonoBehaviour
             controller.Move((vel) * Time.deltaTime);
         }
 
-        animationController.SetBool(anim, AnimContrller.animations.wallrun_right.ToString(), isWallrun_Right);
-        animationController.SetBool(anim, AnimContrller.animations.wallrun_left.ToString(), isWallrun_Left);
+        animationController.SetBool(anim, AnimContrller.AnimationStates.wallrun_right.ToString(), isWallrun_Right);
+        animationController.SetBool(anim, AnimContrller.AnimationStates.wallrun_left.ToString(), isWallrun_Left);
         controller.Move((vel) * Time.deltaTime);
 
     }
@@ -254,16 +254,16 @@ public class CCTest : MonoBehaviour
             vel += (transform.rotation * Vector3.forward) * slideForce + groundChecker.groundSlopeDir.normalized;
             controller.Move((vel + verticalVel) * Time.deltaTime);
         }
-        animationController.SetBool(anim, AnimContrller.animations.sliding.ToString(), isSliding);
+        animationController.SetBool(anim, AnimContrller.AnimationStates.sliding.ToString(), isSliding);
     }
 
     private void Run()
     {
         vel += (transform.rotation * Vector3.forward) * forwardVelocity;
-        animationController.SetBool(anim, AnimContrller.animations.running.ToString(), vel.z != 0);
-        animationController.SetBool(anim, AnimContrller.animations.wallrun_right.ToString(), isWallrun_Right);
-        animationController.SetBool(anim, AnimContrller.animations.wallrun_left.ToString(), isWallrun_Left);
-        animationController.SetBool(anim, AnimContrller.animations.climbing.ToString(), isClimbing);
+        animationController.SetBool(anim, AnimContrller.AnimationStates.running.ToString(), vel.z != 0);
+        animationController.SetBool(anim, AnimContrller.AnimationStates.wallrun_right.ToString(), isWallrun_Right);
+        animationController.SetBool(anim, AnimContrller.AnimationStates.wallrun_left.ToString(), isWallrun_Left);
+        animationController.SetBool(anim, AnimContrller.AnimationStates.climbing.ToString(), isClimbing);
         tmpVel = vel;
         controller.Move((vel + verticalVel) * Time.deltaTime);
     }
