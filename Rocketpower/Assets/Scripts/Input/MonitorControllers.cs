@@ -28,8 +28,8 @@ public class MonitorControllers : MonoBehaviour
     private void OnControllerDisconnected(string _name, int _id)
     {
         AllControllerConnected = false;
-        OnConnect("connect",true , 1);
-        Debug.LogWarning(" Controller " + _id + " is disconnected."+ _name);
+        OnConnect("connect", true, 1);
+        Debug.LogWarning(" Controller " + _id + " is disconnected." + _name);
     }
 
     private IEnumerator CheckControllers()
@@ -57,7 +57,7 @@ public class MonitorControllers : MonoBehaviour
 
 
 
-    
+
 
 
 

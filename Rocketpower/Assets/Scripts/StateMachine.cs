@@ -41,7 +41,7 @@ public class StateMachine : MonoBehaviour
 
     public float maxDistFromGround;
     public RaycastHit frontHit;
-    private bool jumping;
+    public bool jumping;
     public Ledge ledge;
 
     #endregion
@@ -54,18 +54,14 @@ public class StateMachine : MonoBehaviour
         decelRatePerSec = -maxSpeed / timeMaxToZero;
     }
 
-
     private void Update()
     {
-
-        // Debug.Log(cc.isGrounded);
         CheckGrounded();
 
         if (virtualController.JumpButtonPressed)
         {
             if (cc.isGrounded || playerState == State.WALLRUN_LEFT || playerState == State.WALLRUN_RIGHT)
             {
-                //verticalDir.y = jumpVel;
                 if (!jumping)
                     StartCoroutine(JumpRoutine());
             }
@@ -90,7 +86,6 @@ public class StateMachine : MonoBehaviour
         else if (Input.GetKeyUp(KeyCode.Z) && playerState == State.SLIDE)
         {
             SwitchStates(State.RUN, runMove);
-
         }
 
         HandleState();
@@ -99,7 +94,6 @@ public class StateMachine : MonoBehaviour
 
     public void CheckGrounded()
     {
-        //        Debug.Log("grounded: " + DistToGround().ToString());
         if (cc.isGrounded && playerState != State.CLIMB)
         {
             verticalDir = Vector3.zero;
@@ -180,14 +174,12 @@ public class StateMachine : MonoBehaviour
         RaycastHit hit;
         Physics.Raycast(transform.position + Vector3.up, Vector3.down, out hit, 5f);
         Debug.DrawRay(transform.position, Vector3.down, Color.blue);
-        // Debug.Log(hit.distance);
         return hit.distance;
     }
-
-
     public void ApplyGravity()
     {
-        verticalDir.y -= gravity * Time.deltaTime * 10;
+        if (jumping)
+            verticalDir.y = gravity * Time.deltaTime * 15;
     }
 
     public void SetInitVel()
@@ -204,7 +196,6 @@ public class StateMachine : MonoBehaviour
     public void Accelerate()
     {
         float rate = 0;
-
         if (virtualController.VerticalMovement != 0)
         {
             rate = accelRatePerSec;
@@ -230,11 +221,7 @@ public class StateMachine : MonoBehaviour
                 SwitchStates(State.CLIMB, ClimbMove);
             }
         }
-
-
     }
-
-
 
     public void LeftRightCollisionsTest()
     {
@@ -273,19 +260,17 @@ public class StateMachine : MonoBehaviour
         }
     }
 
-
-
-    IEnumerator JumpRoutine()
+    private IEnumerator JumpRoutine()
     {
-        float jumpTime = 0.5f;
+        float jumpTime = 0.75f;
         float timer = 0;
+        verticalDir = Vector3.zero;
         jumping = true;
         while (timer < jumpTime)
         {
             //Calculate how far through the jump we are as a percentage
             //apply the full jump force on the first frame, then apply less force
             //each consecutive frame
-
             float proportionCompleted = timer / jumpTime;
             Vector3 thisFrameJumpVector = Vector3.Lerp(jumpDir, Vector3.zero, proportionCompleted);
             verticalDir = thisFrameJumpVector;

@@ -1,10 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class LedgeDetection : MonoBehaviour
 {
-
     public CharacterController cc;
     public float sphereRadius;
     public float maxDist;
@@ -17,11 +14,11 @@ public class LedgeDetection : MonoBehaviour
     public float heightAboveHead;
     public RaycastHit ledgeHit;
 
-
     private void Awake()
     {
         maxHeight = cc.height + heightAboveHead;
     }
+
     public Ledge CheckLedge()
     {
         origin = transform.position;
@@ -30,14 +27,14 @@ public class LedgeDetection : MonoBehaviour
         dir.z /= 3;
         RaycastHit spherehit;
 
+        // first check if the player won't hit anything above its head
         if (!Physics.SphereCast(origin, sphereRadius, transform.up, out spherehit))
         {
-
+            // check if the top of the ledge is within reach
             if (!Physics.Raycast(origin + dir, Vector3.down, out ledgeHit, maxDist))
                 Debug.DrawRay(origin + dir, Vector3.down * maxDist, Color.green);
             else
             {
-                // Debug.DrawLine(origin + dir, ledgeHit.point, Color.red, 10f);
                 return new Ledge(ledgeHit.point, transform.position, false);
             }
         }
@@ -45,6 +42,8 @@ public class LedgeDetection : MonoBehaviour
     }
 }
 
+
+// Holds information about the ledge, if one is detected
 [System.Serializable]
 public class Ledge
 {

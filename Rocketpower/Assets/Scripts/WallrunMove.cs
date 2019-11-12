@@ -12,7 +12,6 @@ public class WallrunMove : Move
 
     public override void Act(StateMachine _owner)
     {
-        //  _owner.verticalDir = Vector3.zero;
         _owner.LeftRightCollisionsTest();
         Move(_owner);
     }
