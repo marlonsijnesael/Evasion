@@ -18,7 +18,7 @@ public class RecolorPlatform : MonoBehaviour
             gameModeManager.isFluxActive = true;
         }
 
-        if (other.gameObject.CompareTag("ColorPlatform") && gameModeManager.isFluxActive) {
+        if (other.gameObject.CompareTag("ColorPlatform") /*&& gameModeManager.isFluxActive*/) {
             other.gameObject.GetComponent<Renderer>().material = gameModeManager.m_orangePlatform;
         }
     }
