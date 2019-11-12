@@ -107,7 +107,7 @@ public class OldController : MonoBehaviour
     private void GroundTest()
     {
         grounded = controller.isGrounded;
-        animationController.SetBool(anim, AnimContrller.animations.airtime.ToString(), grounded);
+        animationController.SetBool(anim, AnimContrller.AnimationStates.airtime.ToString(), grounded);
         Physics.Raycast(transform.position, -transform.up, out verticalTest);
     }
 
@@ -187,7 +187,7 @@ public class OldController : MonoBehaviour
         vel = Vector3.zero;
         Vector3 force = Vector3.up;
         force.y += climbSpeed;
-        animationController.SetBool(anim, AnimContrller.animations.climbing.ToString(), isClimbing);
+        animationController.SetBool(anim, AnimContrller.AnimationStates.climbing.ToString(), isClimbing);
         while (isClimbing)
         {
             {
@@ -196,7 +196,7 @@ public class OldController : MonoBehaviour
                 yield return null;
             }
         }
-        animationController.SetBool(anim, AnimContrller.animations.climbing.ToString(), isClimbing);
+        animationController.SetBool(anim, AnimContrller.AnimationStates.climbing.ToString(), isClimbing);
         yield return new WaitForSeconds(1);
         vel = Vector3.zero;
 
@@ -211,8 +211,8 @@ public class OldController : MonoBehaviour
             controller.Move((vel) * Time.deltaTime);
         }
 
-        animationController.SetBool(anim, AnimContrller.animations.climbing.ToString(), isClimbing);
-        animationController.SetBool(anim, AnimContrller.animations.wallrun_left.ToString(), isWallrun_Left);
+        animationController.SetBool(anim, AnimContrller.AnimationStates.climbing.ToString(), isClimbing);
+        animationController.SetBool(anim, AnimContrller.AnimationStates.wallrun_left.ToString(), isWallrun_Left);
         controller.Move((vel) * Time.deltaTime);
 
     }
@@ -244,8 +244,8 @@ public class OldController : MonoBehaviour
             controller.Move((vel) * Time.deltaTime);
         }
 
-        animationController.SetBool(anim, AnimContrller.animations.wallrun_right.ToString(), isWallrun_Right);
-        animationController.SetBool(anim, AnimContrller.animations.wallrun_left.ToString(), isWallrun_Left);
+        animationController.SetBool(anim, AnimContrller.AnimationStates.wallrun_right.ToString(), isWallrun_Right);
+        animationController.SetBool(anim, AnimContrller.AnimationStates.wallrun_left.ToString(), isWallrun_Left);
         controller.Move((vel) * Time.deltaTime);
 
     }
@@ -259,15 +259,15 @@ public class OldController : MonoBehaviour
             vel += (transform.rotation * Vector3.forward) * slideForce + groundChecker.groundSlopeDir.normalized;
             controller.Move((vel + verticalVel) * Time.deltaTime);
         }
-        animationController.SetBool(anim, AnimContrller.animations.sliding.ToString(), isSliding);
+        animationController.SetBool(anim, AnimContrller.AnimationStates.sliding.ToString(), isSliding);
     }
 
     private void Run()
     {
         vel += (transform.rotation * Vector3.forward) * forwardVelocity;
-        animationController.SetBool(anim, AnimContrller.animations.running.ToString(), vel.z != 0);
-        animationController.SetBool(anim, AnimContrller.animations.wallrun_right.ToString(), isWallrun_Right);
-        animationController.SetBool(anim, AnimContrller.animations.wallrun_left.ToString(), isWallrun_Left);
+        animationController.SetBool(anim, AnimContrller.AnimationStates.running.ToString(), vel.z != 0);
+        animationController.SetBool(anim, AnimContrller.AnimationStates.wallrun_right.ToString(), isWallrun_Right);
+        animationController.SetBool(anim, AnimContrller.AnimationStates.wallrun_left.ToString(), isWallrun_Left);
         tmpVel = vel;
         controller.Move((vel + verticalVel) * Time.deltaTime);
     }
