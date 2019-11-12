@@ -9,6 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fff1708152afef94386134f8f0cfffac, type: 3}
-  m_Name: Scriptable Run
+  m_Script: {fileID: 11500000, guid: 37bcdaac6aa0e8f4b880045eb451c0ff, type: 3}
+  m_Name: AirMove
   m_EditorClassIdentifier: 
+  noGoStates: 
+  animation: 4

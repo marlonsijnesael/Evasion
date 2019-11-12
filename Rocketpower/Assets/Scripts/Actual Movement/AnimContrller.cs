@@ -4,21 +4,19 @@ public class AnimContrller : MonoBehaviour
 {
     [Header("Animator variable names")]
     [SerializeField] private string animIdle = "isIdle";
-    [SerializeField] private string animRunning = "isRunnin";
+    [SerializeField] private string animRunning = "isRunning";
     [SerializeField] private string animWallrunLeft = "wallrun_left";
     [SerializeField] private string animWallrunRight = "wallrun_right";
-    [SerializeField] private string animAirtime = "isGrounded";
+    [SerializeField] private string animAirtime = "grounded";
     [SerializeField] private string animSliding = "sliding";
     [SerializeField] private string animClimbing = "climbing";
 
-    public enum animations
+    public enum AnimationStates
     {
         idle = 0, running = 1, wallrun_left = 2, wallrun_right = 3, airtime = 4, jumping = 5, sliding = 6, climbing = 7
     }
 
-
-    [HideInInspector] public animations animationStates = new animations();
-
+    [HideInInspector] public AnimationStates animationStates = new AnimationStates();
 
     private string getAnimationName(string name)
     {
@@ -49,6 +47,7 @@ public class AnimContrller : MonoBehaviour
     {
         string name = getAnimationName(animation);
         animator.SetBool(name, val);
+        //        Debug.Log(name + " " + val);
     }
 
     public void SetFloat(Animator animator, string animation, float val)
