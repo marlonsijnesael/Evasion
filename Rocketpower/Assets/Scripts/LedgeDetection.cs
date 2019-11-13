@@ -24,7 +24,7 @@ public class LedgeDetection : MonoBehaviour
         origin = transform.position;
         origin.y += maxHeight;
         dir = transform.forward;
-        dir.z /= 3;
+        dir.z /= 2;
         RaycastHit spherehit;
 
         // first check if the player won't hit anything above its head
