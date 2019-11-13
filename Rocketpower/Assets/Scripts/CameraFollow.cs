@@ -14,20 +14,27 @@ public class CameraFollow : MonoBehaviour
     private float currentX = 0.0f; // Holds value of X mouse movement
     private float currentY = 0.0f; // Holds value of Y mouse movement
     public float sensitivity;
-    void start() { }
 
-    void Update()
+    private VirtualController virtualController;
+    private void Awake()
     {
-        if (Mathf.Abs(Input.GetAxis("HorizontalLook")) > 0.1f || Mathf.Abs(Input.GetAxis("VerticalLook")) > 0.1f)
+        virtualController = character.GetComponent<VirtualController>();
+    }
+
+    private void Update()
+    {
+        float hLook = virtualController.HorizontalLook;
+        float vLook = virtualController.VerticalLook;
+        if (Mathf.Abs(hLook) > 0.05f || Mathf.Abs(vLook) > 0.05f)
         {
-            currentX += sensitivity * Input.GetAxis("HorizontalLook");
-            currentY += sensitivity * Input.GetAxis("VerticalLook");
+            currentX += sensitivity * hLook;
+            currentY += sensitivity * vLook;
         }
 
         currentY = Mathf.Clamp(currentY, Y_ANGLE_MIN, Y_ANGLE_MAX);
     }
 
-    void LateUpdate()
+    private void LateUpdate()
     {                                                        //Rotation around character............/...Keeps distance from character          
         gameObject.transform.position = character.position + Quaternion.Euler(currentY, currentX, 0) * new Vector3(0, 0, distance);
         gameObject.transform.LookAt(character.position);//Points camera at character

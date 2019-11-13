@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class StateMachine : MonoBehaviour
 {
+    public int playerID;
     public LedgeDetection ledgeDetector;
     public CameraLook playerRotator;
     public AnimContrller animationController;
@@ -13,9 +14,8 @@ public class StateMachine : MonoBehaviour
     public enum State { IDLE, RUN, WALLRUN_RIGHT, WALLRUN_LEFT, CLIMB, SLIDE, AIRBORNE }
     public State playerState = new State();
     public CharacterController cc;
-    public Vector3 verticalDir = Vector3.zero, horizontalDir = Vector3.zero;
+    [HideInInspector] public Vector3 verticalDir = Vector3.zero;
     [HideInInspector] public Vector3 wallrunDir;
-    [HideInInspector] public Vector3 initVelocity = new Vector3(0, -1, 0);
     public Vector3 moveDir = Vector3.zero;
 
     #region animator booleans
@@ -48,13 +48,14 @@ public class StateMachine : MonoBehaviour
 
     private void Awake()
     {
+        virtualController = GetComponent<VirtualController>();
         currentMove = idleMove;
         idleMove.EnterState(this);
         accelRatePerSec = maxSpeed / timeZeroToMax;
         decelRatePerSec = -maxSpeed / timeMaxToZero;
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         CheckGrounded();
 
@@ -70,12 +71,15 @@ public class StateMachine : MonoBehaviour
         if (!cc.isGrounded && playerState != State.WALLRUN_LEFT && playerState != State.WALLRUN_RIGHT && playerState != State.CLIMB)
             verticalDir.y -= gravity * Time.deltaTime;
 
-        if (virtualController.VerticalMovement != 0 && playerState != State.RUN
-                       && playerState != State.CLIMB
-                       && playerState != State.AIRBORNE
-                       && playerState != State.SLIDE)
+        if (virtualController.VerticalMovement != 0 || virtualController.HorizontalMovement != 0)
         {
-            SwitchStates(State.RUN, runMove);
+            if (playerState != State.RUN
+                           && playerState != State.CLIMB
+                           && playerState != State.AIRBORNE
+                           && playerState != State.SLIDE)
+            {
+                SwitchStates(State.RUN, runMove);
+            }
         }
 
         if (Input.GetKey(KeyCode.Z))
@@ -196,7 +200,7 @@ public class StateMachine : MonoBehaviour
     public void Accelerate()
     {
         float rate = 0;
-        if (virtualController.VerticalMovement != 0)
+        if (virtualController.VerticalMovement != 0 || virtualController.VerticalMovement != 0)
         {
             rate = accelRatePerSec;
         }
@@ -210,7 +214,7 @@ public class StateMachine : MonoBehaviour
 
     public void FrontCollisionTest()
     {
-        if (isWallrun_Right || isWallrun_Left)
+        if (playerState == State.WALLRUN_LEFT || playerState == State.WALLRUN_RIGHT)
             return;
 
         if (virtualController.ClimbButtonPressed && playerState != State.CLIMB)
@@ -272,8 +276,10 @@ public class StateMachine : MonoBehaviour
             //apply the full jump force on the first frame, then apply less force
             //each consecutive frame
             float proportionCompleted = timer / jumpTime;
+
             Vector3 thisFrameJumpVector = Vector3.Lerp(jumpDir, Vector3.zero, proportionCompleted);
             verticalDir = thisFrameJumpVector;
+            // moveDir.z += transform.forward.z * 10f;
             timer += Time.deltaTime;
             yield return null;
         }
