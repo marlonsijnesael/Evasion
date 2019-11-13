@@ -14,12 +14,24 @@ public class RecolorPlatform : MonoBehaviour
     }
 
     private void OnTriggerEnter(Collider other) {
-        if (other.gameObject.CompareTag("Flux")) {
-            gameModeManager.isFluxActive = true;
+        if (other.gameObject.CompareTag("Flux") && this.transform.tag == "Player") {
+            //gameModeManager.isFluxActive = true;
+            //gameModeManager.flux.transform.parent = gameObject.transform;
+            gameModeManager.player1 = gameModeManager.fluxPlayer;
         }
 
-        if (other.gameObject.CompareTag("ColorPlatform") /*&& gameModeManager.isFluxActive*/) {
+        if(other.gameObject.CompareTag("Flux") && this.transform.tag == "Player2"){
+            gameModeManager.player2 = gameModeManager.fluxPlayer;
+        }
+
+        if (other.gameObject.CompareTag("ColorPlatform") && gameModeManager.player1 == gameModeManager.fluxPlayer) {
             other.gameObject.GetComponent<Renderer>().material = gameModeManager.m_orangePlatform;
+            gameModeManager.updateScore();
+        }
+
+        if(other.gameObject.CompareTag("ColorPlatform") && gameModeManager.player2 == gameModeManager.fluxPlayer){
+            other.gameObject.GetComponent<Renderer>().material = gameModeManager.m_bluePlatform;
+            gameModeManager.updateScore();
         }
     }
 

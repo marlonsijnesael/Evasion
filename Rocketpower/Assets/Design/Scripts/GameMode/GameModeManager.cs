@@ -6,14 +6,18 @@ using UnityEngine;
 
 public class GameModeManager : MonoBehaviour
 {
+
+    public GameObject player1;
+    public GameObject player2;
+
+    public GameObject fluxPlayer;
+
     public int orangeScore;
     public int blueScore;
 
     GameObject[] platformArray;
 
     List<GameObject> platformList;
-
-    [HideInInspector] public bool isFluxActive;
 
     public Material m_orangePlatform;
     public Material m_bluePlatform;
@@ -24,16 +28,19 @@ public class GameModeManager : MonoBehaviour
     }
 
     private void Update() {
-        if (Input.GetKeyDown(KeyCode.F)) {
+        if (Input.GetKeyDown(KeyCode.Q)) {
             updateScore();
         }
     }
 
-    void updateScore() {
+    public void updateScore() {
         foreach (GameObject platform in platformArray) {
             if(platform.gameObject.GetComponent<Renderer>().material.name == "M_PlatformOrange_v1 (Instance)") {
-                List<GameObject> orangeList = new List<GameObject>();
                 Debug.Log(platform);
+            }
+            if(platform.gameObject.GetComponent<Renderer>().material.name == "M_PlatformBlue_v1 (Instance)") {
+                Debug.Log(platform);
+                List<GameObject> blueList = new List<GameObject>();
             }
         }
 
