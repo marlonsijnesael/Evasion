@@ -8,6 +8,7 @@ public class RecolorPlatform : MonoBehaviour
     public GameModeManager gameModeManager;
 
     public Text textOrange;
+    public Text textBlue;
 
     void Update() {
         textOrange.text = gameModeManager.orangeScore.ToString();
@@ -17,19 +18,21 @@ public class RecolorPlatform : MonoBehaviour
         if (other.gameObject.CompareTag("Flux") && this.transform.tag == "Player") {
             //gameModeManager.isFluxActive = true;
             //gameModeManager.flux.transform.parent = gameObject.transform;
-            gameModeManager.player1 = gameModeManager.fluxPlayer;
+            gameModeManager.player1Current = gameModeManager.fluxPlayer;
+            gameModeManager.player2Current = gameModeManager.player2Base;
         }
 
-        if(other.gameObject.CompareTag("Flux") && this.transform.tag == "Player2"){
-            gameModeManager.player2 = gameModeManager.fluxPlayer;
+        else if(other.gameObject.CompareTag("Flux") && this.transform.tag == "Player2"){
+            gameModeManager.player2Current = gameModeManager.fluxPlayer;
+            gameModeManager.player1Current = gameModeManager.player1Base;
         }
 
-        if (other.gameObject.CompareTag("ColorPlatform") && gameModeManager.player1 == gameModeManager.fluxPlayer) {
+        if (other.gameObject.CompareTag("ColorPlatform") && gameModeManager.player1Current == gameModeManager.fluxPlayer) {
             other.gameObject.GetComponent<Renderer>().material = gameModeManager.m_orangePlatform;
             gameModeManager.updateScore();
         }
 
-        if(other.gameObject.CompareTag("ColorPlatform") && gameModeManager.player2 == gameModeManager.fluxPlayer){
+        else if(other.gameObject.CompareTag("ColorPlatform") && gameModeManager.player2Current == gameModeManager.fluxPlayer){
             other.gameObject.GetComponent<Renderer>().material = gameModeManager.m_bluePlatform;
             gameModeManager.updateScore();
         }
