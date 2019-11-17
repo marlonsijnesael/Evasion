@@ -8,6 +8,9 @@ public class VirtualController : MonoBehaviour
     GamePadState state;
     GamePadState prevState;
 
+    public GameObject controllerUI;
+
+
     private void FixedUpdate()
     {
         // SetVibration should be sent in a slower rate.
@@ -16,20 +19,27 @@ public class VirtualController : MonoBehaviour
     }
 
     // Update is called once per frame
-    private void Update()
+    public void ControlledUpdate()
     {
         // Find a PlayerIndex, for a single player game
         // Will find the first controller that is connected ans use it
-        if (!playerIndexSet || !prevState.IsConnected)
+        PlayerIndex testPlayerIndex = playerIndex;
+        GamePadState testState = GamePad.GetState(testPlayerIndex);
+        if (testState.IsConnected)
         {
-            PlayerIndex testPlayerIndex = playerIndex;
-            GamePadState testState = GamePad.GetState(testPlayerIndex);
-            if (testState.IsConnected)
+            if (!playerIndexSet || !prevState.IsConnected)
             {
                 Debug.Log(string.Format("GamePad found {0}", testPlayerIndex));
                 playerIndex = testPlayerIndex;
                 playerIndexSet = true;
             }
+            if (controllerUI.activeInHierarchy)
+                controllerUI.SetActive(false);
+        }
+        else
+        {
+            playerIndexSet = false;
+            controllerUI.SetActive(true);
         }
 
         prevState = state;
@@ -40,7 +50,7 @@ public class VirtualController : MonoBehaviour
     {
         get
         {
-            return prevState.Buttons.A == ButtonState.Released && state.Buttons.A == ButtonState.Pressed;
+            return prevState.Buttons.A != ButtonState.Pressed && state.Buttons.A == ButtonState.Pressed;// && cc.isGrounded;
         }
     }
 
@@ -81,18 +91,4 @@ public class VirtualController : MonoBehaviour
             return state.ThumbSticks.Right.X;
         }
     }
-
-
-
-    //      // Detect if a button was pressed this frame
-    //         if (prevState.Buttons.A == ButtonState.Released && state.Buttons.A == ButtonState.Pressed)
-    //         {
-    //             print("a pressed " + playerIndex.ToString());
-    // }
-    //         // Detect if a button was released this frame
-    //         if (prevState.Buttons.A == ButtonState.Pressed && state.Buttons.A == ButtonState.Released)
-    //         {
-    //             print("a released " + playerIndex.ToString());
-    //         }
-
 }

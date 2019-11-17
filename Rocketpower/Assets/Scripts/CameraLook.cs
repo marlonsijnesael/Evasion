@@ -6,22 +6,16 @@ public class CameraLook : MonoBehaviour
 {
 
     //Make sure you have a camera, it will determine the direction the character faces
-    Transform cam;
+    public Transform cam;
 
     float speed = 10f;    //How fast the player can move
     float turnSpeed = 100;    //How fast the player can rotate
-
     Animator animator;//You may not need an animator, but if so declare it here
     public GameObject player;
     public VirtualController virtualController;
     private void Awake()
     {
         virtualController = player.GetComponent<VirtualController>();
-    }
-
-    void Start()
-    {
-        cam = Camera.main.transform;
     }
 
     public void UpdateRotation()

@@ -44,6 +44,14 @@ public class StateMachine : MonoBehaviour
     public bool jumping;
     public Ledge ledge;
 
+
+    public float jumpHeight = 4;
+    public float timeToJumpApex = .4f;
+    // float gravity;
+    float jumpVelocity;
+
+    public Vector3 stateMoveDir;
+    private bool isGrounded;
     #endregion
 
     private void Awake()
@@ -53,23 +61,16 @@ public class StateMachine : MonoBehaviour
         idleMove.EnterState(this);
         accelRatePerSec = maxSpeed / timeZeroToMax;
         decelRatePerSec = -maxSpeed / timeMaxToZero;
+
+        gravity = -(2 * jumpHeight) / Mathf.Pow(timeToJumpApex, 2);
+        jumpVelocity = Mathf.Abs(gravity) * timeToJumpApex;
+        print("gravity: " + gravity + " jump vel: " + jumpVelocity);
     }
 
     private void FixedUpdate()
     {
         CheckGrounded();
-
-        if (virtualController.JumpButtonPressed)
-        {
-            if (cc.isGrounded || playerState == State.WALLRUN_LEFT || playerState == State.WALLRUN_RIGHT)
-            {
-                if (!jumping)
-                    StartCoroutine(JumpRoutine());
-            }
-        }
-
-        if (!cc.isGrounded && playerState != State.WALLRUN_LEFT && playerState != State.WALLRUN_RIGHT && playerState != State.CLIMB)
-            verticalDir.y -= gravity * Time.deltaTime;
+        SetInitVel();
 
         if (virtualController.VerticalMovement != 0 || virtualController.HorizontalMovement != 0)
         {
@@ -98,19 +99,22 @@ public class StateMachine : MonoBehaviour
 
     public void CheckGrounded()
     {
-        if (cc.isGrounded && playerState != State.CLIMB)
-        {
-            verticalDir = Vector3.zero;
-        }
-
-        if (DistToGround() > 1f && cc.isGrounded && playerState != State.CLIMB)
-        {
-            SwitchStates(State.AIRBORNE, airborneMove);
-        }
-        else
+        RaycastHit hit;
+        Debug.DrawRay(transform.position, Vector3.down, Color.red);
+        if (Physics.Raycast(transform.position, Vector3.down, out hit))
         {
             SwitchStates(State.IDLE, idleMove);
+            isGrounded = true;
         }
+
+        // if (DistToGround() > 1f && cc.isGrounded && playerState != State.CLIMB)
+        // {
+        else
+        {
+            isGrounded = false;
+            SwitchStates(State.AIRBORNE, airborneMove);
+        }
+
     }
 
     private void HandleState()
@@ -182,20 +186,34 @@ public class StateMachine : MonoBehaviour
     }
     public void ApplyGravity()
     {
-        if (jumping)
-            verticalDir.y = gravity * Time.deltaTime * 15;
+        // if (jumping)
+        //     verticalDir.y = gravity * Time.deltaTime * 15;
     }
 
     public void SetInitVel()
     {
-        moveDir = new Vector3(0, 1, 0);
+        stateMoveDir = Vector3.zero;
     }
     public void MovePlayer()
     {
-        if (playerState != State.CLIMB)
-            moveDir.y = verticalDir.y;
+        Jump();
+        //if (playerState != State.WALLRUN_LEFT && playerState != State.WALLRUN_RIGHT && playerState != State.CLIMB)
+        // moveDir.y += gravity * Time.deltaTime;
+        // // if (playerState != State.CLIMB)
+        // //     // moveDir.y = verticalDir.y;
+        // cc.Move(moveDir * Time.deltaTime);
+        if (!cc.isGrounded)
+            moveDir.y += gravity * Time.deltaTime;
+        else
+        {
+            moveDir.y = 0;
+        }
+
+        moveDir.x = stateMoveDir.x;
+        moveDir.z = stateMoveDir.z;
         cc.Move(moveDir * Time.deltaTime);
     }
+
 
     public void Accelerate()
     {
@@ -264,26 +282,37 @@ public class StateMachine : MonoBehaviour
         }
     }
 
-    private IEnumerator JumpRoutine()
+    private void Jump()
     {
-        float jumpTime = 0.75f;
-        float timer = 0;
-        verticalDir = Vector3.zero;
-        jumping = true;
-        while (timer < jumpTime)
+        if (virtualController.JumpButtonPressed && cc.isGrounded)
         {
-            //Calculate how far through the jump we are as a percentage
-            //apply the full jump force on the first frame, then apply less force
-            //each consecutive frame
-            float proportionCompleted = timer / jumpTime;
+            // if (cc.isGrounded || playerState == State.WALLRUN_LEFT || playerState == State.WALLRUN_RIGHT)
+            // {
+            moveDir.y = jumpVelocity;
 
-            Vector3 thisFrameJumpVector = Vector3.Lerp(jumpDir, Vector3.zero, proportionCompleted);
-            verticalDir = thisFrameJumpVector;
-            // moveDir.z += transform.forward.z * 10f;
-            timer += Time.deltaTime;
-            yield return null;
         }
-
-        jumping = false;
     }
+
+    // private IEnumerator JumpRoutine()
+    // {
+    //     float jumpTime = 0.75f;
+    //     float timer = 0;
+    //     verticalDir = Vector3.zero;
+    //     jumping = true;
+    //     while (timer < jumpTime)
+    //     {
+    //         //Calculate how far through the jump we are as a percentage
+    //         //apply the full jump force on the first frame, then apply less force
+    //         //each consecutive frame
+    //         float proportionCompleted = timer / jumpTime;
+
+    //         Vector3 thisFrameJumpVector = Vector3.Lerp(jumpDir, Vector3.zero, proportionCompleted);
+    //         verticalDir = thisFrameJumpVector;
+    //         // moveDir.z += transform.forward.z * 10f;
+    //         timer += Time.deltaTime;
+    //         yield return null;
+    //     }
+
+    //     jumping = false;
+    // }
 }

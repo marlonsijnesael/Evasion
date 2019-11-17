@@ -27,7 +27,7 @@ public class RunMove : Move
 
     private void Move(StateMachine _owner)
     {
-        _owner.moveDir += (_owner.transform.rotation * Vector3.forward) * _owner.forwardVelocity;
+        _owner.stateMoveDir = (_owner.transform.rotation * Vector3.forward) * _owner.forwardVelocity;
         _owner.lastMoveDir = _owner.moveDir;
     }
 }
