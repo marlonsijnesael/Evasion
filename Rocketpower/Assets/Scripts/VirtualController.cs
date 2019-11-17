@@ -29,7 +29,7 @@ public class VirtualController : MonoBehaviour
         {
             if (!playerIndexSet || !prevState.IsConnected)
             {
-                Debug.Log(string.Format("GamePad found {0}", testPlayerIndex));
+                //Debug.Log(string.Format("GamePad found {0}", testPlayerIndex));
                 playerIndex = testPlayerIndex;
                 playerIndexSet = true;
             }
@@ -66,7 +66,7 @@ public class VirtualController : MonoBehaviour
     {
         get
         {
-            Debug.Log(state.Triggers.Right > 0);
+            //Debug.Log(state.Triggers.Right > 0);
             return state.Triggers.Right > 0;
         }
     }

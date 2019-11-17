@@ -168,12 +168,12 @@ public class StateMachine : MonoBehaviour
             currentMove.ExitState(this);
             currentMove = nextMove;
             currentMove.EnterState(this);
-            print("next state: " + nextState.ToString());
+            //print("next state: " + nextState.ToString());
             playerState = nextState;
         }
         else
         {
-            print("invalid state: " + nextState.ToString());
+            //print("invalid state: " + nextState.ToString());
         }
     }
 
@@ -253,7 +253,7 @@ public class StateMachine : MonoBehaviour
             float dot = Vector3.Dot(hit.normal, Vector3.up);
             if (dot == 0)
             {
-                Debug.Log("wallrun right");
+                //Debug.Log("wallrun right");
                 wallrunDir = Vector3.Cross(hit.normal, Vector3.up);
                 Debug.DrawRay(hit.point, wallrunDir, Color.red, 10f);
                 isWallrun_Right = true;
@@ -265,7 +265,7 @@ public class StateMachine : MonoBehaviour
         {
             if (Vector3.Dot(hit.normal, Vector3.up) == 0)
             {
-                Debug.Log("left wall" + hit.transform.CompareTag("wall"));
+                //Debug.Log("left wall" + hit.transform.CompareTag("wall"));
 
                 wallrunDir = Vector3.Cross(hit.transform.up, hit.normal);
                 Debug.DrawRay(hit.point, wallrunDir, Color.red, 10f);
