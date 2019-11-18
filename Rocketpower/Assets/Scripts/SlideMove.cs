@@ -5,7 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "slide")]
 public class SlideMove : Move
 {
-    public AnimContrller.AnimationStates animation;
+    public AnimationManager.AnimationStates animation;
 
     public override void EnterState(StateMachine _owner)
     {
@@ -14,7 +14,6 @@ public class SlideMove : Move
 
     public override void Act(StateMachine _owner)
     {
-        _owner.ApplyGravity();
         Move(_owner);
     }
 
@@ -25,10 +24,8 @@ public class SlideMove : Move
 
     private void Move(StateMachine _owner)
     {
-        _owner.moveDir = Vector3.zero;
+        // _owner.moveDir = Vector3.zero;
         Vector3 force = Vector3.zero;
-
-        _owner.moveDir += (_owner.transform.rotation * Vector3.forward) * _owner.slideForce; //groundChecker.groundSlopeDir.normalized;
-
+        _owner.stateMoveDir += (_owner.transform.rotation * Vector3.forward) * _owner.slideForce;
     }
 }

@@ -3,7 +3,7 @@
 [CreateAssetMenu(menuName = "wallrun")]
 public class WallrunMove : Move
 {
-    public AnimContrller.AnimationStates animation;
+    public AnimationManager.AnimationStates animation;
 
     public override void EnterState(StateMachine _owner)
     {

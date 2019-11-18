@@ -1,57 +1,62 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class StateMachine : MonoBehaviour
 {
-    public int playerID;
+    #region components
+
+
+    [Header("Components: ")]
+    public CharacterController cc;
     public LedgeDetection ledgeDetector;
-    public CameraLook playerRotator;
-    public AnimContrller animationController;
+    public RotatePlayer playerRotator;
+    public AnimationManager animationController;
     public Animator animator;
     public VirtualController virtualController;
+    #endregion
+
+    #region state stuff
+    [Header("States: ")]
+    public Move currentMove;
+    public Move previousMove;
     public Move idleMove, runMove, wallrunMoveRight, wallRunMoveLeft, ClimbMove, SlideMove, airborneMove;
     public enum State { IDLE, RUN, WALLRUN_RIGHT, WALLRUN_LEFT, CLIMB, SLIDE, AIRBORNE }
     public State playerState = new State();
-    public CharacterController cc;
+
+    #endregion
+
+    #region directional vectors
     [HideInInspector] public Vector3 verticalDir = Vector3.zero;
     [HideInInspector] public Vector3 wallrunDir;
-    public Vector3 moveDir = Vector3.zero;
+    [HideInInspector] public Vector3 stateMoveDir;
+    [HideInInspector] public Vector3 moveDir = Vector3.zero;
+    [HideInInspector] public Vector3 lastMoveDir;
+    #endregion
 
     #region animator booleans
-    [HideInInspector] public bool isSliding;
-    [HideInInspector] public bool isClimbing;
     [HideInInspector] public bool isWallrun_Right;
     [HideInInspector] public bool isWallrun_Left;
+    #endregion
+
+    #region movement settings
+    [Header("Movement Settings: ")]
     public float maxSpeed = 5f;
+    [SerializeField] public float slideForce = 10f;
     [SerializeField] private float timeZeroToMax = 2.5f;
     [SerializeField] private float timeMaxToZero = 2.5f;
     private float accelRatePerSec;
     private float decelRatePerSec;
     public float forwardVelocity = 0;
-    public Vector3 jumpDir;
-    [HideInInspector] public Vector3 lastMoveDir;
-    [Header("gravity Settings: ")]
-    [SerializeField] private float gravity = 14.0f;
-    [SerializeField] public float jumpVel = 14f;
-    [SerializeField] public float slideForce = 10f;
-    public Move currentMove, previousMove;
-    public State previousState = new State();
-    public Transform lastClimbedWall;
+    #endregion
 
-    public float maxDistFromGround;
-    public RaycastHit frontHit;
-    public bool jumping;
-    public Ledge ledge;
-
-
-    public float jumpHeight = 4;
-    public float timeToJumpApex = .4f;
-    // float gravity;
-    float jumpVelocity;
-
-    public Vector3 stateMoveDir;
+    #region gravity and jump settings
+    [Header("gravity and jump Settings: ")]
+    [SerializeField] private float jumpHeight = 4;
+    [SerializeField] public float timeToJumpApex = .4f;
+    private float gravity = 14.0f;
+    private float jumpVelocity;
+    [SerializeField] private float forwardJumpMultiplier = 5;
     private bool isGrounded;
+    public Ledge ledge;
     #endregion
 
     private void Awake()
@@ -97,26 +102,9 @@ public class StateMachine : MonoBehaviour
         MovePlayer();
     }
 
-    public void CheckGrounded()
-    {
-        RaycastHit hit;
-        Debug.DrawRay(transform.position, Vector3.down, Color.red);
-        if (Physics.Raycast(transform.position, Vector3.down, out hit))
-        {
-            SwitchStates(State.IDLE, idleMove);
-            isGrounded = true;
-        }
-
-        // if (DistToGround() > 1f && cc.isGrounded && playerState != State.CLIMB)
-        // {
-        else
-        {
-            isGrounded = false;
-            SwitchStates(State.AIRBORNE, airborneMove);
-        }
-
-    }
-
+    /// <summary>
+    /// Executes the the act() function of the state Move
+    /// </summary>
     private void HandleState()
     {
         switch (playerState)
@@ -145,6 +133,10 @@ public class StateMachine : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Checks if the given statechange is valid
+    /// by looping through the nogo states of the proposed state
+    /// </summary>
     private bool ValidateStateChange(State newState, Move nextMove)
     {
         foreach (State noGoState in currentMove.noGoStates)
@@ -159,8 +151,11 @@ public class StateMachine : MonoBehaviour
             }
         }
         return true;
-
     }
+
+    /// <summary>
+    /// If next state is valid -> transition to new state
+    /// </summary>
     public void SwitchStates(State nextState, Move nextMove)
     {
         if (ValidateStateChange(nextState, nextMove))
@@ -168,53 +163,37 @@ public class StateMachine : MonoBehaviour
             currentMove.ExitState(this);
             currentMove = nextMove;
             currentMove.EnterState(this);
-            //print("next state: " + nextState.ToString());
             playerState = nextState;
         }
-        else
-        {
-            //print("invalid state: " + nextState.ToString());
-        }
     }
 
-    private float DistToGround()
-    {
-        RaycastHit hit;
-        Physics.Raycast(transform.position + Vector3.up, Vector3.down, out hit, 5f);
-        Debug.DrawRay(transform.position, Vector3.down, Color.blue);
-        return hit.distance;
-    }
-    public void ApplyGravity()
-    {
-        // if (jumping)
-        //     verticalDir.y = gravity * Time.deltaTime * 15;
-    }
-
+    /// <summary>
+    /// applies a little bit of gravity each frame to get an accurate 
+    /// update on cc.isgrounded
+    /// </summary>
     public void SetInitVel()
     {
-        stateMoveDir = Vector3.zero;
+        stateMoveDir = new Vector3(0, 001f, 0);
     }
+
     public void MovePlayer()
     {
-        Jump();
-        //if (playerState != State.WALLRUN_LEFT && playerState != State.WALLRUN_RIGHT && playerState != State.CLIMB)
-        // moveDir.y += gravity * Time.deltaTime;
-        // // if (playerState != State.CLIMB)
-        // //     // moveDir.y = verticalDir.y;
-        // cc.Move(moveDir * Time.deltaTime);
         if (!cc.isGrounded)
             moveDir.y += gravity * Time.deltaTime;
         else
         {
             moveDir.y = 0;
         }
-
+        Jump();
         moveDir.x = stateMoveDir.x;
         moveDir.z = stateMoveDir.z;
         cc.Move(moveDir * Time.deltaTime);
     }
 
-
+    /// <summary>
+    /// checks input from the analogstick 
+    /// forward velocity will increase/decrease depending on wether the input is higher or lower than zero 
+    /// </summary>
     public void Accelerate()
     {
         float rate = 0;
@@ -230,6 +209,42 @@ public class StateMachine : MonoBehaviour
         forwardVelocity = Mathf.Clamp(forwardVelocity, 0, maxSpeed);
     }
 
+    private void Jump()
+    {
+        if (virtualController.JumpButtonPressed && isGrounded)
+        {
+            isGrounded = false;
+            moveDir.y = jumpVelocity;
+            if (virtualController.VerticalMovement != 0)
+                stateMoveDir.z *= forwardJumpMultiplier;
+        }
+    }
+
+    /// <summary>
+    /// Checks for collision with ground underneath player
+    /// if ground is not detected, switch to idle state
+    /// </summary>
+    public void CheckGrounded()
+    {
+        RaycastHit hit;
+        Physics.Raycast(transform.position + Vector3.up, -transform.up, out hit);
+        float distToGround = hit.distance - 1;
+        if (distToGround > 1f && playerState != State.CLIMB)
+        {
+            isGrounded = false;
+            SwitchStates(State.AIRBORNE, airborneMove);
+        }
+        else
+        {
+            isGrounded = true;
+            SwitchStates(State.IDLE, idleMove);
+        }
+    }
+
+    /// <summary>
+    /// Checks for collision with walls in front of player
+    /// if wall is detected, switch to climbing state
+    /// </summary>
     public void FrontCollisionTest()
     {
         if (playerState == State.WALLRUN_LEFT || playerState == State.WALLRUN_RIGHT)
@@ -245,6 +260,10 @@ public class StateMachine : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Checks for collision with walls left and right of player
+    /// if wall is detected, switch to wallrun state
+    /// </summary>
     public void LeftRightCollisionsTest()
     {
         RaycastHit hit;
@@ -253,7 +272,6 @@ public class StateMachine : MonoBehaviour
             float dot = Vector3.Dot(hit.normal, Vector3.up);
             if (dot == 0)
             {
-                //Debug.Log("wallrun right");
                 wallrunDir = Vector3.Cross(hit.normal, Vector3.up);
                 Debug.DrawRay(hit.point, wallrunDir, Color.red, 10f);
                 isWallrun_Right = true;
@@ -265,8 +283,6 @@ public class StateMachine : MonoBehaviour
         {
             if (Vector3.Dot(hit.normal, Vector3.up) == 0)
             {
-                //Debug.Log("left wall" + hit.transform.CompareTag("wall"));
-
                 wallrunDir = Vector3.Cross(hit.transform.up, hit.normal);
                 Debug.DrawRay(hit.point, wallrunDir, Color.red, 10f);
                 isWallrun_Left = true;
@@ -281,38 +297,4 @@ public class StateMachine : MonoBehaviour
             isWallrun_Left = false;
         }
     }
-
-    private void Jump()
-    {
-        if (virtualController.JumpButtonPressed && cc.isGrounded)
-        {
-            // if (cc.isGrounded || playerState == State.WALLRUN_LEFT || playerState == State.WALLRUN_RIGHT)
-            // {
-            moveDir.y = jumpVelocity;
-
-        }
-    }
-
-    // private IEnumerator JumpRoutine()
-    // {
-    //     float jumpTime = 0.75f;
-    //     float timer = 0;
-    //     verticalDir = Vector3.zero;
-    //     jumping = true;
-    //     while (timer < jumpTime)
-    //     {
-    //         //Calculate how far through the jump we are as a percentage
-    //         //apply the full jump force on the first frame, then apply less force
-    //         //each consecutive frame
-    //         float proportionCompleted = timer / jumpTime;
-
-    //         Vector3 thisFrameJumpVector = Vector3.Lerp(jumpDir, Vector3.zero, proportionCompleted);
-    //         verticalDir = thisFrameJumpVector;
-    //         // moveDir.z += transform.forward.z * 10f;
-    //         timer += Time.deltaTime;
-    //         yield return null;
-    //     }
-
-    //     jumping = false;
-    // }
 }
