@@ -8,9 +8,6 @@ public class LedgeDetection : MonoBehaviour
     public float maxHeight;
     public Vector3 origin;
     public Vector3 dir;
-    public GameObject currentHitObject;
-    public LayerMask layerMask;
-    public float currentHitDistance;
     public float heightAboveHead;
     public RaycastHit ledgeHit;
 
@@ -41,7 +38,6 @@ public class LedgeDetection : MonoBehaviour
         return new Ledge(Vector3.zero, Vector3.zero, true);
     }
 }
-
 
 // Holds information about the ledge, if one is detected
 [System.Serializable]

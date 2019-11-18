@@ -3,7 +3,7 @@
 [CreateAssetMenu(menuName = "air")]
 public class AirMove : Move
 {
-    public AnimContrller.AnimationStates animation;
+    public AnimationManager.AnimationStates animation;
 
     public override void EnterState(StateMachine _owner)
     {
@@ -12,7 +12,8 @@ public class AirMove : Move
 
     public override void Act(StateMachine _owner)
     {
-        _owner.ApplyGravity();
+        _owner.LeftRightCollisionsTest();
+        _owner.FrontCollisionTest();
         Move(_owner);
     }
 
@@ -23,8 +24,8 @@ public class AirMove : Move
 
     private void Move(StateMachine _owner)
     {
-        _owner.moveDir += (_owner.transform.rotation * Vector3.forward) * _owner.forwardVelocity;
-        _owner.verticalDir = Vector3.zero;
+        _owner.stateMoveDir = (_owner.transform.rotation * Vector3.forward) * _owner.forwardVelocity;
+        // _owner.verticalDir = Vector3.zero;
     }
 }
 

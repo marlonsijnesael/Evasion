@@ -3,7 +3,7 @@
 [CreateAssetMenu(menuName = "idle")]
 public class IdleMove : Move
 {
-    public AnimContrller.AnimationStates animation;
+    public AnimationManager.AnimationStates animation;
 
     public override void EnterState(StateMachine _owner)
     {

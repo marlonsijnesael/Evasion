@@ -7,7 +7,7 @@ public class ClimbMove : Move
 {
 
     public float climbSpeed = 2.5f;
-    public AnimContrller.AnimationStates animation;
+    public AnimationManager.AnimationStates animation;
 
     public override void EnterState(StateMachine _owner)
     {
@@ -32,7 +32,8 @@ public class ClimbMove : Move
         Vector3 climbDir = _owner.ledge.hitPosition - _owner.ledge.playerPosition;
 
         if (_owner.transform.position.y < yPosOrigin.y)
-            _owner.moveDir = climbDir + Vector3.up + (_owner.transform.rotation * Vector3.forward) * _owner.forwardVelocity;
+            _owner.moveDir.y = climbDir.y + 1;
+        //_owner.stateMoveDir = climbDir + Vector3.up + (_owner.transform.rotation * Vector3.forward) * _owner.forwardVelocity;
         else
         {
             Debug.Log("stop climbing");

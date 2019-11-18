@@ -1,21 +1,20 @@
 ﻿using UnityEngine;
-using XInputDotNetPure; // Required in C#
+using XInputDotNetPure;
 
 public class VirtualController : MonoBehaviour
 {
-    bool playerIndexSet = false;
     public PlayerIndex playerIndex;
-    GamePadState state;
-    GamePadState prevState;
+    private bool playerIndexSet = false;
+    private GamePadState state;
+    private GamePadState prevState;
+    [SerializeField] private GameObject controllerUI;
 
-    public GameObject controllerUI;
-
-
+    #region Check if controller is connected
     private void FixedUpdate()
     {
         // SetVibration should be sent in a slower rate.
         // Set vibration according to triggers
-        GamePad.SetVibration(playerIndex, state.Triggers.Left, state.Triggers.Right);
+        // GamePad.SetVibration(playerIndex, state.Triggers.Left, state.Triggers.Right);
     }
 
     // Update is called once per frame
@@ -45,15 +44,26 @@ public class VirtualController : MonoBehaviour
         prevState = state;
         state = GamePad.GetState(playerIndex);
     }
+    #endregion
 
+    #region buttons
     public bool JumpButtonPressed
     {
         get
         {
-            return prevState.Buttons.A != ButtonState.Pressed && state.Buttons.A == ButtonState.Pressed;// && cc.isGrounded;
+            return prevState.Buttons.A != ButtonState.Pressed && state.Buttons.A == ButtonState.Pressed;
         }
     }
+    public bool ClimbButtonPressed
+    {
+        get
+        {
+            return state.Triggers.Right > 0;
+        }
+    }
+    #endregion
 
+    #region analogstick-left
     public float HorizontalMovement
     {
         get
@@ -62,14 +72,6 @@ public class VirtualController : MonoBehaviour
         }
     }
 
-    public bool ClimbButtonPressed
-    {
-        get
-        {
-            //Debug.Log(state.Triggers.Right > 0);
-            return state.Triggers.Right > 0;
-        }
-    }
     public float VerticalMovement
     {
         get
@@ -77,11 +79,14 @@ public class VirtualController : MonoBehaviour
             return state.ThumbSticks.Left.Y;
         }
     }
+    #endregion
+
+    #region  analogstick-right
     public float VerticalLook
     {
         get
         {
-            return state.ThumbSticks.Right.Y;
+            return -state.ThumbSticks.Right.Y;
         }
     }
     public float HorizontalLook
@@ -91,4 +96,5 @@ public class VirtualController : MonoBehaviour
             return state.ThumbSticks.Right.X;
         }
     }
+    #endregion
 }

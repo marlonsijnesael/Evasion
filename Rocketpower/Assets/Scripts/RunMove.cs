@@ -3,7 +3,7 @@
 [CreateAssetMenu(menuName = "run")]
 public class RunMove : Move
 {
-    public AnimContrller.AnimationStates animation;
+    public AnimationManager.AnimationStates animation;
 
     public override void EnterState(StateMachine _owner)
     {
