@@ -67,13 +67,16 @@ public class StateMachine : MonoBehaviour
         accelRatePerSec = maxSpeed / timeZeroToMax;
         decelRatePerSec = -maxSpeed / timeMaxToZero;
 
-        gravity = -(2 * jumpHeight) / Mathf.Pow(timeToJumpApex, 2);
-        jumpVelocity = Mathf.Abs(gravity) * timeToJumpApex;
+
         print("gravity: " + gravity + " jump vel: " + jumpVelocity);
     }
 
     private void FixedUpdate()
     {
+        //Put it back to Awake
+        gravity = -(2 * jumpHeight) / Mathf.Pow(timeToJumpApex, 2);
+        jumpVelocity = Mathf.Abs(gravity) * timeToJumpApex;
+
         CheckGrounded();
         SetInitVel();
 
@@ -216,7 +219,8 @@ public class StateMachine : MonoBehaviour
             isGrounded = false;
             moveDir.y = jumpVelocity;
             if (virtualController.VerticalMovement != 0)
-                stateMoveDir.z *= forwardJumpMultiplier;
+                stateMoveDir += transform.forward * forwardJumpMultiplier;
+            
         }
     }
 
