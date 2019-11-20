@@ -7,33 +7,17 @@ public class CameraFollow : MonoBehaviour
     //Determines the limitations of vertical camera movement
     private const float Y_ANGLE_MIN = 0f;
     private const float Y_ANGLE_MAX = 40.0f;
-
     public Transform character; //What the camera is looking at..the main character
     public Transform lookAt;
-
     public float distanceZ = -5.0f; // Distance to stay from character, Make sure it is negative
     public float distanceY = 0f;
     private float currentX = 0.0f; // Holds value of X mouse movement
     private float currentY = 0.0f; // Holds value of Y mouse movement
     public float sensitivity;
-
     private VirtualController virtualController;
     private void Awake()
     {
         virtualController = character.GetComponent<VirtualController>();
-    }
-
-    private void FixedUpdate()
-    {
-        /*float hLook = virtualController.HorizontalLook;
-        float vLook = virtualController.VerticalLook;
-        if (Mathf.Abs(hLook) > 0.05f || Mathf.Abs(vLook) > 0.05f)
-        {
-            currentX += sensitivity * hLook;
-            currentY += sensitivity * vLook;
-        }
-
-        currentY = Mathf.Clamp(currentY, Y_ANGLE_MIN, Y_ANGLE_MAX);*/
     }
 
     private void LateUpdate()
