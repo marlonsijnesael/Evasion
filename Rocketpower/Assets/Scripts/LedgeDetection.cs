@@ -16,28 +16,93 @@ public class LedgeDetection : MonoBehaviour
         maxHeight = cc.height + heightAboveHead;
     }
 
-    public Ledge CheckLedge()
+    private void Update()
     {
+        maxHeight = cc.height + heightAboveHead;
         origin = transform.position;
         origin.y += maxHeight;
         dir = transform.forward;
-        dir.z /= 2;
-        RaycastHit spherehit;
+        dir.z *= 2;
+        RaycastHit spherehit, forwardHit;
 
-        // first check if the player won't hit anything above its head
-        if (!Physics.SphereCast(origin, sphereRadius, transform.up, out spherehit))
+        //FORWARD FROM PLAYER
+        if (Physics.Linecast(transform.position + Vector3.up, transform.position + transform.forward + Vector3.up, out forwardHit))
         {
-            // check if the top of the ledge is within reach
+
+            Debug.DrawLine(transform.position + Vector3.up, transform.position + transform.forward + Vector3.up, Color.red);
+            // if (!Physics.SphereCast(origin, sphereRadius, transform.up, out spherehit))
+            // {
+
+            // DOWN TO LEDGE
             if (!Physics.Raycast(origin + dir, Vector3.down, out ledgeHit, maxDist))
+            {
                 Debug.DrawRay(origin + dir, Vector3.down * maxDist, Color.green);
+            }
+
             else
             {
-                return new Ledge(ledgeHit.point, transform.position, false);
+                Debug.DrawRay(origin + dir, Vector3.down * maxDist, Color.red);
+                //UP TO SKY
+                Debug.DrawLine(transform.position + Vector3.up, transform.position + Vector3.up * 2.5f, Color.red);
+                if (Physics.Linecast(transform.position + Vector3.up, transform.position + transform.forward + Vector3.up))
+                {
+
+                }
+                else
+                {
+                    //return new Ledge(ledgeHit.point, transform.position, false);
+                }
             }
         }
+    }
+    //forward
+    //down on ledge#
+    //up to sky
+
+    public Ledge CheckLedge()
+    {
+        maxHeight = cc.height + heightAboveHead;
+        origin = transform.position;
+        origin.y += maxHeight;
+        dir = transform.forward;
+        dir.z *= 2;
+        RaycastHit spherehit, forwardHit;
+
+        //FORWARD FROM PLAYER
+        if (Physics.Linecast(transform.position + Vector3.up, transform.position + transform.forward + Vector3.up, out forwardHit))
+        {
+
+            Debug.DrawLine(transform.position + Vector3.up, transform.position + transform.forward + Vector3.up, Color.red);
+            // if (!Physics.SphereCast(origin, sphereRadius, transform.up, out spherehit))
+            // {
+
+            // DOWN TO LEDGE
+            if (!Physics.Raycast(origin + dir, Vector3.down, out ledgeHit, maxDist))
+            {
+                Debug.DrawRay(origin + dir, Vector3.down * maxDist, Color.green);
+            }
+
+            else
+            {
+                Debug.DrawRay(origin + dir, Vector3.down * maxDist, Color.red);
+                //UP TO SKY
+                Debug.DrawLine(transform.position + Vector3.up, transform.position + Vector3.up * 2.5f, Color.red);
+                if (Physics.Linecast(transform.position + Vector3.up, transform.position + Vector3.up))
+                {
+
+                }
+                else
+                {
+                    return new Ledge(ledgeHit.point, transform.position, false);
+                }
+            }
+        }
+        else
+            Debug.DrawLine(transform.position + Vector3.up, transform.position + transform.forward + Vector3.up, Color.green);
         return new Ledge(Vector3.zero, Vector3.zero, true);
     }
 }
+
 
 // Holds information about the ledge, if one is detected
 [System.Serializable]

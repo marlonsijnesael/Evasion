@@ -52,7 +52,8 @@ public class StateMachine : MonoBehaviour
     [Header("gravity and jump Settings: ")]
     [SerializeField] private float jumpHeight = 4;
     [SerializeField] public float timeToJumpApex = .4f;
-    private float gravity = 14.0f;
+    public float gravity = 14.0f;
+    public float normalGravity = 0f;
     private float jumpVelocity;
     [SerializeField] private float forwardJumpMultiplier = 5;
     private bool isGrounded;
@@ -67,15 +68,14 @@ public class StateMachine : MonoBehaviour
         accelRatePerSec = maxSpeed / timeZeroToMax;
         decelRatePerSec = -maxSpeed / timeMaxToZero;
 
-
+        gravity = -(2 * jumpHeight) / Mathf.Pow(timeToJumpApex, 2);
+        jumpVelocity = Mathf.Abs(gravity) * timeToJumpApex;
+        normalGravity = gravity;
         print("gravity: " + gravity + " jump vel: " + jumpVelocity);
     }
 
     private void FixedUpdate()
     {
-        //Put it back to Awake
-        gravity = -(2 * jumpHeight) / Mathf.Pow(timeToJumpApex, 2);
-        jumpVelocity = Mathf.Abs(gravity) * timeToJumpApex;
 
         CheckGrounded();
         SetInitVel();
@@ -181,12 +181,9 @@ public class StateMachine : MonoBehaviour
 
     public void MovePlayer()
     {
-        if (!cc.isGrounded)
+        if (!cc.isGrounded && playerState != State.CLIMB)  //|| playerState == State.WALLRUN_RIGHT || playerState == State.WALLRUN_LEFT)
             moveDir.y += gravity * Time.deltaTime;
-        else
-        {
-            moveDir.y = 0;
-        }
+
         Jump();
         moveDir.x = stateMoveDir.x;
         moveDir.z = stateMoveDir.z;
@@ -220,7 +217,6 @@ public class StateMachine : MonoBehaviour
             moveDir.y = jumpVelocity;
             if (virtualController.VerticalMovement != 0)
                 stateMoveDir += transform.forward * forwardJumpMultiplier;
-            
         }
     }
 

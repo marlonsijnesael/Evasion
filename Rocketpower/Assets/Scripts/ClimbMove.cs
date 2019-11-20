@@ -16,7 +16,11 @@ public class ClimbMove : Move
 
     public override void Act(StateMachine _owner)
     {
-        _owner.SetInitVel();
+        if (Physics.Linecast(_owner.transform.position + Vector3.up, _owner.transform.position + Vector3.up))
+        {
+            _owner.SwitchStates(StateMachine.State.AIRBORNE, _owner.airborneMove);
+        }
+        //owner.SetInitVel();
         Move(_owner);
     }
 
@@ -32,8 +36,12 @@ public class ClimbMove : Move
         Vector3 climbDir = _owner.ledge.hitPosition - _owner.ledge.playerPosition;
 
         if (_owner.transform.position.y < yPosOrigin.y)
+        {
+            Debug.Log("climbig");
             _owner.moveDir.y = climbDir.y + 1;
-        //_owner.stateMoveDir = climbDir + Vector3.up + (_owner.transform.rotation * Vector3.forward) * _owner.forwardVelocity;
+            //_owner.stateMoveDir = climbDir + Vector3.up + (_owner.transform.rotation * Vector3.forward) * _owner.forwardVelocity;
+        }
+
         else
         {
             Debug.Log("stop climbing");
