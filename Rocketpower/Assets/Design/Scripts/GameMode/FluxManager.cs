@@ -9,12 +9,8 @@ public class FluxManager : MonoBehaviour
     
 	public Color player1color;
 	public Color player2color;
-	
-	[HideInInspector]
-	public PlayerFlux player1;
-	[HideInInspector]
-    public PlayerFlux player2;
-	[HideInInspector]
+	[HideInInspector] public PlayerFlux player1;
+    [HideInInspector] public PlayerFlux player2;
     public PlayerFlux fluxPlayer;
 
     private int player1score;
@@ -22,28 +18,29 @@ public class FluxManager : MonoBehaviour
 
     public Text textP1;
     public Text textP2;
+    public Text textFluxPlayer;
+    public GameObject canvas;
 
     GameObject[] platformArray;
-
-    List<GameObject> platformList;
 
     private void Awake()
     {
         platformArray = GameObject.FindGameObjectsWithTag("ColorPlatform");
+        canvas.gameObject.SetActive(true);
+
     }
 
     private void Update() {
         if (Input.GetKeyDown(KeyCode.Alpha1)) {
             fluxPlayer = player1;
+            textFluxPlayer.text = "Flux: " + fluxPlayer.ToString();
         }
 
         if(Input.GetKeyDown(KeyCode.Alpha2)){
             fluxPlayer = player2;
+            textFluxPlayer.text = "Flux: " + fluxPlayer.ToString();
         }
 
-        if(Input.GetKeyDown(KeyCode.Q)){
-            updateScore();
-        }
     }
 
     public void updateScore() {

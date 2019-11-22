@@ -24,17 +24,20 @@ public class PlayerFlux : MonoBehaviour
 		}
 	}
 	
+	private void Update(){
+		Debug.Log(this);
+	}
 	
     private void OnTriggerEnter(Collider other) {
 		//on grabbing the flux, set fluxplayer to this player
         if (other.gameObject.CompareTag("Flux")) {
             gm.fluxPlayer = this;
+			gm.textFluxPlayer.text = "Flux: " + gm.fluxPlayer.ToString();
             Destroy(other.gameObject);
         }
 		
 		//on stepping on platform while holding flux, claim it
         if (other.gameObject.CompareTag("ColorPlatform") && gm.fluxPlayer == this) {
-			
 			PlatformState platform = other.gameObject.GetComponent<PlatformState>();
 			
 			if ((platform.GetPlayerID() != playerID) && (platform.GetIsChanging() == false)){
