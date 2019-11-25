@@ -10,7 +10,7 @@ public class RotatePlayer : MonoBehaviour
     private float turnSpeed = 100;    //How fast the player can rotate
     public GameObject player;
     public VirtualController virtualController;
-    float prevlookH, prevlookV;
+
     public bool locked = false;
     private void Awake()
     {
@@ -19,8 +19,7 @@ public class RotatePlayer : MonoBehaviour
 
     public void UpdateRotation()
     {
-        if (locked)
-            return;
+
         float hLook = virtualController.HorizontalMovement;
         float vLook = virtualController.VerticalMovement;
 
@@ -35,7 +34,6 @@ public class RotatePlayer : MonoBehaviour
 
             player.transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(dir), turnSpeed * Time.deltaTime);
         }
-        prevlookH = hLook;
-        prevlookV = vLook;
+
     }
 }

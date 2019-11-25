@@ -26,31 +26,23 @@ public class CameraFollow : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (!locked)
+
+        //Rotation around character............/...Keeps distance from character          
+        gameObject.transform.position = character.position + Quaternion.Euler(currentY, currentX, 0) * new Vector3(0, distanceY, distanceZ);
+        gameObject.transform.LookAt(lookAt.position);//Points camera at character
+
+        float hLook = virtualController.HorizontalLook;
+        float vLook = virtualController.VerticalLook;
+        if (Mathf.Abs(hLook) > 0.05f || Mathf.Abs(vLook) > 0.05f)
         {
-            //Rotation around character............/...Keeps distance from character          
-            gameObject.transform.position = character.position + Quaternion.Euler(currentY, currentX, 0) * new Vector3(0, distanceY, distanceZ);
-            gameObject.transform.LookAt(lookAt.position);//Points camera at character
-
-            float hLook = virtualController.HorizontalLook;
-            float vLook = virtualController.VerticalLook;
-            if (Mathf.Abs(hLook) > 0.05f || Mathf.Abs(vLook) > 0.05f)
-            {
-                currentX += sensitivity * hLook;
-                currentY += sensitivity * vLook;
-            }
-
-            currentY = Mathf.Clamp(currentY, Y_ANGLE_MIN, Y_ANGLE_MAX);
+            currentX += sensitivity * hLook;
+            currentY += sensitivity * vLook;
         }
 
-        else
-        {
-            currentX = 0;
-            currentY = 0;
-            gameObject.transform.position = character.position + Quaternion.Euler(currentY, currentX, 0) * new Vector3(0, distanceY, distanceZ);
-            gameObject.transform.LookAt(lookAt.position);//Points camera at character;
-
-        }
+        currentY = Mathf.Clamp(currentY, Y_ANGLE_MIN, Y_ANGLE_MAX);
     }
+
+
+
 
 }
