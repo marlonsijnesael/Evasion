@@ -262,7 +262,7 @@ Material:
     - _ZTestModeDistortion: 8
     - _ZTestTransparent: 4
     - _ZWrite: 1
-    - _t: 0
+    - _t: 20.877254
     m_Colors:
     - Color_CC87952E: {r: 0, g: 0.9908628, b: 1, a: 0.7843137}
     - Vector2_FDE98351: {r: 0, g: 0, b: 0, a: 0}

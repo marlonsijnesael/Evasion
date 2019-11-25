@@ -15,24 +15,42 @@ public class CameraFollow : MonoBehaviour
     private float currentY = 0.0f; // Holds value of Y mouse movement
     public float sensitivity;
     private VirtualController virtualController;
+
+    public bool locked;
+
     private void Awake()
     {
         virtualController = character.GetComponent<VirtualController>();
     }
 
-    private void LateUpdate()
-    {                                                        //Rotation around character............/...Keeps distance from character          
-        gameObject.transform.position = character.position + Quaternion.Euler(currentY, currentX, 0) * new Vector3(0, distanceY, distanceZ);
-        gameObject.transform.LookAt(lookAt.position);//Points camera at character
 
-        float hLook = virtualController.HorizontalLook;
-        float vLook = virtualController.VerticalLook;
-        if (Mathf.Abs(hLook) > 0.05f || Mathf.Abs(vLook) > 0.05f)
+    private void LateUpdate()
+    {
+        if (!locked)
         {
-            currentX += sensitivity * hLook;
-            currentY += sensitivity * vLook;
+            //Rotation around character............/...Keeps distance from character          
+            gameObject.transform.position = character.position + Quaternion.Euler(currentY, currentX, 0) * new Vector3(0, distanceY, distanceZ);
+            gameObject.transform.LookAt(lookAt.position);//Points camera at character
+
+            float hLook = virtualController.HorizontalLook;
+            float vLook = virtualController.VerticalLook;
+            if (Mathf.Abs(hLook) > 0.05f || Mathf.Abs(vLook) > 0.05f)
+            {
+                currentX += sensitivity * hLook;
+                currentY += sensitivity * vLook;
+            }
+
+            currentY = Mathf.Clamp(currentY, Y_ANGLE_MIN, Y_ANGLE_MAX);
         }
 
-        currentY = Mathf.Clamp(currentY, Y_ANGLE_MIN, Y_ANGLE_MAX);
+        else
+        {
+            currentX = 0;
+            currentY = 0;
+            gameObject.transform.position = character.position + Quaternion.Euler(currentY, currentX, 0) * new Vector3(0, distanceY, distanceZ);
+            gameObject.transform.LookAt(lookAt.position);//Points camera at character;
+
+        }
     }
+
 }

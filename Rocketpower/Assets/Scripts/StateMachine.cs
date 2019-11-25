@@ -58,6 +58,8 @@ public class StateMachine : MonoBehaviour
     [SerializeField] private float forwardJumpMultiplier = 5;
     private bool isGrounded;
     public Ledge ledge;
+    public CameraFollow cameraScript;
+    public RotatePlayer playerScript;
     #endregion
 
     private void Awake()
@@ -216,10 +218,21 @@ public class StateMachine : MonoBehaviour
             isGrounded = false;
             moveDir.y = jumpVelocity;
             if (virtualController.VerticalMovement != 0)
-                stateMoveDir += transform.forward * forwardJumpMultiplier;
+                stateMoveDir += transform.forward * (forwardJumpMultiplier * 1 - GetAngle());
+
         }
     }
 
+    private float GetAngle()
+    {
+        RaycastHit hitA;
+        if (Physics.Raycast(transform.position + transform.forward, -transform.up, out hitA))
+        {
+            print((Mathf.Atan2(transform.position.y, transform.position.x) * Mathf.Rad2Deg));
+
+        }
+        return Mathf.Atan2(transform.position.y, transform.position.x) * Mathf.Rad2Deg;
+    }
     /// <summary>
     /// Checks for collision with ground underneath player
     /// if ground is not detected, switch to idle state
@@ -267,7 +280,8 @@ public class StateMachine : MonoBehaviour
     public void LeftRightCollisionsTest()
     {
         RaycastHit hit;
-        if (Physics.Raycast(transform.position + Vector3.up, transform.right, out hit, 1 + cc.skinWidth))
+
+        if (Physics.Raycast(transform.position + Vector3.up, transform.right, out hit, 1 + cc.skinWidth) && virtualController.WallrunButtonPressed)
         {
             float dot = Vector3.Dot(hit.normal, Vector3.up);
             if (dot == 0)
@@ -279,7 +293,7 @@ public class StateMachine : MonoBehaviour
             }
         }
 
-        else if (Physics.Raycast(transform.position + Vector3.up, -transform.right, out hit, 1 + cc.skinWidth))
+        else if (Physics.Raycast(transform.position + Vector3.up, -transform.right, out hit, 1 + cc.skinWidth) && virtualController.WallrunButtonPressed)
         {
             if (Vector3.Dot(hit.normal, Vector3.up) == 0)
             {

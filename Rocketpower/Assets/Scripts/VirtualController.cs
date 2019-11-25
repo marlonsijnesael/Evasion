@@ -12,6 +12,7 @@ public class VirtualController : MonoBehaviour
     #region Check if controller is connected
     private void FixedUpdate()
     {
+
         // SetVibration should be sent in a slower rate.
         // Set vibration according to triggers
         // GamePad.SetVibration(playerIndex, state.Triggers.Left, state.Triggers.Right);
@@ -47,18 +48,28 @@ public class VirtualController : MonoBehaviour
     #endregion
 
     #region buttons
+
+    public bool WallrunButtonPressed
+    {
+        get
+        {
+            return state.Triggers.Left > 0;
+
+        }
+    }
     public bool JumpButtonPressed
     {
         get
         {
-            return prevState.Buttons.A != ButtonState.Pressed && state.Buttons.A == ButtonState.Pressed;
+            // return prevState.Buttons.A != ButtonState.Pressed && state.Buttons.A == ButtonState.Pressed;
+            return prevState.Triggers.Right == 0 && state.Triggers.Right > 0;
         }
     }
     public bool ClimbButtonPressed
     {
         get
         {
-            return state.Triggers.Right > 0;
+            return prevState.Buttons.A != ButtonState.Pressed && state.Buttons.A == ButtonState.Pressed;
         }
     }
     #endregion

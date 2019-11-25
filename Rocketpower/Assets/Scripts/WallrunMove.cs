@@ -7,6 +7,8 @@ public class WallrunMove : Move
 
     public override void EnterState(StateMachine _owner)
     {
+        _owner.cameraScript.locked = true;
+        _owner.playerScript.locked = true;
         _owner.moveDir.y = 0f;
         _owner.gravity *= 1.7f;
         _owner.animationController.SetBool(_owner.animator, animation.ToString(), true);
@@ -21,6 +23,8 @@ public class WallrunMove : Move
 
     public override void ExitState(StateMachine _owner)
     {
+        _owner.cameraScript.locked = false;
+        _owner.playerScript.locked = false;
         _owner.gravity = _owner.normalGravity;
         _owner.animationController.SetBool(_owner.animator, animation.ToString(), false);
         _owner.wallrunDir = Vector3.zero;
