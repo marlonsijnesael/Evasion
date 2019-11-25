@@ -5,8 +5,8 @@ using UnityEngine;
 public class CameraFollow : MonoBehaviour
 {
     //Determines the limitations of vertical camera movement
-    private const float Y_ANGLE_MIN = 0f;
-    private const float Y_ANGLE_MAX = 40.0f;
+    private const float Y_ANGLE_MIN = -15f;
+    private const float Y_ANGLE_MAX = 50.0f;
     public Transform character; //What the camera is looking at..the main character
     public Transform lookAt;
     public float distanceZ = -5.0f; // Distance to stay from character, Make sure it is negative

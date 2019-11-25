@@ -225,12 +225,6 @@ public class StateMachine : MonoBehaviour
 
     private float GetAngle()
     {
-        RaycastHit hitA;
-        if (Physics.Raycast(transform.position + transform.forward, -transform.up, out hitA))
-        {
-            print((Mathf.Atan2(transform.position.y, transform.position.x) * Mathf.Rad2Deg));
-
-        }
         return Mathf.Atan2(transform.position.y, transform.position.x) * Mathf.Rad2Deg;
     }
     /// <summary>
