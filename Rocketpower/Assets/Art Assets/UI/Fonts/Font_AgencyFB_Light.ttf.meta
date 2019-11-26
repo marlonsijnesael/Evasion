@@ -1,0 +1,34 @@
+fileFormatVersion: 2
+guid: b069204953893bd48bd84d6b4077fc3b
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: AgencyFB
+  fontNames:
+  - Agency FB Light
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 7208d26054c4c26469776e8adea1a315, type: 3}
+  - {fileID: 12800000, guid: c9efb681258afd2429452ab8182a2aff, type: 3}
+  - {fileID: 12800000, guid: ea0f03e1d1059974988b48271c79f8c0, type: 3}
+  - {fileID: 12800000, guid: 1f839c736a83a9640bd7116ba92aeb87, type: 3}
+  - {fileID: 12800000, guid: d03ec654d6ddd0044b83f7f419c2d68e, type: 3}
+  - {fileID: 12800000, guid: 71745b171461c664c956ece74e66d9ac, type: 3}
+  - {fileID: 12800000, guid: 7c8fc4ea412ed4046980c30457e5cc66, type: 3}
+  - {fileID: 12800000, guid: 910d27eb959e6ce45bd5fa67f64447a3, type: 3}
+  - {fileID: 12800000, guid: 100070fc972a97043810056a08ffc0e5, type: 3}
+  - {fileID: 12800000, guid: 9a3aa03d0ce82d346b0eac75a1c671f4, type: 3}
+  - {fileID: 12800000, guid: 9bb8ba1eb944eca4a96395734e353bee, type: 3}
+  - {fileID: 12800000, guid: 69ed59ae1cfb5dc4581031fb7228e171, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
