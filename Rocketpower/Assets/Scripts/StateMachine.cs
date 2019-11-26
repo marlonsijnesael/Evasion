@@ -73,7 +73,7 @@ public class StateMachine : MonoBehaviour
         gravity = -(2 * jumpHeight) / Mathf.Pow(timeToJumpApex, 2);
         jumpVelocity = Mathf.Abs(gravity) * timeToJumpApex;
         normalGravity = gravity;
-        print("gravity: " + gravity + " jump vel: " + jumpVelocity);
+        //print("gravity: " + gravity + " jump vel: " + jumpVelocity);
     }
 
     private void FixedUpdate()

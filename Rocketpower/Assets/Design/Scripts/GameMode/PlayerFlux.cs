@@ -9,6 +9,7 @@ public class PlayerFlux : MonoBehaviour
 	
 	private int playerID = 0;
 	private Color playerColor;
+	public bool isFluxPlayerColliderOnCD = true;
 	
 	//set player ID based on tag
 	private void Awake(){
@@ -25,7 +26,7 @@ public class PlayerFlux : MonoBehaviour
 	}
 	
 	private void Update(){
-		Debug.Log(this);
+		//Debug.Log(isFluxPlayerColliderOnCD);
 	}
 	
     private void OnTriggerEnter(Collider other) {
@@ -44,8 +45,30 @@ public class PlayerFlux : MonoBehaviour
 				platform.ChangeColorTo(playerID, playerColor);
 				gm.updateScore();
 			}
-            
         }
+
+		if (other.gameObject.CompareTag("FluxCollider" ) /*&& gm.fluxPlayer == other.gameObject.transform.parent && isFluxPlayerColliderOnCD*/){
+			if(other.gameObject.transform.parent == gm.fluxPlayer){
+				Debug.Log("Transform = Parent");
+			}
+
+			if(gm.fluxPlayer == other.gameObject){
+				Debug.Log("Transform = Parent");
+			}
+			//Debug.Log(other.gameObject.transform.parent);
+			Debug.Log(other.gameObject.transform.parent);
+			Debug.Log("Flux Collided");
+			gm.fluxPlayer = this;
+			gm.textFluxPlayer.text = "Flux: " + gm.fluxPlayer.ToString();
+			//StartCoroutine("FluxColliderSeconds");
+		}
     }
+
+	IEnumerator FluxColliderSeconds(){
+		Debug.Log("Coroutine Running");
+		isFluxPlayerColliderOnCD = false;
+		yield return new WaitForSeconds(3);
+		isFluxPlayerColliderOnCD = true;
+	}
 
 }
