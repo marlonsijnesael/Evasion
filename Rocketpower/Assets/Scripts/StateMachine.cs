@@ -60,6 +60,8 @@ public class StateMachine : MonoBehaviour
     public Ledge ledge;
     public CameraFollow cameraScript;
     public RotatePlayer playerScript;
+
+    public State prevState;
     #endregion
 
     private void Awake()
@@ -91,6 +93,10 @@ public class StateMachine : MonoBehaviour
             {
                 SwitchStates(State.RUN, runMove);
             }
+        }
+        else if (virtualController.VerticalMovement == 0 && virtualController.HorizontalMovement == 0)
+        {
+            SwitchStates(State.IDLE, idleMove);
         }
 
         if (Input.GetKey(KeyCode.Z))
@@ -165,6 +171,7 @@ public class StateMachine : MonoBehaviour
     {
         if (ValidateStateChange(nextState, nextMove))
         {
+            prevState = playerState;
             currentMove.ExitState(this);
             currentMove = nextMove;
             currentMove.EnterState(this);
@@ -284,7 +291,7 @@ public class StateMachine : MonoBehaviour
         if (Physics.Raycast(transform.position + Vector3.up, transform.right, out hit, 1 + cc.skinWidth) && virtualController.WallrunButtonPressed)
         {
             float dot = Vector3.Dot(hit.normal, Vector3.up);
-            if (dot == 0)
+            if (dot > -0.7f && dot < 0.7f)
             {
                 wallrunDir = Vector3.Cross(hit.normal, Vector3.up);
                 Debug.DrawRay(hit.point, wallrunDir, Color.red, 10f);
@@ -295,7 +302,8 @@ public class StateMachine : MonoBehaviour
 
         else if (Physics.Raycast(transform.position + Vector3.up, -transform.right, out hit, 1 + cc.skinWidth) && virtualController.WallrunButtonPressed)
         {
-            if (Vector3.Dot(hit.normal, Vector3.up) == 0)
+            float dot = Vector3.Dot(hit.normal, Vector3.up);
+            if (dot > -0.7f && dot < 0.7f)
             {
                 wallrunDir = Vector3.Cross(hit.transform.up, hit.normal);
                 Debug.DrawRay(hit.point, wallrunDir, Color.red, 10f);
@@ -305,10 +313,13 @@ public class StateMachine : MonoBehaviour
         }
         else
         {
-            SwitchStates(State.RUN, runMove);
-            wallrunDir = Vector3.zero;
-            isWallrun_Right = false;
-            isWallrun_Left = false;
+            if (playerState == State.WALLRUN_LEFT || playerState == State.WALLRUN_RIGHT)
+            {
+                SwitchStates(State.RUN, runMove);
+                wallrunDir = Vector3.zero;
+                isWallrun_Right = false;
+                isWallrun_Left = false;
+            }
         }
     }
 }

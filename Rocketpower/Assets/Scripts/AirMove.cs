@@ -12,7 +12,6 @@ public class AirMove : Move
 
     public override void Act(StateMachine _owner)
     {
-        _owner.playerRotator.UpdateRotation();
         _owner.LeftRightCollisionsTest();
         _owner.FrontCollisionTest();
         Move(_owner);

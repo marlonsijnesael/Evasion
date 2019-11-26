@@ -197,7 +197,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff8da9c117f6833468861c9e61c64317, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cam: {fileID: 0}
   player: {fileID: 0}
+  virtualController: {fileID: 0}
+  locked: 0
 --- !u!114 &7444637145419070361
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -211,4 +214,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   character: {fileID: 0}
+  lookAt: {fileID: 0}
+  distanceZ: -5
+  distanceY: 0
   sensitivity: 0
+  locked: 0
