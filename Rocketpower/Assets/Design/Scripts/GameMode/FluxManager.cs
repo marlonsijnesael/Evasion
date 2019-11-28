@@ -11,23 +11,28 @@ public class FluxManager : MonoBehaviour
 	public Color player2color;
 	[HideInInspector] public PlayerFlux player1;
     [HideInInspector] public PlayerFlux player2;
+    public int fluxCaptureTime;
     public PlayerFlux fluxPlayer;
-
     private int player1score;
     private int player2score;
 
     public Text textP1;
     public Text textP2;
     public Text textFluxPlayer;
+    public Slider sliderCaptureTime;
+    public Image sliderFillImage;
+    public GameObject sliderCaptureObject;
     public GameObject canvas;
 
     GameObject[] platformArray;
+
+    public bool isFluxPlayerColliderOnCD;
 
     private void Awake()
     {
         platformArray = GameObject.FindGameObjectsWithTag("ColorPlatform");
         canvas.gameObject.SetActive(true);
-
+        sliderCaptureTime.maxValue = fluxCaptureTime;
     }
 
     private void Update() {
@@ -41,6 +46,12 @@ public class FluxManager : MonoBehaviour
             textFluxPlayer.text = "Flux: " + fluxPlayer.ToString();
         }
 
+        if(fluxPlayer == player1){
+            sliderFillImage.color = player2color;
+        }
+        if(fluxPlayer == player2){
+            sliderFillImage.color = player1color;
+        }
     }
 
     public void updateScore() {
@@ -56,18 +67,15 @@ public class FluxManager : MonoBehaviour
 				player2score++;
 			}
 		}
-		
         textP1.text = player1score.ToString();
         textP2.text = player2score.ToString();
     }
 
-    private void switchColor(){
-        if(fluxPlayer == player1){
-            fluxPlayer = player2;
-
-        }
-        else {
-            fluxPlayer = player1;
-        }
-    }
+    IEnumerator FluxColliderSeconds(){
+		Debug.Log("Coroutine Start");
+        isFluxPlayerColliderOnCD = true;
+		yield return new WaitForSeconds(1.5f);
+        isFluxPlayerColliderOnCD = false;
+		Debug.Log("Coroutine Finish");
+	}
 }

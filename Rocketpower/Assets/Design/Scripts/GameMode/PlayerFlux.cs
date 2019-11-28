@@ -9,7 +9,9 @@ public class PlayerFlux : MonoBehaviour
 	
 	private int playerID = 0;
 	private Color playerColor;
-	public bool isFluxPlayerColliderOnCD = true;
+
+	public float currFluxCaptureTime;
+	private bool isFluxCaptured;
 	
 	//set player ID based on tag
 	private void Awake(){
@@ -46,29 +48,50 @@ public class PlayerFlux : MonoBehaviour
 				gm.updateScore();
 			}
         }
-
-		if (other.gameObject.CompareTag("FluxCollider" ) /*&& gm.fluxPlayer == other.gameObject.transform.parent && isFluxPlayerColliderOnCD*/){
-			if(other.gameObject.transform.parent == gm.fluxPlayer){
-				Debug.Log("Transform = Parent");
+		
+		//single collision flux transfer + starting cooldown
+		/*if (other.gameObject.CompareTag("FluxCollider" )){
+			if(gm.fluxPlayer == other.gameObject.transform.parent.GetComponent<PlayerFlux>() && !gm.isFluxPlayerColliderOnCD){
+				Debug.Log("Parent Collision");
+				gm.fluxPlayer = this;
+				gm.textFluxPlayer.text = "Flux: " + gm.fluxPlayer.ToString();
+				gm.StartCoroutine("FluxColliderSeconds");
 			}
-
-			if(gm.fluxPlayer == other.gameObject){
-				Debug.Log("Transform = Parent");
+			else{
+				return;
 			}
-			//Debug.Log(other.gameObject.transform.parent);
-			Debug.Log(other.gameObject.transform.parent);
-			Debug.Log("Flux Collided");
-			gm.fluxPlayer = this;
-			gm.textFluxPlayer.text = "Flux: " + gm.fluxPlayer.ToString();
-			//StartCoroutine("FluxColliderSeconds");
-		}
+		}*/
     }
 
-	IEnumerator FluxColliderSeconds(){
-		Debug.Log("Coroutine Running");
-		isFluxPlayerColliderOnCD = false;
-		yield return new WaitForSeconds(3);
-		isFluxPlayerColliderOnCD = true;
+	private void OnTriggerStay(Collider other){
+		//Flux transfer over time + cooldown
+		if (other.gameObject.CompareTag("FluxCollider" )){
+			if(gm.fluxPlayer == other.gameObject.transform.parent.GetComponent<PlayerFlux>() && gm.fluxPlayer != this.gameObject.transform.GetComponent<PlayerFlux>() && !gm.isFluxPlayerColliderOnCD){
+				gm.sliderCaptureObject.SetActive(true);
+				currFluxCaptureTime += Time.deltaTime;
+				gm.sliderCaptureTime.value = currFluxCaptureTime;			
+				if(currFluxCaptureTime > gm.fluxCaptureTime){
+					isFluxCaptured = true;
+					if(isFluxCaptured){
+						gm.fluxPlayer = this;
+						gm.textFluxPlayer.text = "Flux: " + gm.fluxPlayer.ToString();
+						gm.StartCoroutine("FluxColliderSeconds");
+						isFluxCaptured = false;
+						currFluxCaptureTime = 0;
+						gm.sliderCaptureObject.SetActive(false);
+					}
+				}
+			}
+			else{
+				return;
+			}
+		}
+	}
+
+	private void OnTriggerExit(Collider other){
+		currFluxCaptureTime = 0;
+		gm.sliderCaptureTime.value = 0;
+		gm.sliderCaptureObject.SetActive(false);
 	}
 
 }
