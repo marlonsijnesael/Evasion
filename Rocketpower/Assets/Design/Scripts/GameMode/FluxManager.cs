@@ -37,22 +37,30 @@ public class FluxManager : MonoBehaviour
 
     private void Update() {
         if (Input.GetKeyDown(KeyCode.Alpha1)) {
-            fluxPlayer = player1;
-            textFluxPlayer.text = "Flux: " + fluxPlayer.ToString();
+			ChangeFluxplayer(player1);
         }
 
         if(Input.GetKeyDown(KeyCode.Alpha2)){
-            fluxPlayer = player2;
-            textFluxPlayer.text = "Flux: " + fluxPlayer.ToString();
+			ChangeFluxplayer(player2);
         }
-
-        if(fluxPlayer == player1){
+    }
+	
+	public void ChangeFluxplayer(PlayerFlux newFluxPlayer){
+		if (fluxPlayer){
+			fluxPlayer.TurnFlux(false); //turn off flux for previous flux player, if any
+		}
+		fluxPlayer = newFluxPlayer;
+		fluxPlayer.TurnFlux(true); //turn on flux for new flux player
+		textFluxPlayer.text = "Flux: " + fluxPlayer.ToString();
+		
+		if(fluxPlayer == player1){
             sliderFillImage.color = player2color;
         }
         if(fluxPlayer == player2){
             sliderFillImage.color = player1color;
         }
-    }
+		textFluxPlayer.text = "Flux: " + fluxPlayer.ToString();
+	}
 
     public void updateScore() {
         player1score=0;

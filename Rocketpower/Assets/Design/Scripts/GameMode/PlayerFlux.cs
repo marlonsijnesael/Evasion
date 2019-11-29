@@ -5,13 +5,18 @@ using UnityEngine.UI;
 
 public class PlayerFlux : MonoBehaviour
 {
-    public FluxManager gm;
+    [Header("GameMode")]
+	public FluxManager gm;
+	
+	[Header("Changing Material")]
+	[Tooltip("please put the transform containing all mesh parts of the character here")]public Transform meshParent;
+	public int transitionTime;
 	
 	private int playerID = 0;
 	private Color playerColor;
-
-	public float currFluxCaptureTime;
-	private bool isFluxCaptured;
+	private float currFluxCaptureTime;
+	
+	private List<Material> materialList = new List<Material>();
 	
 	//set player ID based on tag
 	private void Awake(){
@@ -25,6 +30,10 @@ public class PlayerFlux : MonoBehaviour
 			gm.player2 = this;
 			playerColor = gm.player2color;
 		}
+		
+		foreach (Transform part in meshParent){
+			materialList.Add(part.GetComponent<Renderer>().material);
+		}
 	}
 	
 	private void Update(){
@@ -34,8 +43,9 @@ public class PlayerFlux : MonoBehaviour
     private void OnTriggerEnter(Collider other) {
 		//on grabbing the flux, set fluxplayer to this player
         if (other.gameObject.CompareTag("Flux")) {
-            gm.fluxPlayer = this;
-			gm.textFluxPlayer.text = "Flux: " + gm.fluxPlayer.ToString();
+			gm.ChangeFluxplayer(this);
+            //gm.fluxPlayer = this;
+			//gm.textFluxPlayer.text = "Flux: " + gm.fluxPlayer.ToString();
             Destroy(other.gameObject);
         }
 		
@@ -71,15 +81,13 @@ public class PlayerFlux : MonoBehaviour
 				currFluxCaptureTime += Time.deltaTime;
 				gm.sliderCaptureTime.value = currFluxCaptureTime;			
 				if(currFluxCaptureTime > gm.fluxCaptureTime){
-					isFluxCaptured = true;
-					if(isFluxCaptured){
-						gm.fluxPlayer = this;
-						gm.textFluxPlayer.text = "Flux: " + gm.fluxPlayer.ToString();
-						gm.StartCoroutine("FluxColliderSeconds");
-						isFluxCaptured = false;
-						currFluxCaptureTime = 0;
-						gm.sliderCaptureObject.SetActive(false);
-					}
+					PlayerFlux otherPlayer = gm.fluxPlayer;
+					gm.ChangeFluxplayer(this);
+					//gm.fluxPlayer = this;
+					//gm.textFluxPlayer.text = "Flux: " + gm.fluxPlayer.ToString();
+					gm.StartCoroutine("FluxColliderSeconds");
+					currFluxCaptureTime = 0;
+					gm.sliderCaptureObject.SetActive(false);
 				}
 			}
 			else{
@@ -93,5 +101,48 @@ public class PlayerFlux : MonoBehaviour
 		gm.sliderCaptureTime.value = 0;
 		gm.sliderCaptureObject.SetActive(false);
 	}
+	
+	public void TurnFlux(bool turnOn){
+		if (turnOn){
+			StartCoroutine(TurnOnFluxEffect());
+		}
+		else{
+			StartCoroutine(TurnOffFluxEffect());
+		}
+	}
+	
+	private IEnumerator TurnOnFluxEffect(){
+		float transitionFrac = 1.0f / (transitionTime - 1);
+		for (int i = 0; i < transitionTime; i++){
+			foreach (Material mat in materialList){
+				mat.SetFloat("_State", i * transitionFrac);
+			}
+			yield return null;
+		}
+		yield return null;
+	}
+	
+	private IEnumerator TurnOffFluxEffect(){
+		float transitionFrac = 1.0f / (transitionTime - 1);
+		for (int i = 0; i < transitionTime; i++){
+			foreach (Material mat in materialList){
+				mat.SetFloat("_State", 1 - (i * transitionFrac));
+			}
+			yield return null;
+		}
+		yield return null;
+	}
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
