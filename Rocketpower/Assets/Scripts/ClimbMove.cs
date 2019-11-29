@@ -37,7 +37,7 @@ public class ClimbMove : Move
 
         if (_owner.transform.position.y < yPosOrigin.y)
         {
-            Debug.Log("climbig");
+            //Debug.Log("climbig");
             _owner.moveDir.y = climbDir.y + 1;
             //_owner.stateMoveDir = climbDir + Vector3.up + (_owner.transform.rotation * Vector3.forward) * _owner.forwardVelocity;
         }
