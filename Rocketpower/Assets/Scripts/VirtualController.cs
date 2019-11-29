@@ -61,16 +61,15 @@ public class VirtualController : MonoBehaviour
     {
         get
         {
+            // return prevState.Buttons.A != ButtonState.Pressed && state.Buttons.A == ButtonState.Pressed;
             return prevState.Buttons.A != ButtonState.Pressed && state.Buttons.A == ButtonState.Pressed;
-            
         }
     }
     public bool ClimbButtonPressed
     {
         get
         {
-			return prevState.Triggers.Right == 0 && state.Triggers.Right > 0;
-            //return prevState.Buttons.A != ButtonState.Pressed && state.Buttons.A == ButtonState.Pressed;
+            return prevState.Triggers.Right == 0 && state.Triggers.Right > 0;
         }
     }
     #endregion

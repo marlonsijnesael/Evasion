@@ -15,6 +15,7 @@ TagManager:
   - ColorPlatform
   - Flux
   - Player2
+  - FluxCollider
   layers:
   - Default
   - TransparentFX
