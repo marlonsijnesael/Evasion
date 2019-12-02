@@ -35,6 +35,7 @@ public class PlayerFlux : MonoBehaviour
 		//on grabbing the flux, set fluxplayer to this player
         if (other.gameObject.CompareTag("Flux")) {
             gm.fluxPlayer = this;
+			gm.ColorandSpeedSwitch();
 			gm.textFluxPlayer.text = "Flux: " + gm.fluxPlayer.ToString();
             Destroy(other.gameObject);
         }
@@ -74,11 +75,12 @@ public class PlayerFlux : MonoBehaviour
 					isFluxCaptured = true;
 					if(isFluxCaptured){
 						gm.fluxPlayer = this;
+						gm.ColorandSpeedSwitch();
+						gm.sliderCaptureObject.SetActive(false);
 						gm.textFluxPlayer.text = "Flux: " + gm.fluxPlayer.ToString();
 						gm.StartCoroutine("FluxColliderSeconds");
 						isFluxCaptured = false;
 						currFluxCaptureTime = 0;
-						gm.sliderCaptureObject.SetActive(false);
 					}
 				}
 			}
