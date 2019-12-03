@@ -21,7 +21,10 @@ public class SlideMove : Move
     {
         _owner.animationController.SetBool(_owner.animator, animation.ToString(), false);
     }
+    public override void Jump(StateMachine _owner, float power)
+    {
 
+    }
     private void Move(StateMachine _owner)
     {
         // _owner.moveDir = Vector3.zero;

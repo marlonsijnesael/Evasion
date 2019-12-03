@@ -12,9 +12,9 @@ public class AirMove : Move
 
     public override void Act(StateMachine _owner)
     {
-        _owner.playerRotator.UpdateRotation();
         _owner.LeftRightCollisionsTest();
         _owner.FrontCollisionTest();
+        _owner.playerRotator.UpdateRotation();
         Move(_owner);
     }
 
@@ -22,11 +22,14 @@ public class AirMove : Move
     {
         _owner.animationController.SetBool(_owner.animator, animation.ToString(), true);
     }
+    public override void Jump(StateMachine _owner, float power)
+    {
 
+    }
+    
     private void Move(StateMachine _owner)
     {
         _owner.stateMoveDir = (_owner.transform.rotation * Vector3.forward) * _owner.forwardVelocity;
         // _owner.verticalDir = Vector3.zero;
     }
 }
-

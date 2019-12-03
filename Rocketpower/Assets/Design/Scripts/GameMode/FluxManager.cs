@@ -93,6 +93,7 @@ public class FluxManager : MonoBehaviour
             yield return new WaitForSeconds(5);
             countDown--;
         }
+        
     }
 
     IEnumerator FluxColliderSeconds(){
