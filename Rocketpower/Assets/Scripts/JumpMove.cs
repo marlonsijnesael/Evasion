@@ -18,5 +18,10 @@ public class JumpMove : Move
     {
 
     }
+    public override void Jump(StateMachine _owner, float power)
+    {
+
+    }
+
 
 }

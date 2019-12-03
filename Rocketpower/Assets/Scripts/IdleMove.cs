@@ -21,4 +21,13 @@ public class IdleMove : Move
     {
         _owner.animationController.SetBool(_owner.animator, animation.ToString(), false);
     }
+    public override void Jump(StateMachine _owner, float power)
+    {
+        if (_owner.isGrounded)
+        {
+            _owner.isGrounded = false;
+            _owner.moveDir.y = _owner.jumpVelocity;
+        }
+    }
+
 }

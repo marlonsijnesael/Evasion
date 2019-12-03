@@ -73,8 +73,6 @@ public class LedgeDetection : MonoBehaviour
         {
 
             Debug.DrawLine(transform.position + Vector3.up, transform.position + transform.forward + Vector3.up, Color.red);
-            // if (!Physics.SphereCast(origin, sphereRadius, transform.up, out spherehit))
-            // {
 
             // DOWN TO LEDGE
             if (!Physics.Raycast(origin + dir, Vector3.down, out ledgeHit, maxDist))

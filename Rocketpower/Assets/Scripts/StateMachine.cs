@@ -54,13 +54,15 @@ public class StateMachine : MonoBehaviour
     [SerializeField] public float timeToJumpApex = .4f;
     public float gravity = 14.0f;
     public float normalGravity = 0f;
-    private float jumpVelocity;
-    [SerializeField] private float forwardJumpMultiplier = 5;
-    private bool isGrounded;
+    [HideInInspector] public float jumpVelocity;
+    [HideInInspector] public float forwardJumpMultiplier = 5;
+    [HideInInspector] public bool isGrounded;
     public Ledge ledge;
     public CameraFollow cameraScript;
     public RotatePlayer playerScript;
 
+    public float jumpPower = 0;
+    public float currentjumpPower = 0;
     public State prevState;
     #endregion
 
@@ -191,12 +193,12 @@ public class StateMachine : MonoBehaviour
     public void MovePlayer()
     {
         if (!cc.isGrounded && playerState != State.CLIMB)  //|| playerState == State.WALLRUN_RIGHT || playerState == State.WALLRUN_LEFT)
-            moveDir.y += gravity * Time.deltaTime;
+            moveDir.y += gravity * Time.fixedDeltaTime;
 
         Jump();
         moveDir.x = stateMoveDir.x;
         moveDir.z = stateMoveDir.z;
-        cc.Move(moveDir * Time.deltaTime);
+        cc.Move(moveDir * Time.fixedDeltaTime);
     }
 
     /// <summary>
@@ -206,7 +208,7 @@ public class StateMachine : MonoBehaviour
     public void Accelerate()
     {
         float rate = 0;
-        if (virtualController.VerticalMovement != 0 || virtualController.VerticalMovement != 0)
+        if (virtualController.VerticalMovement != 0 || virtualController.HorizontalMovement != 0)
         {
             rate = accelRatePerSec;
         }
@@ -214,23 +216,25 @@ public class StateMachine : MonoBehaviour
         else
             rate = decelRatePerSec;
 
-        forwardVelocity += rate * Time.deltaTime;
+        forwardVelocity += rate * Time.fixedDeltaTime;
         forwardVelocity = Mathf.Clamp(forwardVelocity, 0, maxSpeed);
     }
 
     private void Jump()
     {
-        if (virtualController.JumpButtonPressed && isGrounded)
+        if (virtualController.JumpButtonHold)
         {
-            isGrounded = false;
-            moveDir.y = jumpVelocity;
-            if (virtualController.VerticalMovement != 0)
-                stateMoveDir += transform.forward * (forwardJumpMultiplier * 1 - GetAngle());
-
+            currentjumpPower += Time.fixedDeltaTime;
+        }
+        else if (virtualController.JumpButtonPressedThisFrame)
+        {
+            currentMove.Jump(this, currentjumpPower);
+            currentjumpPower = 1;
         }
     }
 
-    private float GetAngle()
+
+    public float GetAngle()
     {
         RaycastHit hitA;
         if (Physics.Raycast(transform.position + transform.forward, -transform.up, out hitA))
@@ -246,18 +250,21 @@ public class StateMachine : MonoBehaviour
     /// </summary>
     public void CheckGrounded()
     {
+        if (playerState == State.CLIMB)
+            return;
         RaycastHit hit;
-        Physics.Raycast(transform.position + Vector3.up, -transform.up, out hit);
-        float distToGround = hit.distance - 1;
-        if (distToGround > 1f && playerState != State.CLIMB)
+
+        if (!Physics.Raycast(transform.position + Vector3.up - transform.forward, Vector3.down, out hit, 1 +( jumpHeight /2)))
         {
             isGrounded = false;
+            animationController.SetBool(this.animator, "grounded", false);
             SwitchStates(State.AIRBORNE, airborneMove);
         }
         else
         {
             isGrounded = true;
             SwitchStates(State.IDLE, idleMove);
+            animationController.SetBool(this.animator, "grounded", true);
         }
     }
 
@@ -294,7 +301,8 @@ public class StateMachine : MonoBehaviour
             if (dot > -0.7f && dot < 0.7f)
             {
                 wallrunDir = Vector3.Cross(hit.normal, Vector3.up);
-                Debug.DrawRay(hit.point, wallrunDir, Color.red, 10f);
+                wallrunDir.y *= dot;
+                Debug.DrawRay(hit.point, wallrunDir, Color.red, 40f);
                 isWallrun_Right = true;
                 SwitchStates(State.WALLRUN_RIGHT, wallrunMoveRight);
             }
@@ -306,7 +314,8 @@ public class StateMachine : MonoBehaviour
             if (dot > -0.7f && dot < 0.7f)
             {
                 wallrunDir = Vector3.Cross(hit.transform.up, hit.normal);
-                Debug.DrawRay(hit.point, wallrunDir, Color.red, 10f);
+                wallrunDir.y *= dot;
+                Debug.DrawRay(hit.point, wallrunDir, Color.red, 40f);
                 isWallrun_Left = true;
                 SwitchStates(State.WALLRUN_LEFT, wallRunMoveLeft);
             }
@@ -317,6 +326,7 @@ public class StateMachine : MonoBehaviour
             {
                 SwitchStates(State.RUN, runMove);
                 wallrunDir = Vector3.zero;
+                stateMoveDir = Vector3.zero;
                 isWallrun_Right = false;
                 isWallrun_Left = false;
             }

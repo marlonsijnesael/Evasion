@@ -57,19 +57,37 @@ public class VirtualController : MonoBehaviour
 
         }
     }
-    public bool JumpButtonPressed
+    public bool JumpButtonPressedThisFrame
     {
         get
         {
-            return prevState.Buttons.A != ButtonState.Pressed && state.Buttons.A == ButtonState.Pressed;
-            
+            return prevState.Buttons.A == ButtonState.Pressed;
+
         }
     }
+
+    public bool JumpButtonHold
+    {
+        get
+        {
+            return prevState.Buttons.A == ButtonState.Pressed && state.Buttons.A == ButtonState.Pressed;
+
+        }
+    }
+
+    public bool JumpButtonReleased
+    {
+        get
+        {
+            return prevState.Buttons.A == ButtonState.Pressed && state.Buttons.A == ButtonState.Released;
+        }
+    }
+
     public bool ClimbButtonPressed
     {
         get
         {
-			return prevState.Triggers.Right == 0 && state.Triggers.Right > 0;
+            return  state.Triggers.Right > 0;
             //return prevState.Buttons.A != ButtonState.Pressed && state.Buttons.A == ButtonState.Pressed;
         }
     }

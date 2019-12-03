@@ -9,6 +9,7 @@ public abstract class Move : ScriptableObject
 
     public abstract void Act(StateMachine _owner);
 
+    public abstract void Jump(StateMachine _owner, float power);
     public abstract void ExitState(StateMachine _owner);
 
 }

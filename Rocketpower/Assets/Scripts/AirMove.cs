@@ -14,12 +14,17 @@ public class AirMove : Move
     {
         _owner.LeftRightCollisionsTest();
         _owner.FrontCollisionTest();
+        _owner.playerRotator.UpdateRotation();
         Move(_owner);
     }
 
     public override void ExitState(StateMachine _owner)
     {
         _owner.animationController.SetBool(_owner.animator, animation.ToString(), true);
+    }
+    public override void Jump(StateMachine _owner, float power)
+    {
+
     }
 
     private void Move(StateMachine _owner)
