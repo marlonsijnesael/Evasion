@@ -19,6 +19,8 @@ public class FluxManager : MonoBehaviour
 	public int platformsTotal = 3;
 	public GameObject scoreHexagonPrefab;
 	public GameObject scoreArrowPrefab;
+	public Sprite scoreArrowSprite;
+	public Sprite scoreArrowArrowSprite;
 	public int scoreHexagonSize = 75;
     public Text textP1;
     public Text textP2;
@@ -48,14 +50,20 @@ public class FluxManager : MonoBehaviour
     }
 	
 	private void Start(){
+		
 		for (int i = 0; i < platformsTotal; i++){
 			GameObject hex = Instantiate(scoreHexagonPrefab);
 			hex.transform.SetParent(canvas.transform);
-			hex.GetComponent<RectTransform>().localPosition = new Vector3(-400 + 800 / (platformsTotal - 1) * i, 400, 0);
+			hex.transform.localScale = new Vector3(1.2f, 1.2f, 1);
+			RectTransform rt = hex.GetComponent<RectTransform>();
+			rt.localPosition = new Vector3(-.5f * platformsTotal * scoreHexagonSize + scoreHexagonSize * (i + .5f), 400, 0);
+			rt.sizeDelta = new Vector2 (scoreHexagonSize, scoreHexagonSize);
 			scoreHexagonList.Add(hex.GetComponent<ScoreUI>());
 		}
+		
 		scoreArrow = Instantiate(scoreArrowPrefab).transform;
 		scoreArrow.transform.SetParent(canvas.transform);
+		scoreArrow.transform.localScale = new Vector3(1, 1, 1);
 		scoreArrow.gameObject.SetActive(false);
 	}
 
@@ -89,11 +97,23 @@ public class FluxManager : MonoBehaviour
 		scoreArrow.gameObject.SetActive(true);
 		if (fluxPlayer == player1){
 			scoreArrow.GetComponent<Image>().color = player1color;
-			scoreArrow.localPosition = scoreHexagonList[Mathf.Clamp(player1score, 0, platformsTotal - 1)].transform.localPosition - new Vector3(800 / (platformsTotal - 1), 0, 0);
+			scoreArrow.transform.localRotation = Quaternion.Euler(0, 0, 0);
+			scoreArrow.localPosition = scoreHexagonList[Mathf.Clamp(player1score - 1, 0, platformsTotal - 1)].transform.localPosition;
+			scoreArrow.GetComponent<Image>().sprite = scoreArrowSprite;
+			if (player1score == 0){
+				scoreArrow.localPosition = scoreHexagonList[Mathf.Clamp(player1score - 1, 0, platformsTotal - 1)].transform.localPosition - new Vector3(scoreHexagonSize, 0, 0);
+				scoreArrow.GetComponent<Image>().sprite = scoreArrowArrowSprite;
+			}
 		}
 		else{
 			scoreArrow.GetComponent<Image>().color = player2color;
-			scoreArrow.localPosition = scoreHexagonList[Mathf.Clamp(platformsTotal - player2score - 1, 0, platformsTotal - 1)].transform.localPosition + new Vector3(800 / (platformsTotal - 1), 0, 0);
+			scoreArrow.transform.localRotation = Quaternion.Euler(0, 0, 180);
+			scoreArrow.localPosition = scoreHexagonList[Mathf.Clamp(platformsTotal - player2score - 1, 0, platformsTotal - 1)].transform.localPosition;
+			scoreArrow.GetComponent<Image>().sprite = scoreArrowSprite;
+			if (player2score == 0){
+				scoreArrow.localPosition = scoreHexagonList[Mathf.Clamp(platformsTotal - player2score - 1, 0, platformsTotal - 1)].transform.localPosition + new Vector3(scoreHexagonSize, 0, 0);
+				scoreArrow.GetComponent<Image>().sprite = scoreArrowArrowSprite;
+			}
 		}
 		
 	}
@@ -149,23 +169,12 @@ public class FluxManager : MonoBehaviour
 		
 		//move the arrow
 		if (fluxPlayer == player1){
-			scoreArrow.GetComponent<Image>().color = player1color;
-			scoreArrow.localPosition = scoreHexagonList[Mathf.Clamp(player1score, 0, platformsTotal - 1)].transform.localPosition - new Vector3(800 / (platformsTotal - 1), 0, 0);
+			scoreArrow.localPosition = scoreHexagonList[Mathf.Clamp(player1score - 1, 0, platformsTotal - 1)].transform.localPosition;
+			scoreArrow.GetComponent<Image>().sprite = scoreArrowSprite;
 		}
 		else{
-			scoreArrow.GetComponent<Image>().color = player2color;
-			scoreArrow.localPosition = scoreHexagonList[Mathf.Clamp(platformsTotal - player2score - 1, 0, platformsTotal - 1)].transform.localPosition + new Vector3(800 / (platformsTotal - 1), 0, 0);
-		}
-		
-		
-		
-		if (player1score == platformsTotal) {
-			//player 1 wins
-			Debug.Log("player 1 wins");
-		}
-		else if (player2score == platformsTotal){
-			//player 2 wins
-			Debug.Log("player 2 wins");
+			scoreArrow.localPosition = scoreHexagonList[Mathf.Clamp(platformsTotal - player2score - 1, 0, platformsTotal - 1)].transform.localPosition;
+			scoreArrow.GetComponent<Image>().sprite = scoreArrowSprite;
 		}
 		
     }
