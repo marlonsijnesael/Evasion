@@ -6,34 +6,63 @@ using UnityEngine;
 
 public class FluxManager : MonoBehaviour
 {
+    #region Public Script References
+    [HideInInspector] public GameObject canvas;
     [HideInInspector] public StateMachine smP1;
     [HideInInspector] public StateMachine smP2;
-	public Color player1color;
-	public Color player2color;
 	[HideInInspector] public PlayerFlux player1;
     [HideInInspector] public PlayerFlux player2;
-    public float fluxCaptureTime;
+    #endregion
+    public Color player1color;
+	public Color player2color;
+    
+    #region Flux Player + Score
     public PlayerFlux fluxPlayer;
     private int player1score;
     private int player2score;
-
     [HideInInspector] public Text textP1;
     [HideInInspector] public Text textP2;
     [HideInInspector] public Text textFluxPlayer;
+    #endregion
+
+    #region Flux Capture
+    public float fluxCaptureTime;
+    public bool isFluxPlayerColliderOnCD;
     [HideInInspector] public Slider sliderCaptureTime;
     [HideInInspector] public Image sliderFillImage;
     [HideInInspector] public GameObject sliderCaptureObject;
-    [HideInInspector] public GameObject canvas;
+    #endregion
+
+    #region Pre-Round Variables
+    public bool readyP1;
+    public bool readyP2;
+    private int startCountdownTime = 5;    
+    #endregion
+
+    #region Pre-Round Objects
+    [HideInInspector] public GameObject startCountdownObject;
+    [HideInInspector] public Text startCountdownText;
+    [HideInInspector] public GameObject readyChecks;
+    [HideInInspector] public GameObject stasisP1;
+    [HideInInspector] public GameObject stasisP2;
+    [HideInInspector] public Toggle readyToggleP1;
+    [HideInInspector] public Toggle readyToggleP2;
+    #endregion
+
+    #region In-Round
+    private int roundCountdownTime = 120;
+    [HideInInspector] public Text roundCountdownText;
+    [HideInInspector] public GameObject inRoundUI;
+    #endregion
 
     GameObject[] platformArray;
-
-    public bool isFluxPlayerColliderOnCD;
 
     private void Awake()
     {
         platformArray = GameObject.FindGameObjectsWithTag("ColorPlatform");
         canvas.gameObject.SetActive(true);
         sliderCaptureTime.maxValue = fluxCaptureTime;
+        //StartCoroutine(StartRoundCountDown());
     }
 
     private void Update() {
@@ -46,6 +75,7 @@ public class FluxManager : MonoBehaviour
             fluxPlayer = player2;
             textFluxPlayer.text = "Flux: " + fluxPlayer.ToString();
         }
+        startRound();
     }
 
     public void ColorandSpeedSwitch(){
@@ -83,17 +113,47 @@ public class FluxManager : MonoBehaviour
         textP2.text = player2score.ToString();
     }
 
-    public void startGameRound(){
+    public void startRound(){
+        if(Input.GetKeyDown(KeyCode.Q)){
+            readyP1 = true;
+            readyToggleP1.isOn = true;
+        }
+        if(Input.GetKeyDown(KeyCode.W)){
+            readyP2 = true;
+            readyToggleP2.isOn = true;
+        }
 
+        if(readyToggleP1.isOn && readyToggleP2.isOn){
+            startCountdownObject.SetActive(true);
+            startCountdownText.text = startCountdownTime.ToString();
+            StartCoroutine(StartRoundCountdown());
+            readyToggleP1.isOn = false;
+            readyToggleP2.isOn = false;
+            readyChecks.SetActive(false);
+        }
     }
 
-    IEnumerator StartRoundCountDown(){
-        int countDown = 5;
-        while (countDown > 0){
-            yield return new WaitForSeconds(5);
-            countDown--;
+    IEnumerator StartRoundCountdown(){
+        while (startCountdownTime > 0) {
+            yield return new WaitForSeconds(1);
+            startCountdownTime--;
+            startCountdownText.text = startCountdownTime.ToString();
         }
-        
+        stasisP1.gameObject.SetActive(false);
+        stasisP2.gameObject.SetActive(false);
+        startCountdownObject.SetActive(false);
+        inRoundUI.SetActive(true);
+        roundCountdownText.text = roundCountdownTime.ToString();
+        StartCoroutine(GameRoundCountdown());
+    }
+
+    IEnumerator GameRoundCountdown(){
+            while (roundCountdownTime > 0) {
+            yield return new WaitForSeconds(1);
+            roundCountdownTime--;
+            roundCountdownText.text = roundCountdownTime.ToString();
+        }
+        Time.timeScale = 0;
     }
 
     IEnumerator FluxColliderSeconds(){
