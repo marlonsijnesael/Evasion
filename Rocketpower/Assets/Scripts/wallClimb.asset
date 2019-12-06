@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noGoStates: 0000000001000000020000000300000004000000
   climbSpeed: 2.5
-  animation: 5
+  animation: 7
