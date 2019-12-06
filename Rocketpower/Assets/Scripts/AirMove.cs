@@ -27,7 +27,7 @@ public class AirMove : Move
 
     }
 
-    }
+    
     
     private void Move(StateMachine _owner)
     {

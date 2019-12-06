@@ -10,12 +10,12 @@ public class FluxManager : MonoBehaviour
     [HideInInspector] public GameObject canvas;
     [HideInInspector] public StateMachine smP1;
     [HideInInspector] public StateMachine smP2;
-	[HideInInspector] public PlayerFlux player1;
+    [HideInInspector] public PlayerFlux player1;
     [HideInInspector] public PlayerFlux player2;
     #endregion
     public Color player1color;
-	public Color player2color;
-    
+    public Color player2color;
+
     #region Flux Player + Score
     public PlayerFlux fluxPlayer;
     private int player1score;
@@ -28,7 +28,7 @@ public class FluxManager : MonoBehaviour
     #region Flux Capture
     public float fluxCaptureTime;
     public bool isFluxPlayerColliderOnCD;
-    [HideInInspector] public Slider sliderCaptureTime;
+    public Slider sliderCaptureTime;
     [HideInInspector] public Image sliderFillImage;
     [HideInInspector] public GameObject sliderCaptureObject;
     #endregion
@@ -36,17 +36,17 @@ public class FluxManager : MonoBehaviour
     #region Pre-Round Variables
     public bool readyP1;
     public bool readyP2;
-    private int startCountdownTime = 5;    
+    private int startCountdownTime = 5;
     #endregion
 
     #region Pre-Round Objects
-    [HideInInspector] public GameObject startCountdownObject;
-    [HideInInspector] public Text startCountdownText;
-    [HideInInspector] public GameObject readyChecks;
-    [HideInInspector] public GameObject stasisP1;
-    [HideInInspector] public GameObject stasisP2;
-    [HideInInspector] public Toggle readyToggleP1;
-    [HideInInspector] public Toggle readyToggleP2;
+    public GameObject startCountdownObject;
+    public Text startCountdownText;
+    public GameObject readyChecks;
+    public GameObject stasisP1;
+    public GameObject stasisP2;
+    public Toggle readyToggleP1;
+    public Toggle readyToggleP2;
     #endregion
 
     #region In-Round
@@ -65,65 +65,81 @@ public class FluxManager : MonoBehaviour
         //StartCoroutine(StartRoundCountDown());
     }
 
-    private void Update() {
+    private void Update()
+    {
         //Press 1 or 2 to change flux
-        if (Input.GetKeyDown(KeyCode.Alpha1)) {
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
             fluxPlayer = player1;
             textFluxPlayer.text = "Flux: " + fluxPlayer.ToString();
         }
-        if(Input.GetKeyDown(KeyCode.Alpha2)){
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
             fluxPlayer = player2;
             textFluxPlayer.text = "Flux: " + fluxPlayer.ToString();
         }
         startRound();
     }
 
-    public void ColorandSpeedSwitch(){
+    public void ColorandSpeedSwitch()
+    {
         //Change Capture Bar Fill Color + Runspeed
-        if(fluxPlayer == player1){
+        if (fluxPlayer == player1)
+        {
             sliderFillImage.color = player2color;
             smP1.maxSpeed = 12;
         }
-        else{
+        else
+        {
             smP1.maxSpeed = 14;
         }
-        if(fluxPlayer == player2){
+        if (fluxPlayer == player2)
+        {
             sliderFillImage.color = player1color;
             smP2.maxSpeed = 12;
         }
-        else{
+        else
+        {
             smP2.maxSpeed = 14;
         }
     }
 
-    public void updateScore() {
-        player1score=0;
-        player2score=0;
+    public void updateScore()
+    {
+        player1score = 0;
+        player2score = 0;
 
-		foreach (GameObject platform in platformArray){
-			PlatformState state = platform.GetComponent<PlatformState>();
-			if (state.GetPlayerID() == 1){
-				player1score++;
-			}
-			else if (state.GetPlayerID() == 2){
-				player2score++;
-			}
-		}
+        foreach (GameObject platform in platformArray)
+        {
+            PlatformState state = platform.GetComponent<PlatformState>();
+            if (state.GetPlayerID() == 1)
+            {
+                player1score++;
+            }
+            else if (state.GetPlayerID() == 2)
+            {
+                player2score++;
+            }
+        }
         textP1.text = player1score.ToString();
         textP2.text = player2score.ToString();
     }
 
-    public void startRound(){
-        if(Input.GetKeyDown(KeyCode.Q)){
+    public void startRound()
+    {
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
             readyP1 = true;
             readyToggleP1.isOn = true;
         }
-        if(Input.GetKeyDown(KeyCode.W)){
+        if (Input.GetKeyDown(KeyCode.W))
+        {
             readyP2 = true;
             readyToggleP2.isOn = true;
         }
 
-        if(readyToggleP1.isOn && readyToggleP2.isOn){
+        if (readyToggleP1.isOn && readyToggleP2.isOn)
+        {
             startCountdownObject.SetActive(true);
             startCountdownText.text = startCountdownTime.ToString();
             StartCoroutine(StartRoundCountdown());
@@ -133,8 +149,10 @@ public class FluxManager : MonoBehaviour
         }
     }
 
-    IEnumerator StartRoundCountdown(){
-        while (startCountdownTime > 0) {
+    IEnumerator StartRoundCountdown()
+    {
+        while (startCountdownTime > 0)
+        {
             yield return new WaitForSeconds(1);
             startCountdownTime--;
             startCountdownText.text = startCountdownTime.ToString();
@@ -147,8 +165,10 @@ public class FluxManager : MonoBehaviour
         StartCoroutine(GameRoundCountdown());
     }
 
-    IEnumerator GameRoundCountdown(){
-            while (roundCountdownTime > 0) {
+    IEnumerator GameRoundCountdown()
+    {
+        while (roundCountdownTime > 0)
+        {
             yield return new WaitForSeconds(1);
             roundCountdownTime--;
             roundCountdownText.text = roundCountdownTime.ToString();
@@ -156,10 +176,11 @@ public class FluxManager : MonoBehaviour
         Time.timeScale = 0;
     }
 
-    IEnumerator FluxColliderSeconds(){
+    IEnumerator FluxColliderSeconds()
+    {
         //Flux Capture Cooldown
         isFluxPlayerColliderOnCD = true;
-		yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(1.5f);
         isFluxPlayerColliderOnCD = false;
-	}
+    }
 }
