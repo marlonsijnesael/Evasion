@@ -64,6 +64,24 @@ public class FluxManager : MonoBehaviour
         sliderCaptureTime.maxValue = fluxCaptureTime;
         //StartCoroutine(StartRoundCountDown());
     }
+	
+	private void Start(){
+		
+		for (int i = 0; i < platformsTotal; i++){
+			GameObject hex = Instantiate(scoreHexagonPrefab);
+			hex.transform.SetParent(canvas.transform);
+			hex.transform.localScale = new Vector3(1.2f, 1.2f, 1);
+			RectTransform rt = hex.GetComponent<RectTransform>();
+			rt.localPosition = new Vector3(-.5f * platformsTotal * scoreHexagonSize + scoreHexagonSize * (i + .5f), 400, 0);
+			rt.sizeDelta = new Vector2 (scoreHexagonSize, scoreHexagonSize);
+			scoreHexagonList.Add(hex.GetComponent<ScoreUI>());
+		}
+		
+		scoreArrow = Instantiate(scoreArrowPrefab).transform;
+		scoreArrow.transform.SetParent(canvas.transform);
+		scoreArrow.transform.localScale = new Vector3(1, 1, 1);
+		scoreArrow.gameObject.SetActive(false);
+	}
 
     private void Update()
     {
@@ -102,7 +120,32 @@ public class FluxManager : MonoBehaviour
         {
             smP2.maxSpeed = 14;
         }
-    }
+		textFluxPlayer.text = "Flux: " + fluxPlayer.ToString();
+		
+		//set scorearrow position and color
+		scoreArrow.gameObject.SetActive(true);
+		if (fluxPlayer == player1){
+			scoreArrow.GetComponent<Image>().color = player1color;
+			scoreArrow.transform.localRotation = Quaternion.Euler(0, 0, 0);
+			scoreArrow.localPosition = scoreHexagonList[Mathf.Clamp(player1score - 1, 0, platformsTotal - 1)].transform.localPosition;
+			scoreArrow.GetComponent<Image>().sprite = scoreArrowSprite;
+			if (player1score == 0){
+				scoreArrow.localPosition = scoreHexagonList[Mathf.Clamp(player1score - 1, 0, platformsTotal - 1)].transform.localPosition - new Vector3(scoreHexagonSize, 0, 0);
+				scoreArrow.GetComponent<Image>().sprite = scoreArrowArrowSprite;
+			}
+		}
+		else{
+			scoreArrow.GetComponent<Image>().color = player2color;
+			scoreArrow.transform.localRotation = Quaternion.Euler(0, 0, 180);
+			scoreArrow.localPosition = scoreHexagonList[Mathf.Clamp(platformsTotal - player2score - 1, 0, platformsTotal - 1)].transform.localPosition;
+			scoreArrow.GetComponent<Image>().sprite = scoreArrowSprite;
+			if (player2score == 0){
+				scoreArrow.localPosition = scoreHexagonList[Mathf.Clamp(platformsTotal - player2score - 1, 0, platformsTotal - 1)].transform.localPosition + new Vector3(scoreHexagonSize, 0, 0);
+				scoreArrow.GetComponent<Image>().sprite = scoreArrowArrowSprite;
+			}
+		}
+		
+	}
 
     public void updateScore()
     {
@@ -123,6 +166,48 @@ public class FluxManager : MonoBehaviour
         }
         textP1.text = player1score.ToString();
         textP2.text = player2score.ToString();
+		
+		if (pastPlayer1Score < player1score && pastPlayer2Score == player2score){
+			//change white to player 1
+			scoreHexagonList[player1score - 1].StartChangingColor(Color.white, player1color);
+		}
+		else if (pastPlayer1Score == player1score && pastPlayer2Score < player2score){
+			// change white to player 2
+			scoreHexagonList[platformsTotal - player2score].StartChangingColor(Color.white, player2color);
+		}
+		else if (pastPlayer1Score < player1score && pastPlayer2Score > player2score){
+			if (player1score + player2score == platformsTotal){
+				//change one from player 2 to player 1
+				scoreHexagonList[player1score - 1].StartChangingColor(player2color, player1color);
+			}
+			else{
+				//change a white one to player 1 and a player 2 one to white
+				scoreHexagonList[player1score - 1].StartChangingColor(Color.white, player1color);
+				scoreHexagonList[platformsTotal - player2score - 1].StartChangingColor(player2color, Color.white);
+			}
+		}
+		else if (pastPlayer1Score > player1score && pastPlayer2Score < player2score){
+			if (player1score + player2score == platformsTotal){
+				//change one from player 1 to player 2
+				scoreHexagonList[platformsTotal - player2score].StartChangingColor(player1color, player2color);
+			}
+			else{
+				//change a white one to player 2 and a player 1 one to white
+				scoreHexagonList[platformsTotal - player2score].StartChangingColor(Color.white, player2color);
+				scoreHexagonList[player1score].StartChangingColor(player1color, Color.white);
+			}
+		}
+		
+		//move the arrow
+		if (fluxPlayer == player1){
+			scoreArrow.localPosition = scoreHexagonList[Mathf.Clamp(player1score - 1, 0, platformsTotal - 1)].transform.localPosition;
+			scoreArrow.GetComponent<Image>().sprite = scoreArrowSprite;
+		}
+		else{
+			scoreArrow.localPosition = scoreHexagonList[Mathf.Clamp(platformsTotal - player2score - 1, 0, platformsTotal - 1)].transform.localPosition;
+			scoreArrow.GetComponent<Image>().sprite = scoreArrowSprite;
+		}
+		
     }
 
     public void startRound()
