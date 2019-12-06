@@ -4,7 +4,6 @@
 public class RunMove : Move
 {
     public AnimationManager.AnimationStates animation;
-
     public override void EnterState(StateMachine _owner)
     {
         _owner.animationController.SetBool(_owner.animator, animation.ToString(), true);

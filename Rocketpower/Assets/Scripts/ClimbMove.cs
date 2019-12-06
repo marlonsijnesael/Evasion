@@ -6,7 +6,6 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "wallClimb")]
 public class ClimbMove : Move
 {
-
     public float climbSpeed = 2.5f;
     public AnimationManager.AnimationStates animation;
 
@@ -14,7 +13,6 @@ public class ClimbMove : Move
     {
         _owner.animationController.SetBool(_owner.animator, animation.ToString(), true);
     }
-
     public override void Act(StateMachine _owner)
     {
         if (Physics.Linecast(_owner.transform.position + Vector3.up, _owner.transform.position + Vector3.up))

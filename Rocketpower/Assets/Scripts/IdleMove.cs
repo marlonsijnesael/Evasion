@@ -4,12 +4,10 @@
 public class IdleMove : Move
 {
     public AnimationManager.AnimationStates animation;
-
     public override void EnterState(StateMachine _owner)
     {
         _owner.animationController.SetBool(_owner.animator, animation.ToString(), true);
     }
-
     public override void Act(StateMachine _owner)
     {
         _owner.SetInitVel();

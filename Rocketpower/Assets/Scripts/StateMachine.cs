@@ -1,10 +1,7 @@
 ﻿using UnityEngine;
-
 public class StateMachine : MonoBehaviour
 {
     #region components
-
-
     [Header("Components: ")]
     public CharacterController cc;
     public LedgeDetection ledgeDetector;
@@ -13,7 +10,6 @@ public class StateMachine : MonoBehaviour
     public Animator animator;
     public VirtualController virtualController;
     #endregion
-
     #region state stuff
     [Header("States: ")]
     public Move currentMove;
@@ -21,9 +17,7 @@ public class StateMachine : MonoBehaviour
     public Move idleMove, runMove, wallrunMoveRight, wallRunMoveLeft, ClimbMove, SlideMove, airborneMove;
     public enum State { IDLE, RUN, WALLRUN_RIGHT, WALLRUN_LEFT, CLIMB, SLIDE, AIRBORNE }
     public State playerState = new State();
-
     #endregion
-
     #region directional vectors
     [HideInInspector] public Vector3 verticalDir = Vector3.zero;
     [HideInInspector] public Vector3 wallrunDir;
@@ -31,12 +25,10 @@ public class StateMachine : MonoBehaviour
     [HideInInspector] public Vector3 moveDir = Vector3.zero;
     [HideInInspector] public Vector3 lastMoveDir;
     #endregion
-
     #region animator booleans
     [HideInInspector] public bool isWallrun_Right;
     [HideInInspector] public bool isWallrun_Left;
     #endregion
-
     #region movement settings
     [Header("Movement Settings: ")]
     public float maxSpeed = 5f;
@@ -47,7 +39,6 @@ public class StateMachine : MonoBehaviour
     private float decelRatePerSec;
     public float forwardVelocity = 0;
     #endregion
-
     #region gravity and jump settings
     [Header("gravity and jump Settings: ")]
     [SerializeField] private float jumpHeight = 4;
@@ -60,12 +51,10 @@ public class StateMachine : MonoBehaviour
     public Ledge ledge;
     public CameraFollow cameraScript;
     public RotatePlayer playerScript;
-
     public float jumpPower = 0;
     public float currentjumpPower = 0;
     public State prevState;
     #endregion
-
     private void Awake()
     {
         virtualController = GetComponent<VirtualController>();
@@ -73,19 +62,14 @@ public class StateMachine : MonoBehaviour
         idleMove.EnterState(this);
         accelRatePerSec = maxSpeed / timeZeroToMax;
         decelRatePerSec = -maxSpeed / timeMaxToZero;
-
         gravity = -(2 * jumpHeight) / Mathf.Pow(timeToJumpApex, 2);
         jumpVelocity = Mathf.Abs(gravity) * timeToJumpApex;
         normalGravity = gravity;
-        print("gravity: " + gravity + " jump vel: " + jumpVelocity);
     }
-
     private void FixedUpdate()
     {
-
         CheckGrounded();
         SetInitVel();
-
         if (virtualController.VerticalMovement != 0 || virtualController.HorizontalMovement != 0)
         {
             if (playerState != State.RUN
@@ -100,21 +84,17 @@ public class StateMachine : MonoBehaviour
         {
             SwitchStates(State.IDLE, idleMove);
         }
-
         if (Input.GetKey(KeyCode.Z))
         {
             SwitchStates(State.SLIDE, SlideMove);
         }
-
         else if (Input.GetKeyUp(KeyCode.Z) && playerState == State.SLIDE)
         {
             SwitchStates(State.RUN, runMove);
         }
-
         HandleState();
         MovePlayer();
     }
-
     /// <summary>
     /// Executes the the act() function of the state Move
     /// </summary>
@@ -145,7 +125,6 @@ public class StateMachine : MonoBehaviour
                 break;
         }
     }
-
     /// <summary>
     /// Checks if the given statechange is valid
     /// by looping through the nogo states of the proposed state
@@ -165,7 +144,6 @@ public class StateMachine : MonoBehaviour
         }
         return true;
     }
-
     /// <summary>
     /// If next state is valid -> transition to new state
     /// </summary>
@@ -180,30 +158,26 @@ public class StateMachine : MonoBehaviour
             playerState = nextState;
         }
     }
-
     /// <summary>
-    /// applies a little bit of gravity each frame to get an accurate 
+    /// applies a little bit of gravity each frame to get an accurate
     /// update on cc.isgrounded
     /// </summary>
     public void SetInitVel()
     {
         stateMoveDir = new Vector3(0, 001f, 0);
     }
-
     public void MovePlayer()
     {
         if (!cc.isGrounded && playerState != State.CLIMB)  //|| playerState == State.WALLRUN_RIGHT || playerState == State.WALLRUN_LEFT)
             moveDir.y += gravity * Time.fixedDeltaTime;
-
         Jump();
         moveDir.x = stateMoveDir.x;
         moveDir.z = stateMoveDir.z;
         cc.Move(moveDir * Time.fixedDeltaTime);
     }
-
     /// <summary>
-    /// checks input from the analogstick 
-    /// forward velocity will increase/decrease depending on wether the input is higher or lower than zero 
+    /// checks input from the analogstick
+    /// forward velocity will increase/decrease depending on wether the input is higher or lower than zero
     /// </summary>
     public void Accelerate()
     {
@@ -212,14 +186,11 @@ public class StateMachine : MonoBehaviour
         {
             rate = accelRatePerSec;
         }
-
         else
             rate = decelRatePerSec;
-
         forwardVelocity += rate * Time.fixedDeltaTime;
         forwardVelocity = Mathf.Clamp(forwardVelocity, 0, maxSpeed);
     }
-
     private void Jump()
     {
         if (virtualController.JumpButtonHold)
@@ -232,15 +203,12 @@ public class StateMachine : MonoBehaviour
             currentjumpPower = 1;
         }
     }
-
-
     public float GetAngle()
     {
         RaycastHit hitA;
         if (Physics.Raycast(transform.position + transform.forward, -transform.up, out hitA))
         {
             print((Mathf.Atan2(transform.position.y, transform.position.x) * Mathf.Rad2Deg));
-
         }
         return Mathf.Atan2(transform.position.y, transform.position.x) * Mathf.Rad2Deg;
     }
@@ -253,7 +221,6 @@ public class StateMachine : MonoBehaviour
         if (playerState == State.CLIMB)
             return;
         RaycastHit hit;
-
         if (!Physics.Raycast(transform.position + Vector3.up - transform.forward, Vector3.down, out hit, 1 +( jumpHeight /2)))
         {
             isGrounded = false;
@@ -267,7 +234,6 @@ public class StateMachine : MonoBehaviour
             animationController.SetBool(this.animator, "grounded", true);
         }
     }
-
     /// <summary>
     /// Checks for collision with walls in front of player
     /// if wall is detected, switch to climbing state
@@ -276,7 +242,6 @@ public class StateMachine : MonoBehaviour
     {
         if (playerState == State.WALLRUN_LEFT || playerState == State.WALLRUN_RIGHT)
             return;
-
         if (virtualController.ClimbButtonPressed && playerState != State.CLIMB)
         {
             ledge = ledgeDetector.CheckLedge();
@@ -286,7 +251,6 @@ public class StateMachine : MonoBehaviour
             }
         }
     }
-
     /// <summary>
     /// Checks for collision with walls left and right of player
     /// if wall is detected, switch to wallrun state
@@ -294,7 +258,6 @@ public class StateMachine : MonoBehaviour
     public void LeftRightCollisionsTest()
     {
         RaycastHit hit;
-
         if (Physics.Raycast(transform.position + Vector3.up, transform.right, out hit, 1 + cc.skinWidth) && virtualController.WallrunButtonPressed)
         {
             float dot = Vector3.Dot(hit.normal, Vector3.up);
@@ -307,7 +270,6 @@ public class StateMachine : MonoBehaviour
                 SwitchStates(State.WALLRUN_RIGHT, wallrunMoveRight);
             }
         }
-
         else if (Physics.Raycast(transform.position + Vector3.up, -transform.right, out hit, 1 + cc.skinWidth) && virtualController.WallrunButtonPressed)
         {
             float dot = Vector3.Dot(hit.normal, Vector3.up);

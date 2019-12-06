@@ -27,10 +27,11 @@ public class AirMove : Move
 
     }
 
+    }
+    
     private void Move(StateMachine _owner)
     {
         _owner.stateMoveDir = (_owner.transform.rotation * Vector3.forward) * _owner.forwardVelocity;
         // _owner.verticalDir = Vector3.zero;
     }
 }
-
