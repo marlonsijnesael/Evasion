@@ -125,7 +125,7 @@ public class PlayerFlux : MonoBehaviour
 
     public void TurnFlux(bool turnOn)
     {
-        if (turnOn)
+		if (turnOn)
         {
             StartCoroutine(TurnOnFluxEffect());
         }
