@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 using XInputDotNetPure;
 public class VirtualController : MonoBehaviour
 {
@@ -6,15 +8,22 @@ public class VirtualController : MonoBehaviour
     private bool playerIndexSet = false;
     private GamePadState state;
     private GamePadState prevState;
+
+    public List<ButtonState> pressList_A = new List<ButtonState>();
+    private float timeHold_Button_A = 0f;
+
     [SerializeField] private GameObject controllerUI;
     #region Check if controller is connected
-    private void FixedUpdate()
+
+
+    private void Awake()
     {
-        // SetVibration should be sent in a slower rate.
-        // Set vibration according to triggers
-        // GamePad.SetVibration(playerIndex, state.Triggers.Left, state.Triggers.Right);
+        for (int i = 0; i < 5; i++)
+            pressList_A.Add(prevState.Buttons.A);
     }
+
     // Update is called once per frame
+
     public void ControlledUpdate()
     {
         // Find a PlayerIndex, for a single player game
@@ -40,6 +49,36 @@ public class VirtualController : MonoBehaviour
         prevState = state;
         state = GamePad.GetState(playerIndex);
     }
+
+    private void FixedUpdate()
+    {
+        pressList_A.RemoveAt(4);
+        pressList_A.Insert(0, state.Buttons.A);
+
+        string list = "";
+        foreach (ButtonState bState in pressList_A)
+            list += " " + bState.ToString();
+        print(list);
+    }
+
+
+    private void Update()
+    {
+
+        if (JumpButtonHold && (VerticalMovement != 0 || HorizontalMovement != 0))
+        {
+            timeHold_Button_A += Time.deltaTime * 5;
+            Debug.Log("jumppower: " + timeHold_Button_A);
+        }
+        else
+        {
+            if (timeHold_Button_A > 0)
+                timeHold_Button_A = -Time.deltaTime;
+            else
+                timeHold_Button_A = 0;
+        }
+    }
+
     #endregion
     #region buttons
     public bool WallrunButtonPressed
@@ -49,11 +88,20 @@ public class VirtualController : MonoBehaviour
             return state.Triggers.Left > 0;
         }
     }
+
+    public float Time_Hold_Button_A
+    {
+        get
+        {
+            return timeHold_Button_A;
+        }
+    }
+
     public bool JumpButtonPressedThisFrame
     {
         get
         {
-            return prevState.Buttons.A == ButtonState.Pressed;
+            return prevState.Buttons.A == ButtonState.Released && state.Buttons.A == ButtonState.Pressed;
         }
     }
     public bool JumpButtonHold
@@ -75,7 +123,7 @@ public class VirtualController : MonoBehaviour
     {
         get
         {
-            return  state.Triggers.Right > 0;
+            return state.Triggers.Right > 0;
             //return prevState.Buttons.A != ButtonState.Pressed && state.Buttons.A == ButtonState.Pressed;
         }
     }

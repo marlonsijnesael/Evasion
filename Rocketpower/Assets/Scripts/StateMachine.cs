@@ -1,4 +1,7 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
+using System.Collections.Generic;
+
 public class StateMachine : MonoBehaviour
 {
     #region components
@@ -21,7 +24,7 @@ public class StateMachine : MonoBehaviour
     #region directional vectors
     [HideInInspector] public Vector3 verticalDir = Vector3.zero;
     [HideInInspector] public Vector3 wallrunDir;
-    [HideInInspector] public Vector3 stateMoveDir;
+    [HideInInspector] public Vector3 stateMoveDir = Vector3.zero;
     [HideInInspector] public Vector3 moveDir = Vector3.zero;
     [HideInInspector] public Vector3 lastMoveDir;
     #endregion
@@ -52,9 +55,14 @@ public class StateMachine : MonoBehaviour
     public CameraFollow cameraScript;
     public RotatePlayer playerScript;
     public float jumpPower = 0;
-    public float currentjumpPower = 0;
+    public float maxJumpBoost = 0;
     public State prevState;
     #endregion
+
+    public Slider jumpSlider;
+    public float groundedBufferSize = 5;
+    public List<bool> groundedBuffer = new List<bool>();
+
     private void Awake()
     {
         virtualController = GetComponent<VirtualController>();
@@ -65,7 +73,18 @@ public class StateMachine : MonoBehaviour
         gravity = -(2 * jumpHeight) / Mathf.Pow(timeToJumpApex, 2);
         jumpVelocity = Mathf.Abs(gravity) * timeToJumpApex;
         normalGravity = gravity;
+        jumpSlider.maxValue = maxJumpBoost;
     }
+
+    private void Start()
+    {
+        for (int i = 0; i < groundedBufferSize; i++)
+        {
+            groundedBuffer.Add(isGrounded);
+        }
+    }
+
+
     private void FixedUpdate()
     {
         CheckGrounded();
@@ -168,7 +187,7 @@ public class StateMachine : MonoBehaviour
     }
     public void MovePlayer()
     {
-        if (!cc.isGrounded && playerState != State.CLIMB)  //|| playerState == State.WALLRUN_RIGHT || playerState == State.WALLRUN_LEFT)
+        if (!WasGroundedInBuffer() && playerState != State.CLIMB)  //|| playerState == State.WALLRUN_RIGHT || playerState == State.WALLRUN_LEFT)
             moveDir.y += gravity * Time.fixedDeltaTime;
         Jump();
         moveDir.x = stateMoveDir.x;
@@ -191,17 +210,48 @@ public class StateMachine : MonoBehaviour
         forwardVelocity += rate * Time.fixedDeltaTime;
         forwardVelocity = Mathf.Clamp(forwardVelocity, 0, maxSpeed);
     }
+
+    private void StoreGroundedThisFrame()
+    {
+        groundedBuffer.RemoveAt(4);
+        groundedBuffer.Insert(0,isGrounded);
+
+        string list = "";
+        foreach (bool g in groundedBuffer)
+            list += " " + g.ToString();
+        print(list);
+    }
+
+    private void ClearGroundedBuffer()
+    {
+        for (int i = 0; i < groundedBufferSize; i++)
+        {
+            groundedBuffer[i] = false;
+        }
+    }
+
+    private bool WasGroundedInBuffer()
+    {
+        return groundedBuffer.Contains(true);
+    }
+
     private void Jump()
     {
-        if (virtualController.JumpButtonHold)
+        jumpSlider.value = virtualController.Time_Hold_Button_A / jumpSlider.maxValue;
+
+        if (virtualController.JumpButtonReleased )
         {
-            currentjumpPower += Time.fixedDeltaTime;
+            ClearGroundedBuffer();
+            float recievedPower = virtualController.Time_Hold_Button_A;
+            if (recievedPower > maxJumpBoost)
+                recievedPower = jumpPower;
+            currentMove.Jump(this, recievedPower);
         }
-        else if (virtualController.JumpButtonPressedThisFrame)
-        {
-            currentMove.Jump(this, currentjumpPower);
-            currentjumpPower = 1;
-        }
+        //else if (virtualController.JumpButtonPressedThisFrame && virtualController.pressList_A[4] == XInputDotNetPure.ButtonState.Pressed)
+        //{
+        //    currentMove.Jump(this, 1f);
+        //}
+
     }
     public float GetAngle()
     {
@@ -233,6 +283,7 @@ public class StateMachine : MonoBehaviour
             SwitchStates(State.IDLE, idleMove);
             animationController.SetBool(this.animator, "grounded", true);
         }
+        StoreGroundedThisFrame();
     }
     /// <summary>
     /// Checks for collision with walls in front of player
