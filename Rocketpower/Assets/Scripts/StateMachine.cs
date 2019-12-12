@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using System.Collections;
 
 public class StateMachine : MonoBehaviour
 {
@@ -43,25 +44,39 @@ public class StateMachine : MonoBehaviour
     public float forwardVelocity = 0;
     #endregion
     #region gravity and jump settings
+
+    /// <summary>
+    /// Jump = minimumJumpVelocity * jumpMultiplier + jumpBoost 
+    /// </summary>
     [Header("gravity and jump Settings: ")]
-    [SerializeField] private float jumpHeight = 4;
-    [SerializeField] public float timeToJumpApex = .4f;
-    public float gravity = 14.0f;
-    public float normalGravity = 0f;
-    [HideInInspector] public float jumpVelocity;
+    public float gravityMultiplier = 1f; //use this to increase gravity after the calculation
+    public float jumpMultiplier = 1f;
+    public float maxJumpBoost = 0;
+    public float jumpHeight = 4;
+    [HideInInspector] public float timeToJumpApex = 0;
+    [HideInInspector] public float gravity = 0;
+    [HideInInspector] public float normalGravity = 0f;
+
+    [HideInInspector] public float minimumJumpVelocity;
     [HideInInspector] public float forwardJumpMultiplier = 5;
     [HideInInspector] public bool isGrounded;
+
     public Ledge ledge;
     public CameraFollow cameraScript;
     public RotatePlayer playerScript;
-    public float jumpPower = 0;
-    public float maxJumpBoost = 0;
+
+
     public State prevState;
     #endregion
 
     public Slider jumpSlider;
-    public float groundedBufferSize = 5;
+    public int groundedBufferSize = 5;
     public List<bool> groundedBuffer = new List<bool>();
+
+    public bool canClimb = true;
+
+    public float timeFalling = 0;
+    public float deltaFalling = 5;
 
     private void Awake()
     {
@@ -70,8 +85,10 @@ public class StateMachine : MonoBehaviour
         idleMove.EnterState(this);
         accelRatePerSec = maxSpeed / timeZeroToMax;
         decelRatePerSec = -maxSpeed / timeMaxToZero;
+
+        timeToJumpApex = jumpHeight / 10;
         gravity = -(2 * jumpHeight) / Mathf.Pow(timeToJumpApex, 2);
-        jumpVelocity = Mathf.Abs(gravity) * timeToJumpApex;
+        minimumJumpVelocity = Mathf.Abs(gravity) * timeToJumpApex;
         normalGravity = gravity;
         jumpSlider.maxValue = maxJumpBoost;
     }
@@ -187,8 +204,10 @@ public class StateMachine : MonoBehaviour
     }
     public void MovePlayer()
     {
+        StoreGroundedThisFrame();
         if (!WasGroundedInBuffer() && playerState != State.CLIMB)  //|| playerState == State.WALLRUN_RIGHT || playerState == State.WALLRUN_LEFT)
-            moveDir.y += gravity * Time.fixedDeltaTime;
+            moveDir.y += (gravity * gravityMultiplier) * Time.fixedDeltaTime;
+
         Jump();
         moveDir.x = stateMoveDir.x;
         moveDir.z = stateMoveDir.z;
@@ -213,16 +232,16 @@ public class StateMachine : MonoBehaviour
 
     private void StoreGroundedThisFrame()
     {
-        groundedBuffer.RemoveAt(4);
-        groundedBuffer.Insert(0,isGrounded);
+        groundedBuffer.RemoveAt(groundedBufferSize - 1);
+        groundedBuffer.Insert(0, isGrounded);
 
         string list = "";
         foreach (bool g in groundedBuffer)
             list += " " + g.ToString();
-        print(list);
+
     }
 
-    private void ClearGroundedBuffer()
+    public void ClearGroundedBuffer()
     {
         for (int i = 0; i < groundedBufferSize; i++)
         {
@@ -235,16 +254,35 @@ public class StateMachine : MonoBehaviour
         return groundedBuffer.Contains(true);
     }
 
+    private IEnumerator OnJump()
+    {
+        float YpositionOnJump = transform.position.y + jumpHeight;
+        while (!isGrounded)
+        {
+            yield return new WaitForEndOfFrame();
+        }
+        OnLand(YpositionOnJump, transform.position.y);
+    }
+
+    private void OnLand(float jumpPosY, float landingPosY)
+    {
+        if (jumpPosY - landingPosY > deltaFalling)
+        {
+            Debug.Log("fell this height: " + (jumpPosY - landingPosY).ToString());
+        }
+    }
+
     private void Jump()
     {
         jumpSlider.value = virtualController.Time_Hold_Button_A / jumpSlider.maxValue;
 
-        if (virtualController.JumpButtonReleased )
+        if (virtualController.JumpButtonReleased)
         {
+            StartCoroutine(OnJump());
             ClearGroundedBuffer();
             float recievedPower = virtualController.Time_Hold_Button_A;
             if (recievedPower > maxJumpBoost)
-                recievedPower = jumpPower;
+                recievedPower = maxJumpBoost;
             currentMove.Jump(this, recievedPower);
         }
         //else if (virtualController.JumpButtonPressedThisFrame && virtualController.pressList_A[4] == XInputDotNetPure.ButtonState.Pressed)
@@ -268,22 +306,24 @@ public class StateMachine : MonoBehaviour
     /// </summary>
     public void CheckGrounded()
     {
-        if (playerState == State.CLIMB)
-            return;
-        RaycastHit hit;
-        if (!Physics.Raycast(transform.position + Vector3.up - transform.forward, Vector3.down, out hit, 1 +( jumpHeight /2)))
+        if (playerState != State.CLIMB)
         {
-            isGrounded = false;
-            animationController.SetBool(this.animator, "grounded", false);
-            SwitchStates(State.AIRBORNE, airborneMove);
+            RaycastHit hit;
+            if (!Physics.Raycast(transform.position + Vector3.up, Vector3.down, out hit, 1 + (jumpHeight / 2)))
+            {
+                isGrounded = false;
+                animationController.SetBool(this.animator, "grounded", false);
+                SwitchStates(State.AIRBORNE, airborneMove);
+            }
+            else
+            {
+                isGrounded = true;
+                SwitchStates(State.IDLE, idleMove);
+                animationController.SetBool(this.animator, "grounded", true);
+            }
         }
-        else
-        {
-            isGrounded = true;
-            SwitchStates(State.IDLE, idleMove);
-            animationController.SetBool(this.animator, "grounded", true);
-        }
-        StoreGroundedThisFrame();
+
+
     }
     /// <summary>
     /// Checks for collision with walls in front of player
@@ -293,7 +333,7 @@ public class StateMachine : MonoBehaviour
     {
         if (playerState == State.WALLRUN_LEFT || playerState == State.WALLRUN_RIGHT)
             return;
-        if (virtualController.ClimbButtonPressed && playerState != State.CLIMB)
+        if (virtualController.ClimbButtonPressed && playerState != State.CLIMB && canClimb)
         {
             ledge = ledgeDetector.CheckLedge();
             if (!ledge.empty)
@@ -345,4 +385,12 @@ public class StateMachine : MonoBehaviour
             }
         }
     }
+
+    public IEnumerator ClimbCooldown(float climbCoolDown)
+    {
+        canClimb = false;
+        yield return new WaitForSeconds(climbCoolDown);
+        canClimb = true;
+    }
+
 }

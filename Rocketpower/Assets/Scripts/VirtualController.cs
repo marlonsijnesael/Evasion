@@ -58,7 +58,7 @@ public class VirtualController : MonoBehaviour
         string list = "";
         foreach (ButtonState bState in pressList_A)
             list += " " + bState.ToString();
-        print(list);
+
     }
 
 

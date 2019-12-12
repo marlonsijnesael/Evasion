@@ -24,7 +24,7 @@ public class IdleMove : Move
         if (_owner.isGrounded)
         {
             _owner.isGrounded = false;
-            _owner.moveDir.y = _owner.jumpVelocity;
+            _owner.moveDir.y = _owner.minimumJumpVelocity;
         }
     }
 

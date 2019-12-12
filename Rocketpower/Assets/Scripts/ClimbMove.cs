@@ -1,4 +1,4 @@
-﻿
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,7 +7,12 @@ using UnityEngine;
 public class ClimbMove : Move
 {
     public float climbSpeed = 2.5f;
+    public float climbCoolDown = 2f;
+    public float maxClimbHeight = 25f;
     public AnimationManager.AnimationStates animation;
+    
+
+    public bool canClimb = false;
 
     public override void EnterState(StateMachine _owner)
     {
@@ -40,21 +45,27 @@ public class ClimbMove : Move
         yPosOrigin.y = _owner.ledge.hitPosition.y;
         Vector3 climbDir = _owner.ledge.hitPosition - _owner.ledge.playerPosition;
 
-        if (_owner.transform.position.y < yPosOrigin.y && _owner.virtualController.ClimbButtonPressed)
+        if (_owner.transform.position.y < yPosOrigin.y && _owner.virtualController.ClimbButtonPressed && _owner.transform.position.y < maxClimbHeight && _owner.canClimb)
         {
             Debug.Log("climbig");
             _owner.moveDir.y = climbDir.y + 1;
             //_owner.stateMoveDir = climbDir + Vector3.up + (_owner.transform.rotation * Vector3.forward) * _owner.forwardVelocity;
+        }
+        else if (_owner.transform.position.y >= maxClimbHeight &&_owner.canClimb)
+        {
+            _owner.moveDir.y = 0;
+          
         }
 
         else
         {
             Debug.Log("stop climbing");
             _owner.SwitchStates(StateMachine.State.AIRBORNE, _owner.airborneMove);
+            _owner.StartCoroutine(_owner.ClimbCooldown(climbCoolDown));
+            _owner.ClearGroundedBuffer();
+            
         }
-        Debug.DrawRay(_owner.ledge.playerPosition, climbDir, Color.red, 10f);
-        // newPos.y += _owner.ledge.height;
-        // _owner.transform.position = newPos;
-
+        Debug.DrawRay(_owner.ledge.playerPosition, climbDir, Color.red, 10f); 
     }
+
 }

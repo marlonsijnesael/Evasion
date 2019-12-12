@@ -28,7 +28,7 @@ public class WallrunMove : Move
 
     public override void Jump(StateMachine _owner, float power)
     {
-        _owner.moveDir.y = _owner.jumpVelocity;
+        _owner.moveDir.y = _owner.minimumJumpVelocity;
 
     }
 

@@ -4,9 +4,11 @@
 public class AirMove : Move
 {
     public AnimationManager.AnimationStates animation;
-
+    public float timeFallingToRoll = 2f;
+    
     public override void EnterState(StateMachine _owner)
     {
+        _owner.timeFalling = 0;
         _owner.animationController.SetBool(_owner.animator, animation.ToString(), false);
     }
 
@@ -15,11 +17,17 @@ public class AirMove : Move
         _owner.LeftRightCollisionsTest();
         _owner.FrontCollisionTest();
         _owner.playerRotator.UpdateRotation();
+        _owner.timeFalling += Time.deltaTime;
+        Debug.Log("falling: " + _owner.timeFalling);
         Move(_owner);
     }
 
     public override void ExitState(StateMachine _owner)
     {
+        if(_owner.timeFalling >= timeFallingToRoll)
+        {
+
+        }
         _owner.animationController.SetBool(_owner.animator, animation.ToString(), true);
     }
     public override void Jump(StateMachine _owner, float power)
@@ -27,7 +35,7 @@ public class AirMove : Move
 
     }
 
-    
+ 
     
     private void Move(StateMachine _owner)
     {

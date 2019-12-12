@@ -19,7 +19,7 @@ public class ScoreUI : MonoBehaviour
 	
 	public void StartChangingColor(Color start, Color goal){
 		StartCoroutine(ChangeColor(start, goal));
-		Debug.Log("start changing from" + start + " to " + goal);
+
 	}
 	
 	private IEnumerator ChangeColor(Color start, Color goal){

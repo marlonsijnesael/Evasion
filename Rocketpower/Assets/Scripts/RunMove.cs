@@ -28,7 +28,7 @@ public class RunMove : Move
         if (_owner.isGrounded)
         {
             _owner.isGrounded = false;
-            _owner.moveDir.y = _owner.jumpVelocity + power;
+            _owner.moveDir.y = _owner.minimumJumpVelocity * _owner.jumpMultiplier + power;
             _owner.stateMoveDir += (_owner.transform.rotation * Vector3.forward) * (_owner.forwardJumpMultiplier * power - _owner.GetAngle());
         }
     }
