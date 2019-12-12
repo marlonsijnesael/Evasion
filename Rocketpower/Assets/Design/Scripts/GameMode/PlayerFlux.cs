@@ -54,7 +54,8 @@ public class PlayerFlux : MonoBehaviour
         {
             gm.fluxPlayer = this;
             gm.ColorandSpeedSwitch();
-            gm.textFluxPlayer.text = "Flux: " + gm.fluxPlayer.ToString();
+            gm.textFluxP1.text = "Flux: " + gm.fluxPlayer.ToString();
+            gm.textFluxP2.text = "Flux: " + gm.fluxPlayer.ToString();
             Destroy(other.gameObject);
         }
 
@@ -102,7 +103,8 @@ public class PlayerFlux : MonoBehaviour
                         gm.fluxPlayer = this;
                         gm.ColorandSpeedSwitch();
                         gm.sliderCaptureObject.SetActive(false);
-                        gm.textFluxPlayer.text = "Flux: " + gm.fluxPlayer.ToString();
+                        gm.textFluxP1.text = "Flux: " + gm.fluxPlayer.ToString();
+                        gm.textFluxP2.text = "Flux: " + gm.fluxPlayer.ToString();
                         gm.StartCoroutine("FluxColliderSeconds");
                         isFluxCaptured = false;
                         currFluxCaptureTime = 0;

@@ -6,68 +6,82 @@ using UnityEngine;
 public class FluxManager : MonoBehaviour
 {
     #region Public Script References
-    public GameObject canvas_D1, canvas_D2;
+    [HideInInspector] public GameObject canvas_D1, canvas_D2;
     [HideInInspector] public StateMachine smP1;
     [HideInInspector] public StateMachine smP2;
     [HideInInspector] public PlayerFlux player1;
     [HideInInspector] public PlayerFlux player2;
-    public VirtualController vControllerP1, vControllerP2;
-
+    [HideInInspector] public VirtualController vControllerP1, vControllerP2;
     #endregion
-    [Header("Players")]
+    
+    #region Player Variables
     public Color player1color;
     public Color player2color;
+    public int mSpeed_It, mSpeed_notIt;
+    #endregion
+
+    [Header("GameMode")]
     #region Flux Player + Score
     public PlayerFlux fluxPlayer;
     private int player1score;
     private int player2score;
     private int pastPlayer1Score;
     private int pastPlayer2Score;
-    public Text textP1_D1, textP1_D2;
-    public Text textP2_D1, textP2_D2;
-    [HideInInspector] public Text textFluxPlayer;
+    [HideInInspector] public Text textFluxP1, textFluxP2;
     #endregion
-    [Header("GameMode")]
     #region Flux Capture
     public float fluxCaptureTime;
-    public bool isFluxPlayerColliderOnCD;
+    [HideInInspector] public bool isFluxPlayerColliderOnCD;
     [HideInInspector] public Slider sliderCaptureTime;
     [HideInInspector] public Image sliderFillImage;
     [HideInInspector] public GameObject sliderCaptureObject;
     #endregion
     #region Pre-Round Variables
-    public bool readyP1;
-    public bool readyP2;
+    [HideInInspector] public bool readyP1;
+    [HideInInspector] public bool readyP2;
     private int startCountdownTime = 5;
     #endregion
     #region Pre-Round Objects
-    public GameObject startCountdownObjectD1, startCountdownObjectD2;
-    public Text startCountdownTextDisplay1, startCountDownTextDisplay2;
-    public GameObject[] readyChecks;
-    public GameObject stasisP1;
-    public GameObject stasisP2;
-    public Toggle readyToggleP1;
-    public Toggle readyToggleP2;
+    [HideInInspector] public GameObject startCountdownObjectD1, startCountdownObjectD2;
+    [HideInInspector] public Text startCountdownTextD1, startCountdownTextD2;
+    [HideInInspector] public GameObject readyChecksD1, readyChecksD2;
+    [HideInInspector] public GameObject stasisP1;
+    [HideInInspector] public GameObject stasisP2;
+    [HideInInspector] public Toggle readyToggleP1;
+    [HideInInspector] public Toggle readyToggleP2;
     #endregion
     #region In-Round
-    private int roundCountdownTime = 120;
-    public Text roundCountdownText_D1, roundCountdownText_D2;
-    public GameObject inRoundUI_D1, inRoundUI_D2;
+    public int roundCountdownTime = 120;
+    private bool isStartRoundTimer = true;
+    [HideInInspector] public Text roundCountdownText_D1, roundCountdownText_D2;
+    [HideInInspector] public GameObject inRoundUI_D1, inRoundUI_D2;
     #endregion
-    GameObject[] platformArray;
+
+    [Header("WinCondition")]
+    #region WinCondition
+    private bool stopWinCountDown;
+    private IEnumerator coroutineWinTimer;
+    [HideInInspector] public bool isWinCountDownActive = true;
+    public int winStartCountdownTime = 20;
+    private int winCountDownTime;
+    [HideInInspector] public GameObject winCountDownD1, winCountDownD2;
+    [HideInInspector] public Text winCountDownTextD1, winCountDownTextD2;
+    [HideInInspector] public GameObject endScreenD1, endScreenD2;
+    [HideInInspector] public Text endTextD1, endTextD2;
+    #endregion
 
     [Header("UI")]
     #region ScoreHexagons
     public int platformsTotal = 3;
-    public GameObject scoreHexagonPrefab;
-    public GameObject scoreArrowPrefab;
-    public Sprite scoreArrowSprite;
-    public Sprite scoreArrowArrowSprite;
+    [HideInInspector] public GameObject scoreHexagonPrefab;
+    [HideInInspector] public GameObject scoreArrowPrefab;
+    [HideInInspector] public Sprite scoreArrowSprite;
+    [HideInInspector] public Sprite scoreArrowArrowSprite;
     public int scoreHexagonSize = 75;
     private List<ScoreUI> scoreHexagonList_D1 = new List<ScoreUI>();
     private List<ScoreUI> scoreHexagonList_D2 = new List<ScoreUI>();
-
-    public GameObject scoreArrow_D1, scoreArrow_D2;
+    GameObject[] platformArray;
+    [HideInInspector] public GameObject scoreArrow_D1, scoreArrow_D2;
     #endregion
 
     private void Awake()
@@ -108,10 +122,7 @@ public class FluxManager : MonoBehaviour
             scoreArrow_D1 = newArrow;
         else
             scoreArrow_D2 = newArrow;
-
     }
-
-
 
     private void Update()
     {
@@ -119,12 +130,14 @@ public class FluxManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             fluxPlayer = player1;
-            textFluxPlayer.text = "Flux: " + fluxPlayer.ToString();
+            textFluxP1.text = "Flux: " + fluxPlayer.ToString();
+            textFluxP2.text = "Flux: " + fluxPlayer.ToString();
         }
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
             fluxPlayer = player2;
-            textFluxPlayer.text = "Flux: " + fluxPlayer.ToString();
+            textFluxP1.text = "Flux: " + fluxPlayer.ToString();
+            textFluxP2.text = "Flux: " + fluxPlayer.ToString();
         }
         startRound();
     }
@@ -135,21 +148,21 @@ public class FluxManager : MonoBehaviour
         if (fluxPlayer == player1)
         {
             sliderFillImage.color = player2color;
-            smP1.maxSpeed = 12;
+            smP1.maxSpeed = mSpeed_It;
         }
         else
         {
-            smP1.maxSpeed = 14;
+            smP1.maxSpeed = mSpeed_notIt;
         }
 
         if (fluxPlayer == player2)
         {
             sliderFillImage.color = player1color;
-            smP2.maxSpeed = 12;
+            smP2.maxSpeed = mSpeed_It;
         }
         else
         {
-            smP2.maxSpeed = 14;
+            smP2.maxSpeed = mSpeed_notIt;
         }
 
         player1.TurnFlux(fluxPlayer == player1);
@@ -194,6 +207,9 @@ public class FluxManager : MonoBehaviour
 
     public void updateScore()
     {
+        if(winCountDownTime >= 0 && !isWinCountDownActive){
+            stopWinCountDown = true;
+        }
         pastPlayer1Score = player1score;
         pastPlayer2Score = player2score;
         player1score = 0;
@@ -210,10 +226,7 @@ public class FluxManager : MonoBehaviour
                 player2score++;
             }
         }
-        textP1_D1.text = player1score.ToString();
-        textP2_D1.text = player2score.ToString();
-        textP1_D2.text = textP1_D1.text;
-        textP2_D2.text = textP2_D1.text;
+        WinCondition();
 
         //change score UI
         if (pastPlayer1Score < player1score && pastPlayer2Score == player2score)
@@ -296,18 +309,14 @@ public class FluxManager : MonoBehaviour
             readyP2 = true;
             readyToggleP2.isOn = true;
         }
-        if (readyToggleP1.isOn && readyToggleP2.isOn)
+        if (readyToggleP1.isOn && readyToggleP2.isOn && isStartRoundTimer)
         {
-            startCountdownObjectD1.SetActive(true);
-            startCountdownObjectD2.SetActive(true);
-            startCountdownTextDisplay1.text = startCountdownTime.ToString();
-            startCountDownTextDisplay2.text = startCountdownTime.ToString();
+            ToggleUI(startCountdownObjectD1, startCountdownObjectD2, true);
+            ToggleUI(readyChecksD1, readyChecksD2, false);
+            ToggleUIText(startCountdownTextD1, startCountdownTextD2, startCountdownTime);
+            isStartRoundTimer = false;
 
             StartCoroutine(StartRoundCountdown());
-            readyToggleP1.isOn = false;
-            readyToggleP2.isOn = false;
-            readyChecks[0].SetActive(false);
-            readyChecks[1].SetActive(false);
         }
     }
 
@@ -317,19 +326,14 @@ public class FluxManager : MonoBehaviour
         {
             yield return new WaitForSeconds(1);
             startCountdownTime--;
-            startCountdownTextDisplay1.text = startCountdownTime.ToString();
-            startCountDownTextDisplay2.text = startCountdownTime.ToString();
+            ToggleUIText(startCountdownTextD1, startCountdownTextD2, startCountdownTime);
 
         }
         stasisP1.gameObject.SetActive(false);
         stasisP2.gameObject.SetActive(false);
-        startCountdownObjectD1.SetActive(false);
-        startCountdownObjectD2.SetActive(false);
-
-        inRoundUI_D1.SetActive(true);
-        inRoundUI_D2.SetActive(true);
-        roundCountdownText_D1.text = roundCountdownTime.ToString();
-        roundCountdownText_D2.text = roundCountdownTime.ToString();
+        ToggleUI(startCountdownObjectD1, startCountdownObjectD2, false);
+        ToggleUI(inRoundUI_D1, inRoundUI_D2, true);
+        ToggleUIText(roundCountdownText_D1, roundCountdownText_D2, roundCountdownTime);
 
         StartCoroutine(GameRoundCountdown());
     }
@@ -340,11 +344,69 @@ public class FluxManager : MonoBehaviour
         {
             yield return new WaitForSeconds(1);
             roundCountdownTime--;
-            roundCountdownText_D1.text = roundCountdownTime.ToString();
-            roundCountdownText_D2.text = roundCountdownTime.ToString();
-
+            ToggleUIText(roundCountdownText_D1, roundCountdownText_D2, roundCountdownTime);
         }
         Time.timeScale = 0;
+        WinScreen();
+    }
+
+public void WinCondition(){
+        coroutineWinTimer = winCountDown();
+        if(player1score == platformsTotal || player2score == platformsTotal && isWinCountDownActive){
+            winCountDownTime = winStartCountdownTime;
+            isWinCountDownActive = false;
+            stopWinCountDown = false;
+            StartCoroutine(winCountDown());
+            ToggleUIText(winCountDownTextD1, winCountDownTextD2, winStartCountdownTime);
+            ToggleUI(winCountDownD1, winCountDownD2, true);
+        }
+        else if(!isWinCountDownActive){
+            isWinCountDownActive = true;
+            ToggleUI(winCountDownD1, winCountDownD2, false);
+        }
+    }
+
+    IEnumerator winCountDown(){
+        while(winCountDownTime >= 0 && !isWinCountDownActive && !stopWinCountDown){
+            yield return new WaitForSeconds(1);
+            winCountDownTime--;
+            ToggleUIText(winCountDownTextD1, winCountDownTextD2, winCountDownTime);
+        }
+        if(winCountDownTime <= 0 && !stopWinCountDown){
+            Debug.Log("End Me");
+            Time.timeScale = 0;
+            WinScreen();
+        }
+        yield return new WaitForEndOfFrame();
+        //yield return new WaitWhile(() => winCountDownTime >= 0);
+    }
+
+    public void WinScreen(){
+        ToggleUI(inRoundUI_D1, inRoundUI_D2, false);
+        ToggleUI(endScreenD1, endScreenD2, true);
+
+        if(player1score > player2score){
+            endTextD1.text = "Winner";
+            endTextD2.text = "Loser";
+        }
+        if(player2score > player1score){
+            endTextD1.text = "Loser";
+            endTextD2.text = "Winner";
+        }
+        if(player1score == player2score){
+            endTextD1.text = "Draw";
+            endTextD2.text = "Draw";
+        }
+    }
+
+    private void ToggleUI(GameObject d1, GameObject d2, bool turnOn){
+        d1.SetActive(turnOn);
+        d2.SetActive(turnOn);
+    }
+
+    private void ToggleUIText(Text d1, Text d2, int integer){
+        d1.text = integer.ToString();
+        d2.text = integer.ToString();
     }
 
     IEnumerator FluxColliderSeconds()
