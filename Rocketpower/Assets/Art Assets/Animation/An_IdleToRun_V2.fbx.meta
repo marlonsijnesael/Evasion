@@ -1,11 +1,11 @@
 fileFormatVersion: 2
-guid: e4a7795f3932879499161b123a5afeba
+guid: f81efc6a07208fc4fbfc2a09feae68cf
 ModelImporter:
   serializedVersion: 26
   internalIDToNameTable:
   - first:
       74: 1827226128182048838
-    second: take climbing
+    second: IdleToRun_v2
   externalObjects: {}
   materials:
     importMaterials: 1
@@ -19,12 +19,17 @@ ModelImporter:
     optimizeGameObjects: 0
     motionNodeName: 
     rigImportErrors: 
-    rigImportWarnings: 
+    rigImportWarnings: "Copied Avatar Rig Configuration mis-match. Bone length in
+      copied configuration does not match position in animation file:\n\t'ball_l'
+      : position error = 7.433642 mm\n\t'spine_02' : position error = 6.816072 mm\n\t'spine_03'
+      : position error = 2.718141 mm\n"
     animationImportErrors: 
     animationImportWarnings: "\nClip 'Take 001' has import animation warnings that
       might lower retargeting quality:\nNote: Activate translation DOF on avatar to
-      improve retargeting quality.\n\t'spine_02' has translation animation that will
-      be discarded.\n\t'spine_03' has translation animation that will be discarded.\n"
+      improve retargeting quality.\n\t'ball_r' has translation animation that will
+      be discarded.\n\t'ball_l' has translation animation that will be discarded.\n\t'spine_02'
+      has translation animation that will be discarded.\n\t'spine_03' has translation
+      animation that will be discarded.\n"
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
@@ -38,11 +43,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: take climbing
+      name: IdleToRun_v2
       takeName: Take 001
       internalID: 0
-      firstFrame: 174
-      lastFrame: 200
+      firstFrame: 106
+      lastFrame: 117
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -52,8 +57,8 @@ ModelImporter:
       loopTime: 0
       loopBlend: 0
       loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
       keepOriginalOrientation: 0
       keepOriginalPositionY: 1
       keepOriginalPositionXZ: 0
