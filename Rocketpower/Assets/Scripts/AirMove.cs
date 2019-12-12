@@ -18,18 +18,16 @@ public class AirMove : Move
         _owner.FrontCollisionTest();
         _owner.playerRotator.UpdateRotation();
         _owner.timeFalling += Time.deltaTime;
-        Debug.Log("falling: " + _owner.timeFalling);
+        //Debug.Log("falling: " + _owner.timeFalling);
         Move(_owner);
     }
 
     public override void ExitState(StateMachine _owner)
     {
-        if(_owner.timeFalling >= timeFallingToRoll)
-        {
-
-        }
+       
         _owner.animationController.SetBool(_owner.animator, animation.ToString(), true);
     }
+
     public override void Jump(StateMachine _owner, float power)
     {
 

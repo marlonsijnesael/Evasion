@@ -68,7 +68,7 @@ public class VirtualController : MonoBehaviour
         if (JumpButtonHold && (VerticalMovement != 0 || HorizontalMovement != 0))
         {
             timeHold_Button_A += Time.deltaTime * 5;
-            Debug.Log("jumppower: " + timeHold_Button_A);
+            //Debug.Log("jumppower: " + timeHold_Button_A);
         }
         else
         {

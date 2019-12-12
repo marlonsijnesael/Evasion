@@ -6,7 +6,7 @@ public class RunMove : Move
     public AnimationManager.AnimationStates animation;
     public override void EnterState(StateMachine _owner)
     {
-        _owner.animationController.SetBool(_owner.animator, animation.ToString(), true);
+        //_owner.animationController.SetBool(_owner.animator, animation.ToString(), true);
     }
 
     public override void Act(StateMachine _owner)
@@ -21,7 +21,7 @@ public class RunMove : Move
 
     public override void ExitState(StateMachine _owner)
     {
-        _owner.animationController.SetBool(_owner.animator, animation.ToString(), false);
+        //_owner.animationController.SetBool(_owner.animator, animation.ToString(), false);
     }
     public override void Jump(StateMachine _owner, float power)
     {

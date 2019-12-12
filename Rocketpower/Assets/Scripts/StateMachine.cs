@@ -59,7 +59,7 @@ public class StateMachine : MonoBehaviour
 
     [HideInInspector] public float minimumJumpVelocity;
     [HideInInspector] public float forwardJumpMultiplier = 5;
-    [HideInInspector] public bool isGrounded;
+public bool isGrounded;
 
     public Ledge ledge;
     public CameraFollow cameraScript;
@@ -77,6 +77,8 @@ public class StateMachine : MonoBehaviour
 
     public float timeFalling = 0;
     public float deltaFalling = 5;
+    public bool wasJump = false;
+    private float YpositionOnJump = 0f;
 
     private void Awake()
     {
@@ -108,6 +110,7 @@ public class StateMachine : MonoBehaviour
         SetInitVel();
         if (virtualController.VerticalMovement != 0 || virtualController.HorizontalMovement != 0)
         {
+            animationController.SetBool(animator, "running", true);
             if (playerState != State.RUN
                            && playerState != State.CLIMB
                            && playerState != State.AIRBORNE
@@ -119,6 +122,7 @@ public class StateMachine : MonoBehaviour
         else if (virtualController.VerticalMovement == 0 && virtualController.HorizontalMovement == 0)
         {
             SwitchStates(State.IDLE, idleMove);
+            animationController.SetBool(animator, "running", false);
         }
         if (Input.GetKey(KeyCode.Z))
         {
@@ -256,20 +260,30 @@ public class StateMachine : MonoBehaviour
 
     private IEnumerator OnJump()
     {
-        float YpositionOnJump = transform.position.y + jumpHeight;
-        while (!isGrounded)
-        {
-            yield return new WaitForEndOfFrame();
-        }
-        OnLand(YpositionOnJump, transform.position.y);
+        ClearGroundedBuffer();
+        YpositionOnJump = transform.position.y + jumpHeight;
+        yield return new WaitUntil(() => groundedBuffer.Contains(true));
+       
+        //Debug.Log("landed, calling onland()");
+        //StartCoroutine(OnLand(YpositionOnJump, transform.position.y));
     }
 
-    private void OnLand(float jumpPosY, float landingPosY)
+    private IEnumerator OnLand(float jumpPosY, float landingPosY)
     {
-        if (jumpPosY - landingPosY > deltaFalling)
+        Debug.Log(jumpPosY - landingPosY);
+        animator.SetBool("B_IsRoling", false);
+
+        if (jumpPosY - landingPosY > deltaFalling && forwardVelocity > 0)
         {
-            Debug.Log("fell this height: " + (jumpPosY - landingPosY).ToString());
+            Debug.Log("rolling");
+            animator.SetBool("B_IsGrounded", true);
+          animator.SetTrigger("roll");
+
         }
+        yield return new WaitForEndOfFrame();
+    
+        YpositionOnJump = 0;
+        //animator.SetBool("B_IsRoling", false);
     }
 
     private void Jump()
@@ -279,24 +293,22 @@ public class StateMachine : MonoBehaviour
         if (virtualController.JumpButtonReleased)
         {
             StartCoroutine(OnJump());
-            ClearGroundedBuffer();
+            wasJump = true;
+
             float recievedPower = virtualController.Time_Hold_Button_A;
             if (recievedPower > maxJumpBoost)
                 recievedPower = maxJumpBoost;
             currentMove.Jump(this, recievedPower);
         }
-        //else if (virtualController.JumpButtonPressedThisFrame && virtualController.pressList_A[4] == XInputDotNetPure.ButtonState.Pressed)
-        //{
-        //    currentMove.Jump(this, 1f);
-        //}
 
     }
+
     public float GetAngle()
     {
         RaycastHit hitA;
         if (Physics.Raycast(transform.position + transform.forward, -transform.up, out hitA))
         {
-            print((Mathf.Atan2(transform.position.y, transform.position.x) * Mathf.Rad2Deg));
+            //print((Mathf.Atan2(transform.position.y, transform.position.x) * Mathf.Rad2Deg));
         }
         return Mathf.Atan2(transform.position.y, transform.position.x) * Mathf.Rad2Deg;
     }
@@ -309,17 +321,33 @@ public class StateMachine : MonoBehaviour
         if (playerState != State.CLIMB)
         {
             RaycastHit hit;
-            if (!Physics.Raycast(transform.position + Vector3.up, Vector3.down, out hit, 1 + (jumpHeight / 2)))
+            Vector3 rayPos = transform.position + Vector3.up;
+            if (Physics.Raycast(rayPos, Vector3.down, out hit))  /*1 + (jumpHeight / 2))*/
             {
-                isGrounded = false;
-                animationController.SetBool(this.animator, "grounded", false);
-                SwitchStates(State.AIRBORNE, airborneMove);
+                if (rayPos.y - hit.point.y > 1.1f)
+                {
+                    isGrounded = false;
+                    animationController.SetBool(this.animator, "grounded", false);
+                    SwitchStates(State.AIRBORNE, airborneMove);
+                }
+                else
+                {
+                    isGrounded = true;
+                    SwitchStates(State.IDLE, idleMove);
+                    animationController.SetBool(this.animator, "grounded", true);
+                    if (wasJump)
+                    {
+                        wasJump = false;
+                        StartCoroutine(OnLand(YpositionOnJump, transform.position.y));
+                    }
+                  
+                }
             }
             else
             {
-                isGrounded = true;
-                SwitchStates(State.IDLE, idleMove);
-                animationController.SetBool(this.animator, "grounded", true);
+                 isGrounded = false;
+                    animationController.SetBool(this.animator, "grounded", false);
+                    SwitchStates(State.AIRBORNE, airborneMove);
             }
         }
 

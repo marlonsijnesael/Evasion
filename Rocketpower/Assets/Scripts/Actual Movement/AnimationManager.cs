@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEditor.Animations;
 public class AnimationManager : MonoBehaviour
 {
     [Header("Animator variable names")]
