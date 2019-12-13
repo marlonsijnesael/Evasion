@@ -58,18 +58,18 @@ MonoBehaviour:
     max: 10
   atmosphereThickness:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: 0.5
     min: 0
     max: 5
   skyTint:
     m_OverrideState: 1
-    m_Value: {r: 0.36040404, g: 0.82323897, b: 0.8396226, a: 1}
+    m_Value: {r: 1, g: 1, b: 1, a: 1}
     hdr: 0
     showAlpha: 1
     showEyeDropper: 1
   groundColor:
     m_OverrideState: 1
-    m_Value: {r: 0.49056602, g: 0.3340048, b: 0.3216447, a: 1}
+    m_Value: {r: 0.4339623, g: 0.38254946, b: 0.3786935, a: 1}
     hdr: 0
     showAlpha: 1
     showEyeDropper: 1

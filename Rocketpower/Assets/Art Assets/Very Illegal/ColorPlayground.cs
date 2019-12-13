@@ -20,6 +20,7 @@ public class ColorPlayground : MonoBehaviour
 	public int pulseTime = 30;
 
 	[Header("Update")]
+	public bool autoUpdate = false;
 	public KeyCode updateKey = KeyCode.Space;
 
 	[Header("Meshes that need color changing")]
@@ -49,7 +50,7 @@ public class ColorPlayground : MonoBehaviour
 	}
 
 	private void Update() {
-		if (Input.GetKeyDown(updateKey)) {
+		if (autoUpdate || Input.GetKeyDown(updateKey)) {
 			UpdateColors();
 		}
 	}
