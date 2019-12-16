@@ -23,6 +23,7 @@ public class FluxManager : MonoBehaviour
     [Header("GameMode")]
     #region Flux Player + Score
     public PlayerFlux fluxPlayer;
+	public SparkVFX sparkVFX;
     private int player1score;
     private int player2score;
     private int pastPlayer1Score;
@@ -167,6 +168,8 @@ public class FluxManager : MonoBehaviour
 
         player1.TurnFlux(fluxPlayer == player1);
         player2.TurnFlux(fluxPlayer == player2);
+		
+		sparkVFX.SetPlayerToFollow(fluxPlayer.transform);
 
         //set scorearrow position and color
         scoreArrow_D1.SetActive(true);

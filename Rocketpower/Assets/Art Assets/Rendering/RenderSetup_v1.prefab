@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1609939008842924433}
   - component: {fileID: 9114330815705135526}
-  - component: {fileID: 7356223177534062001}
   m_Layer: 0
   m_Name: MaterialChangingScripts
   m_TagString: Untagged
@@ -48,20 +47,6 @@ MonoBehaviour:
   rainbowMaterial: {fileID: 2100000, guid: 54428a0b197f93b459e3096912329c6a, type: 2}
   officialYellowMaterial: {fileID: 2100000, guid: 6daa47b7692d48c42b90572938437d2d,
     type: 2}
---- !u!114 &7356223177534062001
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4452126129356523167}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c0a0300680a7d5d42938eadbaf3eb062, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  materialList:
-  - {fileID: 2100000, guid: ca1a20f6cc2d6c84abaa5a66b298eebd, type: 2}
 --- !u!1 &7011097598949794865
 GameObject:
   m_ObjectHideFlags: 0
