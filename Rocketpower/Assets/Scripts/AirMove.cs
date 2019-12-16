@@ -16,7 +16,7 @@ public class AirMove : Move
     {
         _owner.LeftRightCollisionsTest();
         _owner.FrontCollisionTest();
-        _owner.playerRotator.UpdateRotation();
+        //_owner.playerRotator.UpdateRotation();
         _owner.timeFalling += Time.deltaTime;
         //Debug.Log("falling: " + _owner.timeFalling);
         Move(_owner);

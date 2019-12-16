@@ -15,7 +15,7 @@ public class RunMove : Move
         _owner.Accelerate();
         _owner.FrontCollisionTest();
         _owner.LeftRightCollisionsTest();
-        _owner.playerRotator.UpdateRotation();
+        //_owner.playerRotator.UpdateRotation();
         Move(_owner);
     }
 
@@ -29,13 +29,13 @@ public class RunMove : Move
         {
             _owner.isGrounded = false;
             _owner.moveDir.y = _owner.minimumJumpVelocity * _owner.jumpMultiplier + power;
-            _owner.stateMoveDir += (_owner.transform.rotation * Vector3.forward) * (_owner.forwardJumpMultiplier * power - _owner.GetAngle());
+            _owner.stateMoveDir += _owner.transform.forward* (_owner.forwardJumpMultiplier * power - _owner.GetAngle());
         }
     }
 
     private void Move(StateMachine _owner)
     {
-        _owner.stateMoveDir = (_owner.transform.rotation * Vector3.forward) * _owner.forwardVelocity;
+        _owner.stateMoveDir = _owner.transform.forward * _owner.forwardVelocity;
         _owner.lastMoveDir = _owner.moveDir;
     }
 }

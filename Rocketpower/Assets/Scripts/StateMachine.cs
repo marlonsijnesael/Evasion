@@ -63,7 +63,7 @@ public bool isGrounded;
 
     public Ledge ledge;
     public CameraFollow cameraScript;
-    public RotatePlayer playerScript;
+ 
 
 
     public State prevState;

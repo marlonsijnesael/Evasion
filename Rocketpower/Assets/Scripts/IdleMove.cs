@@ -12,7 +12,7 @@ public class IdleMove : Move
     {
         _owner.SetInitVel();
         _owner.FrontCollisionTest();
-        _owner.playerRotator.UpdateRotation();
+        //_owner.playerRotator.UpdateRotation();
     }
 
     public override void ExitState(StateMachine _owner)
