@@ -294,10 +294,12 @@ public class EzCamera : MonoBehaviour
         switch (nextState)
         {
             case EzCameraState.State.FOLLOW:
+                Debug.Log("follow");
                 SetFollowEnabled(true);
                 m_stateMachine.SetCurrentState(m_followState);                
                 break;
             case EzCameraState.State.ORBIT:
+                Debug.Log("orbit");
                 SetOrbitEnabled(true);
                 m_stateMachine.SetCurrentState(m_orbitState);
                 break;

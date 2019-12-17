@@ -11,6 +11,7 @@ public class IdleMove : Move
     public override void Act(StateMachine _owner)
     {
         _owner.SetInitVel();
+        _owner.Accelerate();
         _owner.FrontCollisionTest();
         //_owner.playerRotator.UpdateRotation();
     }

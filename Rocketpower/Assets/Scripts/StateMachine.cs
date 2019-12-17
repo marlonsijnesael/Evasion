@@ -74,10 +74,16 @@ public bool isGrounded;
     public List<bool> groundedBuffer = new List<bool>();
 
     public bool canClimb = true;
-
+    public bool canWallRun = true;
+    public Camera playerCam;
     public float timeFalling = 0;
     public float deltaFalling = 5;
     public bool wasJump = false;
+
+    public float FOVIdle = 60;
+    public float FOVRun = 75;
+
+   public float boostedJumpPower = 1;
     private float YpositionOnJump = 0f;
 
     private void Awake()
@@ -90,7 +96,9 @@ public bool isGrounded;
 
         timeToJumpApex = jumpHeight / 10;
         gravity = -(2 * jumpHeight) / Mathf.Pow(timeToJumpApex, 2);
+
         minimumJumpVelocity = Mathf.Abs(gravity) * timeToJumpApex;
+
         normalGravity = gravity;
         jumpSlider.maxValue = maxJumpBoost;
     }
@@ -205,11 +213,13 @@ public bool isGrounded;
     public void SetInitVel()
     {
         stateMoveDir = new Vector3(0, 001f, 0);
+        moveDir.x = 0;
+        moveDir.z = 0;
     }
     public void MovePlayer()
     {
         StoreGroundedThisFrame();
-        if (!WasGroundedInBuffer() && playerState != State.CLIMB)  //|| playerState == State.WALLRUN_RIGHT || playerState == State.WALLRUN_LEFT)
+        if (!WasGroundedInBuffer() && playerState != State.CLIMB && playerState != State.WALLRUN_LEFT && playerState != State.WALLRUN_LEFT)  //|| playerState == State.WALLRUN_RIGHT || playerState == State.WALLRUN_LEFT)
             moveDir.y += (gravity * gravityMultiplier) * Time.fixedDeltaTime;
 
         Jump();
@@ -227,10 +237,14 @@ public bool isGrounded;
         if (virtualController.VerticalMovement != 0 || virtualController.HorizontalMovement != 0)
         {
             rate = accelRatePerSec;
+            playerCam.fieldOfView = Mathf.Lerp(playerCam.fieldOfView, FOVRun, Time.deltaTime);
         }
         else
+        {
+            playerCam.fieldOfView = Mathf.Lerp(playerCam.fieldOfView, FOVIdle,  Time.deltaTime);
             rate = decelRatePerSec;
-        forwardVelocity += rate * Time.fixedDeltaTime;
+        }
+            forwardVelocity += rate * Time.fixedDeltaTime;
         forwardVelocity = Mathf.Clamp(forwardVelocity, 0, maxSpeed);
     }
 
@@ -289,16 +303,17 @@ public bool isGrounded;
     private void Jump()
     {
         jumpSlider.value = virtualController.Time_Hold_Button_A / jumpSlider.maxValue;
-
+        boostedJumpPower = 1;
         if (virtualController.JumpButtonReleased)
         {
             StartCoroutine(OnJump());
             wasJump = true;
 
-            float recievedPower = virtualController.Time_Hold_Button_A;
-            if (recievedPower > maxJumpBoost)
-                recievedPower = maxJumpBoost;
-            currentMove.Jump(this, recievedPower);
+            boostedJumpPower = virtualController.Time_Hold_Button_A;
+            if (boostedJumpPower > maxJumpBoost)
+                boostedJumpPower = maxJumpBoost;
+            currentMove.Jump(this, 1);
+            virtualController.Time_Hold_Button_A =0f;
         }
 
     }
@@ -377,7 +392,7 @@ public bool isGrounded;
     public void LeftRightCollisionsTest()
     {
         RaycastHit hit;
-        if (Physics.Raycast(transform.position + Vector3.up, transform.right, out hit, 1 + cc.skinWidth) && virtualController.WallrunButtonPressed)
+        if (Physics.Raycast(transform.position + Vector3.up, transform.right, out hit, 1 + cc.skinWidth) && virtualController.WallrunButtonPressed && canWallRun)
         {
             float dot = Vector3.Dot(hit.normal, Vector3.up);
             if (dot > -0.7f && dot < 0.7f)
@@ -389,7 +404,7 @@ public bool isGrounded;
                 SwitchStates(State.WALLRUN_RIGHT, wallrunMoveRight);
             }
         }
-        else if (Physics.Raycast(transform.position + Vector3.up, -transform.right, out hit, 1 + cc.skinWidth) && virtualController.WallrunButtonPressed)
+        else if (Physics.Raycast(transform.position + Vector3.up, -transform.right, out hit, 1 + cc.skinWidth) && virtualController.WallrunButtonPressed && canWallRun)
         {
             float dot = Vector3.Dot(hit.normal, Vector3.up);
             if (dot > -0.7f && dot < 0.7f)
@@ -414,11 +429,11 @@ public bool isGrounded;
         }
     }
 
-    public IEnumerator ClimbCooldown(float climbCoolDown)
+    public IEnumerator ClimbCooldown(bool cooldownState, float coolDown)
     {
-        canClimb = false;
-        yield return new WaitForSeconds(climbCoolDown);
-        canClimb = true;
+        cooldownState = false;
+        yield return new WaitUntil(() => groundedBuffer.Contains(true));
+        cooldownState = true;
     }
 
 }

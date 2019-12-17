@@ -45,23 +45,18 @@ public class ClimbMove : Move
         yPosOrigin.y = _owner.ledge.hitPosition.y;
         Vector3 climbDir = _owner.ledge.hitPosition - _owner.ledge.playerPosition;
 
-        if (_owner.transform.position.y < yPosOrigin.y && _owner.virtualController.ClimbButtonPressed && _owner.transform.position.y < maxClimbHeight && _owner.canClimb)
+        if (_owner.transform.position.y < yPosOrigin.y && _owner.virtualController.ClimbButtonPressed)
         {
             Debug.Log("climbig");
             _owner.moveDir.y = climbDir.y + 1;
             //_owner.stateMoveDir = climbDir + Vector3.up + (_owner.transform.rotation * Vector3.forward) * _owner.forwardVelocity;
         }
-        else if (_owner.transform.position.y >= maxClimbHeight &&_owner.canClimb)
-        {
-            _owner.moveDir.y = 0;
-          
-        }
-
+ 
         else
         {
             Debug.Log("stop climbing");
             _owner.SwitchStates(StateMachine.State.AIRBORNE, _owner.airborneMove);
-            _owner.StartCoroutine(_owner.ClimbCooldown(climbCoolDown));
+            _owner.StartCoroutine(_owner.ClimbCooldown(_owner.canClimb, climbCoolDown));
             _owner.ClearGroundedBuffer();
             
         }

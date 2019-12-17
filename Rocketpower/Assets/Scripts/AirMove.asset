@@ -14,3 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noGoStates: 
   animation: 4
+  timeFallingToRoll: 2
+  friction: 1.47

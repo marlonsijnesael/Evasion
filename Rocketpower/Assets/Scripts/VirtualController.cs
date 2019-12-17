@@ -72,10 +72,10 @@ public class VirtualController : MonoBehaviour
         }
         else
         {
-            if (timeHold_Button_A > 0)
-                timeHold_Button_A = -Time.deltaTime;
+            if (timeHold_Button_A > 1)
+                timeHold_Button_A -= Time.deltaTime;
             else
-                timeHold_Button_A = 0;
+                timeHold_Button_A =1;
         }
     }
 
@@ -94,6 +94,10 @@ public class VirtualController : MonoBehaviour
         get
         {
             return timeHold_Button_A;
+        }
+        set
+        {
+            timeHold_Button_A = value;
         }
     }
 

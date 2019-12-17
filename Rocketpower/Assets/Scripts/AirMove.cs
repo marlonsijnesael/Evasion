@@ -5,7 +5,8 @@ public class AirMove : Move
 {
     public AnimationManager.AnimationStates animation;
     public float timeFallingToRoll = 2f;
-    
+    public float friction = 2;
+
     public override void EnterState(StateMachine _owner)
     {
         _owner.timeFalling = 0;
@@ -16,9 +17,7 @@ public class AirMove : Move
     {
         _owner.LeftRightCollisionsTest();
         _owner.FrontCollisionTest();
-        //_owner.playerRotator.UpdateRotation();
         _owner.timeFalling += Time.deltaTime;
-        //Debug.Log("falling: " + _owner.timeFalling);
         Move(_owner);
     }
 
@@ -38,6 +37,11 @@ public class AirMove : Move
     private void Move(StateMachine _owner)
     {
         _owner.stateMoveDir = (_owner.transform.rotation * Vector3.forward) * _owner.forwardVelocity;
-        // _owner.verticalDir = Vector3.zero;
+        //_owner.stateMoveDir = _owner.transform.forward  * (_owner.boostedJumpPower * _owner.maxSpeed);
+
+        //if (_owner.lastMoveDir.z > 0)
+        //    _owner.lastMoveDir.z -= Time.deltaTime * friction;
+        //else if (_owner.lastMoveDir.z < 0)
+        //    _owner.lastMoveDir.z = 0;
     }
 }
