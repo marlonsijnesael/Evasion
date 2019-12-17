@@ -93,7 +93,7 @@ public class EzOrbitState : EzCameraState
         {
             m_controlledCamera.SetState(State.ORBIT);
         }
-        else if ((Mathf.Abs(horz) > 0 && Mathf.Abs(vert) > 0))
+        else if ((Mathf.Abs(horz) < 0 && Mathf.Abs(vert) < 0))
         {
             m_controlledCamera.SetState(State.FOLLOW);
             return;
