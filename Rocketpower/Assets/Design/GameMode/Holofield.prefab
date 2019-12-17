@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 2495631146962277512}
   - component: {fileID: 2495631146962277515}
   - component: {fileID: 2495631146962277513}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Holofield
   m_TagString: ColorPlatform
   m_Icon: {fileID: 0}
