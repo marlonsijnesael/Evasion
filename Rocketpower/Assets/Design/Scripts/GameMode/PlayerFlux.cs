@@ -54,8 +54,8 @@ public class PlayerFlux : MonoBehaviour
         {
             gm.fluxPlayer = this;
             gm.ColorandSpeedSwitch();
-            gm.textFluxP1.text = "Flux: " + gm.fluxPlayer.ToString();
-            gm.textFluxP2.text = "Flux: " + gm.fluxPlayer.ToString();
+            gm.textFluxP1.text = "Spark: " + gm.fluxPlayer.ToString();
+            gm.textFluxP2.text = "Spark: " + gm.fluxPlayer.ToString();
             Destroy(other.gameObject);
         }
 
@@ -127,7 +127,7 @@ public class PlayerFlux : MonoBehaviour
 
     public void TurnFlux(bool turnOn)
     {
-		if (turnOn)
+        if (turnOn)
         {
             StartCoroutine(TurnOnFluxEffect());
         }
