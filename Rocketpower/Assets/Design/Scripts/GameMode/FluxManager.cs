@@ -11,9 +11,10 @@ public class FluxManager : MonoBehaviour
     [HideInInspector] public StateMachine smP2;
     [HideInInspector] public PlayerFlux player1;
     [HideInInspector] public PlayerFlux player2;
+    [HideInInspector] public GameObject preRoundD1, preRoundD2;
     [HideInInspector] public VirtualController vControllerP1, vControllerP2;
     #endregion
-    
+
     #region Player Variables
     public Color player1color;
     public Color player2color;
@@ -23,7 +24,7 @@ public class FluxManager : MonoBehaviour
     [Header("GameMode")]
     #region Flux Player + Score
     public PlayerFlux fluxPlayer;
-	public SparkVFX sparkVFX;
+    public SparkVFX sparkVFX;
     private int player1score;
     private int player2score;
     private int pastPlayer1Score;
@@ -53,7 +54,8 @@ public class FluxManager : MonoBehaviour
     #endregion
     #region In-Round
     public int roundCountdownTime = 120;
-    private bool isStartRoundTimer = true;
+    [HideInInspector] public bool isStartRoundTimer = true;
+    [HideInInspector] public bool isGameRoundTimerRunning;
     [HideInInspector] public Text roundCountdownText_D1, roundCountdownText_D2;
     [HideInInspector] public GameObject inRoundUI_D1, inRoundUI_D2;
     #endregion
@@ -88,8 +90,6 @@ public class FluxManager : MonoBehaviour
     private void Awake()
     {
         platformArray = GameObject.FindGameObjectsWithTag("ColorPlatform");
-        canvas_D1.gameObject.SetActive(true);
-        canvas_D2.gameObject.SetActive(true);
         sliderCaptureTime.maxValue = fluxCaptureTime;
         //StartCoroutine(StartRoundCountDown());
     }
@@ -131,14 +131,14 @@ public class FluxManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             fluxPlayer = player1;
-            textFluxP1.text = "Flux: " + fluxPlayer.ToString();
-            textFluxP2.text = "Flux: " + fluxPlayer.ToString();
+            textFluxP1.text = "Spark: " + fluxPlayer.ToString();
+            textFluxP2.text = "Spark: " + fluxPlayer.ToString();
         }
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
             fluxPlayer = player2;
-            textFluxP1.text = "Flux: " + fluxPlayer.ToString();
-            textFluxP2.text = "Flux: " + fluxPlayer.ToString();
+            textFluxP1.text = "Spark: " + fluxPlayer.ToString();
+            textFluxP2.text = "Spark: " + fluxPlayer.ToString();
         }
         startRound();
     }
@@ -219,7 +219,8 @@ public class FluxManager : MonoBehaviour
 
     public void updateScore()
     {
-        if(winCountDownTime >= 0 && !isWinCountDownActive){
+        if (winCountDownTime >= 0 && !isWinCountDownActive)
+        {
             stopWinCountDown = true;
         }
         pastPlayer1Score = player1score;
@@ -354,17 +355,21 @@ public class FluxManager : MonoBehaviour
     {
         while (roundCountdownTime > 0)
         {
+            isGameRoundTimerRunning = true;
             yield return new WaitForSeconds(1);
             roundCountdownTime--;
             ToggleUIText(roundCountdownText_D1, roundCountdownText_D2, roundCountdownTime);
         }
+        isGameRoundTimerRunning = false;
         Time.timeScale = 0;
         WinScreen();
     }
 
-public void WinCondition(){
+    public void WinCondition()
+    {
         coroutineWinTimer = winCountDown();
-        if(player1score == platformsTotal || player2score == platformsTotal && isWinCountDownActive){
+        if (player1score == platformsTotal || player2score == platformsTotal && isWinCountDownActive)
+        {
             winCountDownTime = winStartCountdownTime;
             isWinCountDownActive = false;
             stopWinCountDown = false;
@@ -372,19 +377,23 @@ public void WinCondition(){
             ToggleUIText(winCountDownTextD1, winCountDownTextD2, winStartCountdownTime);
             ToggleUI(winCountDownD1, winCountDownD2, true);
         }
-        else if(!isWinCountDownActive){
+        else if (!isWinCountDownActive)
+        {
             isWinCountDownActive = true;
             ToggleUI(winCountDownD1, winCountDownD2, false);
         }
     }
 
-    IEnumerator winCountDown(){
-        while(winCountDownTime >= 0 && !isWinCountDownActive && !stopWinCountDown){
+    IEnumerator winCountDown()
+    {
+        while (winCountDownTime >= 0 && !isWinCountDownActive && !stopWinCountDown)
+        {
             yield return new WaitForSeconds(1);
             winCountDownTime--;
             ToggleUIText(winCountDownTextD1, winCountDownTextD2, winCountDownTime);
         }
-        if(winCountDownTime <= 0 && !stopWinCountDown){
+        if (winCountDownTime <= 0 && !stopWinCountDown)
+        {
             Debug.Log("End Me");
             Time.timeScale = 0;
             WinScreen();
@@ -393,30 +402,36 @@ public void WinCondition(){
         //yield return new WaitWhile(() => winCountDownTime >= 0);
     }
 
-    public void WinScreen(){
+    public void WinScreen()
+    {
         ToggleUI(inRoundUI_D1, inRoundUI_D2, false);
         ToggleUI(endScreenD1, endScreenD2, true);
 
-        if(player1score > player2score){
+        if (player1score > player2score)
+        {
             endTextD1.text = "Winner";
             endTextD2.text = "Loser";
         }
-        if(player2score > player1score){
+        if (player2score > player1score)
+        {
             endTextD1.text = "Loser";
             endTextD2.text = "Winner";
         }
-        if(player1score == player2score){
+        if (player1score == player2score)
+        {
             endTextD1.text = "Draw";
             endTextD2.text = "Draw";
         }
     }
 
-    private void ToggleUI(GameObject d1, GameObject d2, bool turnOn){
+    public void ToggleUI(GameObject d1, GameObject d2, bool turnOn)
+    {
         d1.SetActive(turnOn);
         d2.SetActive(turnOn);
     }
 
-    private void ToggleUIText(Text d1, Text d2, int integer){
+    private void ToggleUIText(Text d1, Text d2, int integer)
+    {
         d1.text = integer.ToString();
         d2.text = integer.ToString();
     }
