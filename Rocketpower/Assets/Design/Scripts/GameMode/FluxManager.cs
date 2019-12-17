@@ -168,11 +168,17 @@ public class FluxManager : MonoBehaviour
 
         player1.TurnFlux(fluxPlayer == player1);
         player2.TurnFlux(fluxPlayer == player2);
-
-        if (sparkVFX != null)
-        {
-            sparkVFX.SetPlayerToFollow(fluxPlayer.transform);
-        }
+		
+		if (sparkVFX != null){
+			Color c;
+			if (fluxPlayer == player1){
+				c = player1color;
+			}
+			else{
+				c = player2color;
+			}
+			sparkVFX.SetPlayerToFollow(fluxPlayer.transform, c);
+		}
 
         //set scorearrow position and color
         scoreArrow_D1.SetActive(true);

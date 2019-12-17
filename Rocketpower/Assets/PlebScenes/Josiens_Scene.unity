@@ -132,12 +132,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_TheSparkObject
       objectReference: {fileID: 0}
-    - target: {fileID: -5178661895559278292, guid: cddd72f60816ed645a2310d5bba6296e,
-        type: 3}
-      propertyPath: m_Mesh
-      value: 
-      objectReference: {fileID: 792513169662496270, guid: a757d5a99cf9a304591154ad3ea60d1f,
-        type: 3}
     - target: {fileID: -4216859302048453862, guid: cddd72f60816ed645a2310d5bba6296e,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -193,6 +187,12 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -5178661895559278292, guid: cddd72f60816ed645a2310d5bba6296e,
+        type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 792513169662496270, guid: a757d5a99cf9a304591154ad3ea60d1f,
+        type: 3}
     - target: {fileID: -1504981713932161579, guid: cddd72f60816ed645a2310d5bba6296e,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -925,7 +925,10 @@ VisualEffect:
         m_Name: CenterPoint
         m_Overridden: 1
     m_Vector4f:
-      m_Array: []
+      m_Array:
+      - m_Value: {x: 1, y: 0.2784314, z: 0, w: 1}
+        m_Name: PlayerColor
+        m_Overridden: 1
     m_Uint:
       m_Array: []
     m_Int:
