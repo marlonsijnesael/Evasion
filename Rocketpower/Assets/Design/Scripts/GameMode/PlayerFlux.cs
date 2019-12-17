@@ -103,8 +103,8 @@ public class PlayerFlux : MonoBehaviour
                         gm.fluxPlayer = this;
                         gm.ColorandSpeedSwitch();
                         gm.sliderCaptureObject.SetActive(false);
-                        gm.textFluxP1.text = "Flux: " + gm.fluxPlayer.ToString();
-                        gm.textFluxP2.text = "Flux: " + gm.fluxPlayer.ToString();
+                        gm.textFluxP1.text = "Spark: " + gm.fluxPlayer.ToString();
+                        gm.textFluxP2.text = "Spark: " + gm.fluxPlayer.ToString();
                         gm.StartCoroutine("FluxColliderSeconds");
                         isFluxCaptured = false;
                         currFluxCaptureTime = 0;

@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using UnityEditor.Animations;
+
 public class AnimContrller : MonoBehaviour
 {
     [Header("Animator variable names")]

@@ -16,6 +16,7 @@ TagManager:
   - Flux
   - Player2
   - FluxCollider
+  - holowall
   layers:
   - Default
   - TransparentFX

@@ -17,13 +17,13 @@ public class StateMachine : MonoBehaviour
     #region state stuff
     [Header("States: ")]
     public Move currentMove;
-    public Move previousMove;
+
     public Move idleMove, runMove, wallrunMoveRight, wallRunMoveLeft, ClimbMove, SlideMove, airborneMove;
     public enum State { IDLE, RUN, WALLRUN_RIGHT, WALLRUN_LEFT, CLIMB, SLIDE, AIRBORNE }
     public State playerState = new State();
     #endregion
     #region directional vectors
-    [HideInInspector] public Vector3 verticalDir = Vector3.zero;
+
     [HideInInspector] public Vector3 wallrunDir;
     [HideInInspector] public Vector3 stateMoveDir = Vector3.zero;
     [HideInInspector] public Vector3 moveDir = Vector3.zero;
@@ -59,13 +59,9 @@ public class StateMachine : MonoBehaviour
 
     [HideInInspector] public float minimumJumpVelocity;
     [HideInInspector] public float forwardJumpMultiplier = 5;
-public bool isGrounded;
+    public bool isGrounded;
 
     public Ledge ledge;
-    public CameraFollow cameraScript;
- 
-
-
     public State prevState;
     #endregion
 
@@ -74,6 +70,9 @@ public bool isGrounded;
     public List<bool> groundedBuffer = new List<bool>();
 
     public bool canClimb = true;
+    public float timeClimbing = 0;
+    public float maxTmeClimbing = 5f;
+
     public bool canWallRun = true;
     public Camera playerCam;
     public float timeFalling = 0;
@@ -83,7 +82,7 @@ public bool isGrounded;
     public float FOVIdle = 60;
     public float FOVRun = 75;
 
-   public float boostedJumpPower = 1;
+    public float boostedJumpPower = 1;
     private float YpositionOnJump = 0f;
 
     private void Awake()
@@ -111,11 +110,15 @@ public bool isGrounded;
         }
     }
 
-
     private void FixedUpdate()
     {
+        Debug.Log(moveDir.y);
+
         CheckGrounded();
         SetInitVel();
+
+
+
         if (virtualController.VerticalMovement != 0 || virtualController.HorizontalMovement != 0)
         {
             animationController.SetBool(animator, "running", true);
@@ -215,11 +218,12 @@ public bool isGrounded;
         stateMoveDir = new Vector3(0, 001f, 0);
         moveDir.x = 0;
         moveDir.z = 0;
+
     }
     public void MovePlayer()
     {
         StoreGroundedThisFrame();
-        if (!WasGroundedInBuffer() && playerState != State.CLIMB && playerState != State.WALLRUN_LEFT && playerState != State.WALLRUN_LEFT)  //|| playerState == State.WALLRUN_RIGHT || playerState == State.WALLRUN_LEFT)
+        if (cc.collisionFlags.HasFlag(CollisionFlags.Above) || !WasGroundedInBuffer() && playerState != State.CLIMB && playerState != State.WALLRUN_LEFT && playerState != State.WALLRUN_LEFT)  //|| playerState == State.WALLRUN_RIGHT || playerState == State.WALLRUN_LEFT)
             moveDir.y += (gravity * gravityMultiplier) * Time.fixedDeltaTime;
 
         Jump();
@@ -237,14 +241,14 @@ public bool isGrounded;
         if (virtualController.VerticalMovement != 0 || virtualController.HorizontalMovement != 0)
         {
             rate = accelRatePerSec;
-            playerCam.fieldOfView = Mathf.Lerp(playerCam.fieldOfView, FOVRun, Time.deltaTime);
+            playerCam.fieldOfView = Mathf.Lerp(playerCam.fieldOfView, FOVRun, Time.deltaTime * 2);
         }
         else
         {
-            playerCam.fieldOfView = Mathf.Lerp(playerCam.fieldOfView, FOVIdle,  Time.deltaTime);
+            playerCam.fieldOfView = Mathf.Lerp(playerCam.fieldOfView, FOVIdle, Time.deltaTime * 2);
             rate = decelRatePerSec;
         }
-            forwardVelocity += rate * Time.fixedDeltaTime;
+        forwardVelocity += rate * Time.fixedDeltaTime;
         forwardVelocity = Mathf.Clamp(forwardVelocity, 0, maxSpeed);
     }
 
@@ -277,7 +281,7 @@ public bool isGrounded;
         ClearGroundedBuffer();
         YpositionOnJump = transform.position.y + jumpHeight;
         yield return new WaitUntil(() => groundedBuffer.Contains(true));
-       
+
         //Debug.Log("landed, calling onland()");
         //StartCoroutine(OnLand(YpositionOnJump, transform.position.y));
     }
@@ -291,20 +295,24 @@ public bool isGrounded;
         {
             Debug.Log("rolling");
             animator.SetBool("B_IsGrounded", true);
-          animator.SetTrigger("roll");
+            animator.SetTrigger("roll");
 
         }
         yield return new WaitForEndOfFrame();
-    
+
         YpositionOnJump = 0;
         //animator.SetBool("B_IsRoling", false);
     }
 
+    bool jumpPressed() => Settings.GameSettings.jumpOnPress ? virtualController.JumpButtonPressedThisFrame : virtualController.JumpButtonReleased;
     private void Jump()
     {
         jumpSlider.value = virtualController.Time_Hold_Button_A / jumpSlider.maxValue;
         boostedJumpPower = 1;
-        if (virtualController.JumpButtonReleased)
+
+
+
+        if (jumpPressed())
         {
             StartCoroutine(OnJump());
             wasJump = true;
@@ -313,20 +321,11 @@ public bool isGrounded;
             if (boostedJumpPower > maxJumpBoost)
                 boostedJumpPower = maxJumpBoost;
             currentMove.Jump(this, 1);
-            virtualController.Time_Hold_Button_A =0f;
+            virtualController.Time_Hold_Button_A = 0f;
         }
 
     }
 
-    public float GetAngle()
-    {
-        RaycastHit hitA;
-        if (Physics.Raycast(transform.position + transform.forward, -transform.up, out hitA))
-        {
-            //print((Mathf.Atan2(transform.position.y, transform.position.x) * Mathf.Rad2Deg));
-        }
-        return Mathf.Atan2(transform.position.y, transform.position.x) * Mathf.Rad2Deg;
-    }
     /// <summary>
     /// Checks for collision with ground underneath player
     /// if ground is not detected, switch to idle state
@@ -337,6 +336,19 @@ public bool isGrounded;
         {
             RaycastHit hit;
             Vector3 rayPos = transform.position + Vector3.up;
+
+            if (cc.collisionFlags.HasFlag(CollisionFlags.CollidedBelow))
+            {
+                isGrounded = true;
+                SwitchStates(State.IDLE, idleMove);
+                animationController.SetBool(this.animator, "grounded", true);
+                if (wasJump)
+                {
+                    wasJump = false;
+                    StartCoroutine(OnLand(YpositionOnJump, transform.position.y));
+                }
+            }
+
             if (Physics.Raycast(rayPos, Vector3.down, out hit))  /*1 + (jumpHeight / 2))*/
             {
                 if (rayPos.y - hit.point.y > 1.1f)
@@ -355,14 +367,14 @@ public bool isGrounded;
                         wasJump = false;
                         StartCoroutine(OnLand(YpositionOnJump, transform.position.y));
                     }
-                  
+
                 }
             }
             else
             {
-                 isGrounded = false;
-                    animationController.SetBool(this.animator, "grounded", false);
-                    SwitchStates(State.AIRBORNE, airborneMove);
+                isGrounded = false;
+                animationController.SetBool(this.animator, "grounded", false);
+                SwitchStates(State.AIRBORNE, airborneMove);
             }
         }
 
@@ -434,6 +446,7 @@ public bool isGrounded;
         cooldownState = false;
         yield return new WaitUntil(() => groundedBuffer.Contains(true));
         cooldownState = true;
+        timeClimbing = 0;
     }
 
 }

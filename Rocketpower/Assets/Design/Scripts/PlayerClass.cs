@@ -13,6 +13,6 @@ public class PlayerClass : MonoBehaviour
 
     private void Update()
     {
-        virtualController.ControlledUpdate();
+
     }
 }

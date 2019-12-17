@@ -24,7 +24,7 @@ public class VirtualController : MonoBehaviour
 
     // Update is called once per frame
 
-    public void ControlledUpdate()
+    public void Update()
     {
         // Find a PlayerIndex, for a single player game
         // Will find the first controller that is connected ans use it
@@ -48,6 +48,19 @@ public class VirtualController : MonoBehaviour
         }
         prevState = state;
         state = GamePad.GetState(playerIndex);
+        if (JumpButtonHold && (VerticalMovement != 0 || HorizontalMovement != 0))
+        {
+            timeHold_Button_A += Time.deltaTime * 5;
+            //Debug.Log("jumppower: " + timeHold_Button_A);
+        }
+        else
+        {
+            if (timeHold_Button_A > 1)
+                timeHold_Button_A -= Time.deltaTime;
+            else
+                timeHold_Button_A = 1;
+        }
+
     }
 
     private void FixedUpdate()
@@ -62,22 +75,7 @@ public class VirtualController : MonoBehaviour
     }
 
 
-    private void Update()
-    {
 
-        if (JumpButtonHold && (VerticalMovement != 0 || HorizontalMovement != 0))
-        {
-            timeHold_Button_A += Time.deltaTime * 5;
-            //Debug.Log("jumppower: " + timeHold_Button_A);
-        }
-        else
-        {
-            if (timeHold_Button_A > 1)
-                timeHold_Button_A -= Time.deltaTime;
-            else
-                timeHold_Button_A =1;
-        }
-    }
 
     #endregion
     #region buttons
@@ -86,6 +84,14 @@ public class VirtualController : MonoBehaviour
         get
         {
             return state.Triggers.Left > 0;
+        }
+    }
+
+    public bool StartPressed
+    {
+        get
+        {
+            return prevState.Buttons.Start == ButtonState.Released && state.Buttons.Start == ButtonState.Pressed;
         }
     }
 
@@ -153,7 +159,7 @@ public class VirtualController : MonoBehaviour
     {
         get
         {
-            return -state.ThumbSticks.Right.Y;
+            return Settings.GameSettings.invert_Y ? -state.ThumbSticks.Right.Y : -state.ThumbSticks.Right.Y;
         }
     }
     public float HorizontalLook

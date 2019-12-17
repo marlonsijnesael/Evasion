@@ -12,12 +12,18 @@ EditorBuildSettings:
     path: Assets/Scenes/17Dec_TestDag/MainMenu.unity
     guid: a9bbb3763c29dcb469727352d4ca0ecf
   - enabled: 1
+    path: Assets/Scenes/TimeTrial_Level_v3.unity
+    guid: 555ce2f9be5b5d845b3950265304fa12
+  - enabled: 0
     path: Assets/Scenes/17Dec_TestDag/Level1.unity
     guid: c751fc4136556e44983d80696bed319c
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/17Dec_TestDag/Level2.unity
     guid: f9ab30148ee2c4946bcd68ba2762b3b5
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/TimeTrial_Level_v1.unity
     guid: aece6a99880b97044b179aa2d3ab3828
+  - enabled: 0
+    path: Assets/Scenes/TimeTrial_Level_vMarlon.unity
+    guid: 8fa15084cc484cf499bb4d4380a95a90
   m_configObjects: {}

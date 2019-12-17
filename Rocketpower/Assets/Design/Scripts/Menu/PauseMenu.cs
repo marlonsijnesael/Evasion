@@ -9,6 +9,8 @@ public class PauseMenu : MonoBehaviour
 {
     public FluxManager gm;
 
+    public VirtualController vCP1, vCP2;
+
     public GameObject pauseMenuP1, pauseMenuP2;
 
     public bool isPauseMenuActive;
@@ -30,7 +32,7 @@ public class PauseMenu : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.P))
+        if (Input.GetKeyDown(KeyCode.P) || vCP1.StartPressed || vCP2.StartPressed)
         {
             isPauseMenuActive = !isPauseMenuActive;
             if (isPauseMenuActive)

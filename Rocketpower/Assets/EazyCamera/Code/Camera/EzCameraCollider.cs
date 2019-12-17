@@ -194,7 +194,7 @@ public class EzCameraCollider : MonoBehaviour
 #endif
             if (Physics.Linecast(m_controlledCamera.Target.position, m_originalClipPlanePoints[i], out hit, m_layermask))
             {
-                lineColor = Color.red;
+             
                 objectWasHit = true;
 
                 if (hit.distance < closestHitDistance)
@@ -203,7 +203,6 @@ public class EzCameraCollider : MonoBehaviour
                 }
             }
 
-            Debug.DrawLine(m_controlledCamera.Target.position, m_originalClipPlanePoints[i], lineColor);
         }
 
         if (!objectWasHit)

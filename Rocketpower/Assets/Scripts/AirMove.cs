@@ -37,6 +37,15 @@ public class AirMove : Move
     private void Move(StateMachine _owner)
     {
         _owner.stateMoveDir = (_owner.transform.rotation * Vector3.forward) * _owner.forwardVelocity;
+
+        if (_owner.moveDir.y > 0)
+        {
+            if (_owner.cc.collisionFlags.HasFlag(CollisionFlags.Above))
+            {
+                _owner.moveDir.y = 0;
+            }
+        }
+
         //_owner.stateMoveDir = _owner.transform.forward  * (_owner.boostedJumpPower * _owner.maxSpeed);
 
         //if (_owner.lastMoveDir.z > 0)

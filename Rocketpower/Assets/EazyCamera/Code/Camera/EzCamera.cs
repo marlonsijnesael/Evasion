@@ -133,7 +133,7 @@ public class EzCamera : MonoBehaviour
     public bool ZoomEnabled { get { return m_zoomEnabled; } }
     [SerializeField] private bool m_zoomEnabled = true;
     private float m_zoomDelta = 0f;
-    private const float ZOOM_DEAD_ZONE = .01f;
+    private const float ZOOM_DEAD_ZONE = 100f;
     public void SetZoomEnabled(bool isEnabled) { m_zoomEnabled = isEnabled; }
 
 
@@ -238,23 +238,23 @@ public class EzCamera : MonoBehaviour
 
     private void HandleInput()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            if (m_lockOnEnabled && !IsLockedOn)
-            {
-                SetState(EzCameraState.State.LOCKON);
-            }
-        }
+        //if (Input.GetKeyDown(KeyCode.Space))
+        //{
+        //    if (m_lockOnEnabled && !IsLockedOn)
+        //    {
+        //        SetState(EzCameraState.State.LOCKON);
+        //    }
+        //}
 
-        // Zoom the camera using the middle mouse button + drag
-        if (Input.GetMouseButton(2) || Input.GetKey(KeyCode.Z))
-        {
-            m_zoomDelta = Input.GetAxis(ExtensionMethods.MOUSEY);
-        }
-        else
-        {
-            m_zoomDelta = 0;
-        }
+        //// Zoom the camera using the middle mouse button + drag
+        //if (Input.GetMouseButton(2) || Input.GetKey(KeyCode.Z))
+        //{
+        //    m_zoomDelta = Input.GetAxis(ExtensionMethods.MOUSEY);
+        //}
+        //else
+        //{
+        //    m_zoomDelta = 0;
+        //}
     }
 
     public void UpdatePosition()
@@ -277,10 +277,16 @@ public class EzCamera : MonoBehaviour
     public void ZoomCamera(float zDelta)
     {
         // clamp the value to the min/max ranges
+
+        if (Vector3.Distance(this.transform.position, Target.position) < m_settings.DesiredDistance)
+        {
+            
+        }
+        
         if (!IsOccluded)
         {
-            float step = Time.deltaTime * m_settings.ZoomSpeed * zDelta;
-            m_settings.DesiredDistance = Mathf.Clamp(m_settings.OffsetDistance + step, m_settings.MinDistance, m_settings.MaxDistance);
+            //float step = Time.deltaTime * m_settings.ZoomSpeed * zDelta;
+            //m_settings.DesiredDistance = Mathf.Clamp(m_settings.OffsetDistance + step, m_settings.MinDistance, m_settings.MaxDistance);
         }
     }
 
@@ -294,12 +300,11 @@ public class EzCamera : MonoBehaviour
         switch (nextState)
         {
             case EzCameraState.State.FOLLOW:
-                Debug.Log("follow");
                 SetFollowEnabled(true);
                 m_stateMachine.SetCurrentState(m_followState);                
                 break;
             case EzCameraState.State.ORBIT:
-                Debug.Log("orbit");
+
                 SetOrbitEnabled(true);
                 m_stateMachine.SetCurrentState(m_orbitState);
                 break;

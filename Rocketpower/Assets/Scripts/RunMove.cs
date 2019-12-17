@@ -16,6 +16,8 @@ public class RunMove : Move
         _owner.FrontCollisionTest();
         _owner.LeftRightCollisionsTest();
         //_owner.playerRotator.UpdateRotation();
+        if (_owner.isGrounded)
+            _owner.moveDir.y = 0;
         Move(_owner);
     }
 
@@ -28,10 +30,10 @@ public class RunMove : Move
         if (_owner.isGrounded)
         {
             _owner.isGrounded = false;
-            _owner.moveDir.y = _owner.minimumJumpVelocity * _owner.jumpMultiplier + power/2;
-            Debug.Log("JUMP POWER = " + ( power).ToString());
-           
-            _owner.stateMoveDir += _owner.transform.forward* (_owner.forwardJumpMultiplier * power /*- _owner.GetAngle()*/);
+            _owner.moveDir.y = _owner.minimumJumpVelocity * _owner.jumpMultiplier + power / 2;
+            Debug.Log("JUMP POWER = " + (power).ToString());
+
+            _owner.stateMoveDir += _owner.transform.forward * (_owner.forwardJumpMultiplier * power /*- _owner.GetAngle()*/);
         }
     }
 

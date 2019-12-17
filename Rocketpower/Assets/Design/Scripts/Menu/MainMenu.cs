@@ -8,31 +8,49 @@ public class MainMenu : MonoBehaviour
 {
     public EventSystem ES;
     private GameObject StoreSelected;
+    public string LevelToLoad = "TimeTrial_Level_v3";
+    public string LevelToLoad2 = "";
 
-    public void Start(){
+    public UnityEngine.UI.Toggle invert_Y, jumpOnPress;
+
+    public void Start()
+    {
+
         StoreSelected = ES.firstSelectedGameObject;
+
+        if (Display.displays.Length > 1)
+            Display.displays[1].Activate();
     }
 
-    public void Update(){
-        if(ES.currentSelectedGameObject != StoreSelected){
-            if(ES.currentSelectedGameObject == null){
+    public void Update()
+    {
+        if (ES.currentSelectedGameObject != StoreSelected)
+        {
+            if (ES.currentSelectedGameObject == null)
+            {
                 ES.SetSelectedGameObject(StoreSelected);
             }
-            else{
+            else
+            {
                 StoreSelected = ES.currentSelectedGameObject;
             }
         }
     }
 
-    public void StartLevel1(){
-        SceneManager.LoadScene("Level1");
+    public void StartLevel1()
+    {
+        SceneManager.LoadScene(LevelToLoad);
+        Settings.GameSettings.invert_Y = invert_Y.isOn;
+        Settings.GameSettings.jumpOnPress = invert_Y.isOn;
     }
 
-    public void StartLevel2(){
-        SceneManager.LoadScene("Level2");
+    public void StartLevel2()
+    {
+        SceneManager.LoadScene(LevelToLoad2);
     }
 
-    public void QuitGame(){
+    public void QuitGame()
+    {
         Application.Quit();
     }
 }

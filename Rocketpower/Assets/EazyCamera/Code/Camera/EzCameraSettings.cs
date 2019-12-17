@@ -8,12 +8,12 @@ using UnityEditor;
 public class EzCameraSettings : ScriptableObject 
 {
 
-    [MenuItem("Eazy Camera/Create Camera Settings")]
+    //[MenuItem("Eazy Camera/Create Camera Settings")]
     static void Init()
     {
-        AssetDatabase.CreateAsset(ScriptableObject.CreateInstance<EzCameraSettings>(), "Assets/NewCameraSettings.asset");
-        AssetDatabase.Refresh();
-        AssetDatabase.SaveAssets();
+        ////AssetDatabase.CreateAsset(ScriptableObject.CreateInstance<EzCameraSettings>(), "Assets/NewCameraSettings.asset");
+        //AssetDatabase.Refresh();
+        //AssetDatabase.SaveAssets();
     }
 
     public EzCameraSettings()
