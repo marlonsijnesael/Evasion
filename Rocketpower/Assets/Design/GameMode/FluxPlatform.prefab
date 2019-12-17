@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 6249864578296422542}
   - component: {fileID: 6249864578296422543}
   - component: {fileID: 6249864578296422540}
+  - component: {fileID: -5691763960281292702}
   m_Layer: 0
   m_Name: FluxPlatform
   m_TagString: ColorPlatform
@@ -42,7 +43,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6249864578296422541}
-  m_Mesh: {fileID: 4681219010719698527, guid: b27411508de745343ac7fb2afb4b4d59, type: 3}
+  m_Mesh: {fileID: -1532815376004570483, guid: 3cdb16ef2654b4a4d867c16e4dc92d07, type: 3}
 --- !u!23 &6249864578296422577
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -94,7 +95,7 @@ MeshCollider:
   serializedVersion: 3
   m_Convex: 1
   m_CookingOptions: 14
-  m_Mesh: {fileID: 4681219010719698527, guid: b27411508de745343ac7fb2afb4b4d59, type: 3}
+  m_Mesh: {fileID: -1532815376004570483, guid: 3cdb16ef2654b4a4d867c16e4dc92d07, type: 3}
 --- !u!65 &6249864578296422543
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -104,7 +105,7 @@ BoxCollider:
   m_GameObject: {fileID: 6249864578296422541}
   m_Material: {fileID: 0}
   m_IsTrigger: 1
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 3.5, y: 6, z: 2}
   m_Center: {x: 0, y: 3, z: 0}
@@ -121,3 +122,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   colorChangeTime: 15
+--- !u!64 &-5691763960281292702
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6249864578296422541}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 1
+  m_CookingOptions: 14
+  m_Mesh: {fileID: -8547232568700439067, guid: 672c989f94e0c2048bd859247b9526c6, type: 3}
