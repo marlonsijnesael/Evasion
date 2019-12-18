@@ -112,7 +112,6 @@ public class StateMachine : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Debug.Log(moveDir.y);
 
         CheckGrounded();
         SetInitVel();
@@ -271,6 +270,19 @@ public class StateMachine : MonoBehaviour
         }
     }
 
+    public float GetAngle()
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position + transform.up, -transform.up, out hit))
+        {
+            Vector3 tmp = Vector3.Cross(hit.normal, Vector3.down);
+            Vector3 dir = Vector3.Cross(tmp, hit.normal);
+            Debug.Log("angle is = " + Vector3.Angle(hit.normal, Vector3.up));
+            return Vector3.Angle(hit.normal, Vector3.up);
+        }
+        return 1;
+    }
+
     private bool WasGroundedInBuffer()
     {
         return groundedBuffer.Contains(true);
@@ -311,7 +323,6 @@ public class StateMachine : MonoBehaviour
         boostedJumpPower = 1;
 
 
-
         if (jumpPressed())
         {
             StartCoroutine(OnJump());
@@ -320,8 +331,13 @@ public class StateMachine : MonoBehaviour
             boostedJumpPower = virtualController.Time_Hold_Button_A;
             if (boostedJumpPower > maxJumpBoost)
                 boostedJumpPower = maxJumpBoost;
-            currentMove.Jump(this, 1);
-            virtualController.Time_Hold_Button_A = 0f;
+
+            if (Settings.GameSettings.jumpOnPress)
+            {
+                boostedJumpPower = (1 + (GetAngle() / 100));
+            }
+            currentMove.Jump(this, boostedJumpPower);
+            virtualController.Time_Hold_Button_A = 1f;
         }
 
     }

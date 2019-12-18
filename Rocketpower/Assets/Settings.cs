@@ -18,7 +18,7 @@ public class Settings : MonoBehaviour
         }
         else
         {
-            Destroy(this);
+            Destroy(this.gameObject);
         }
     }
 }

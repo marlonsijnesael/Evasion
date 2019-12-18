@@ -30,10 +30,10 @@ public class RunMove : Move
         if (_owner.isGrounded)
         {
             _owner.isGrounded = false;
-            _owner.moveDir.y = _owner.minimumJumpVelocity * _owner.jumpMultiplier + power / 2;
-            Debug.Log("JUMP POWER = " + (power).ToString());
+            _owner.moveDir.y = _owner.minimumJumpVelocity * _owner.jumpMultiplier + power;
+            Debug.Log("JUMP POWER = " + (_owner.moveDir.y).ToString());
 
-            _owner.stateMoveDir += _owner.transform.forward * (_owner.forwardJumpMultiplier * power /*- _owner.GetAngle()*/);
+            _owner.stateMoveDir += (_owner.transform.forward + _owner.transform.up) * (1 + (_owner.GetAngle() / 100) * (_owner.forwardJumpMultiplier * power));//s
         }
     }
 
