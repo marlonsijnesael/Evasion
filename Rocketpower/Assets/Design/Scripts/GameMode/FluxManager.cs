@@ -93,6 +93,7 @@ public class FluxManager : MonoBehaviour
         platformArray = GameObject.FindGameObjectsWithTag("ColorPlatform");
         sliderCaptureTime.maxValue = fluxCaptureTime;
         //StartCoroutine(StartRoundCountDown());
+        Time.timeScale = 1;
     }
 
     private void Start()
