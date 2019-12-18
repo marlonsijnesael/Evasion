@@ -49,7 +49,7 @@ public class ClimbMove : Move
         if (_owner.transform.position.y < yPosOrigin.y && _owner.virtualController.ClimbButtonPressed && _owner.timeClimbing < maxClimbTime)
         {
             Debug.Log("climbig");
-            _owner.moveDir.y = climbDir.y + 1;
+            _owner.moveDir.y = climbDir.y + climbSpeed;
             _owner.timeClimbing += Time.deltaTime;
             //_owner.stateMoveDir = climbDir + Vector3.up + (_owner.transform.rotation * Vector3.forward) * _owner.forwardVelocity;
         }

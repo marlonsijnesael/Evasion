@@ -1027,7 +1027,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Transitorium
+  m_Text: HoloField
 --- !u!222 &973777371
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2008,7 +2008,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: HoloFields
+  m_Text: Transitorium
 --- !u!222 &1984296822
 CanvasRenderer:
   m_ObjectHideFlags: 0
