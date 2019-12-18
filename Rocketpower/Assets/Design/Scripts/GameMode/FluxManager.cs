@@ -47,8 +47,7 @@ public class FluxManager : MonoBehaviour
     [HideInInspector] public GameObject startCountdownObjectD1, startCountdownObjectD2;
     [HideInInspector] public Text startCountdownTextD1, startCountdownTextD2;
     [HideInInspector] public GameObject readyChecksD1, readyChecksD2;
-    [HideInInspector] public GameObject stasisP1;
-    [HideInInspector] public GameObject stasisP2;
+    [HideInInspector] public GameObject stasisP1, stasisP2;
     [HideInInspector] public Toggle readyToggleP1;
     [HideInInspector] public Toggle readyToggleP2;
     #endregion
@@ -67,6 +66,8 @@ public class FluxManager : MonoBehaviour
     [HideInInspector] public bool isWinCountDownActive = true;
     public int winStartCountdownTime = 20;
     private int winCountDownTime;
+    public Text playerWinningTextD1, playerWinningTextD2;
+    public GameObject playerWinningD1, playerWinningD2;
     [HideInInspector] public GameObject winCountDownD1, winCountDownD2;
     [HideInInspector] public Text winCountDownTextD1, winCountDownTextD2;
     [HideInInspector] public GameObject endScreenD1, endScreenD2;
@@ -168,17 +169,20 @@ public class FluxManager : MonoBehaviour
 
         player1.TurnFlux(fluxPlayer == player1);
         player2.TurnFlux(fluxPlayer == player2);
-		
-		if (sparkVFX != null){
-			Color c;
-			if (fluxPlayer == player1){
-				c = player1color;
-			}
-			else{
-				c = player2color;
-			}
-			sparkVFX.SetPlayerToFollow(fluxPlayer.transform, c);
-		}
+
+        if (sparkVFX != null)
+        {
+            Color c;
+            if (fluxPlayer == player1)
+            {
+                c = player1color;
+            }
+            else
+            {
+                c = player2color;
+            }
+            sparkVFX.SetPlayerToFollow(fluxPlayer.transform, c);
+        }
 
         //set scorearrow position and color
         scoreArrow_D1.SetActive(true);
@@ -376,16 +380,29 @@ public class FluxManager : MonoBehaviour
             StartCoroutine(winCountDown());
             ToggleUIText(winCountDownTextD1, winCountDownTextD2, winStartCountdownTime);
             ToggleUI(winCountDownD1, winCountDownD2, true);
+            ToggleUI(playerWinningD1, playerWinningD2, true);
         }
         else if (!isWinCountDownActive)
         {
             isWinCountDownActive = true;
             ToggleUI(winCountDownD1, winCountDownD2, false);
+            ToggleUI(playerWinningD1, playerWinningD2, false);
         }
     }
 
     IEnumerator winCountDown()
     {
+        if (player1score > player2score)
+        {
+            playerWinningTextD1.text = "Orange Holds All Objectives";
+            playerWinningTextD2.text = "Orange Holds All Objectives";
+        }
+        else if (player2score > player1score)
+        {
+            playerWinningTextD1.text = "Blue Holds All Objectives";
+            playerWinningTextD2.text = "Blue Holds All Objectives";
+        }
+
         while (winCountDownTime >= 0 && !isWinCountDownActive && !stopWinCountDown)
         {
             yield return new WaitForSeconds(1);
