@@ -14,6 +14,7 @@ public class StateMachine : MonoBehaviour
     public Animator animator;
     public VirtualController virtualController;
     #endregion
+
     #region state stuff
     [Header("States: ")]
     public Move currentMove;
@@ -46,7 +47,7 @@ public class StateMachine : MonoBehaviour
     #region gravity and jump settings
 
     /// <summary>
-    /// Jump = minimumJumpVelocity * jumpMultiplier + jumpBoost 
+    /// Jump = minimumJumpVelocity * jumpMultiplier + jumpBoost
     /// </summary>
     [Header("gravity and jump Settings: ")]
     public float gravityMultiplier = 1f; //use this to increase gravity after the calculation
@@ -85,21 +86,21 @@ public class StateMachine : MonoBehaviour
     public float boostedJumpPower = 1;
     private float YpositionOnJump = 0f;
 
+    private bool IsMoving()
+    {
+        return virtualController.VerticalMovement != 0 || virtualController.HorizontalMovement != 0;
+    }
+
     private void Awake()
     {
         virtualController = GetComponent<VirtualController>();
+
         currentMove = idleMove;
         idleMove.EnterState(this);
-        accelRatePerSec = maxSpeed / timeZeroToMax;
-        decelRatePerSec = -maxSpeed / timeMaxToZero;
-
-        timeToJumpApex = jumpHeight / 10;
-        gravity = -(2 * jumpHeight) / Mathf.Pow(timeToJumpApex, 2);
-
-        minimumJumpVelocity = Mathf.Abs(gravity) * timeToJumpApex;
-
         normalGravity = gravity;
-        jumpSlider.maxValue = maxJumpBoost;
+
+        SpeedCalc();
+        JumpCalc();
     }
 
     private void Start()
@@ -112,24 +113,32 @@ public class StateMachine : MonoBehaviour
 
     private void FixedUpdate()
     {
-
         CheckGrounded();
         SetInitVel();
+        CheckInput();
+        HandleState();
+    }
+
+    private void LateUpdate()
+    {
+        MovePlayer();
+    }
 
 
-
-        if (virtualController.VerticalMovement != 0 || virtualController.HorizontalMovement != 0)
+    private void CheckInput()
+    {
+        if (IsMoving())
         {
-            animationController.SetBool(animator, "running", true);
             if (playerState != State.RUN
                            && playerState != State.CLIMB
                            && playerState != State.AIRBORNE
                            && playerState != State.SLIDE)
             {
+                animationController.SetBool(animator, "running", true);
                 SwitchStates(State.RUN, runMove);
             }
         }
-        else if (virtualController.VerticalMovement == 0 && virtualController.HorizontalMovement == 0)
+        else if (!IsMoving())
         {
             SwitchStates(State.IDLE, idleMove);
             animationController.SetBool(animator, "running", false);
@@ -142,9 +151,9 @@ public class StateMachine : MonoBehaviour
         {
             SwitchStates(State.RUN, runMove);
         }
-        HandleState();
-        MovePlayer();
     }
+
+
     /// <summary>
     /// Executes the the act() function of the state Move
     /// </summary>
@@ -194,6 +203,7 @@ public class StateMachine : MonoBehaviour
         }
         return true;
     }
+
     /// <summary>
     /// If next state is valid -> transition to new state
     /// </summary>
@@ -219,17 +229,34 @@ public class StateMachine : MonoBehaviour
         moveDir.z = 0;
 
     }
+
+    private void JumpCalc()
+    {
+        timeToJumpApex = jumpHeight / 10;
+        gravity = -(2 * jumpHeight) / Mathf.Pow(timeToJumpApex, 2);
+        minimumJumpVelocity = Mathf.Abs(gravity) * timeToJumpApex;
+    }
+
+    private void SpeedCalc()
+    {
+        accelRatePerSec = maxSpeed / timeZeroToMax;
+        decelRatePerSec = -maxSpeed / timeMaxToZero;
+    }
+
     public void MovePlayer()
     {
         StoreGroundedThisFrame();
-        if (cc.collisionFlags.HasFlag(CollisionFlags.Above) || !WasGroundedInBuffer() && playerState != State.CLIMB && playerState != State.WALLRUN_LEFT && playerState != State.WALLRUN_LEFT)  //|| playerState == State.WALLRUN_RIGHT || playerState == State.WALLRUN_LEFT)
+        if (!virtualController.GetNextKey() && cc.collisionFlags.HasFlag(CollisionFlags.Above) || !WasGroundedInBuffer() && playerState != State.CLIMB && playerState != State.WALLRUN_LEFT && playerState != State.WALLRUN_LEFT)  //|| playerState == State.WALLRUN_RIGHT || playerState == State.WALLRUN_LEFT)
             moveDir.y += (gravity * gravityMultiplier) * Time.fixedDeltaTime;
 
-        Jump();
+        if (jumpPressed())
+            Jump();
+
         moveDir.x = stateMoveDir.x;
         moveDir.z = stateMoveDir.z;
         cc.Move(moveDir * Time.fixedDeltaTime);
     }
+
     /// <summary>
     /// checks input from the analogstick
     /// forward velocity will increase/decrease depending on wether the input is higher or lower than zero
@@ -323,23 +350,20 @@ public class StateMachine : MonoBehaviour
         boostedJumpPower = 1;
 
 
-        if (jumpPressed())
+
+        StartCoroutine(OnJump());
+        wasJump = true;
+
+        boostedJumpPower = virtualController.Time_Hold_Button_A;
+        if (boostedJumpPower > maxJumpBoost)
+            boostedJumpPower = maxJumpBoost;
+
+        if (Settings.GameSettings.jumpOnPress)
         {
-            StartCoroutine(OnJump());
-            wasJump = true;
-
-            boostedJumpPower = virtualController.Time_Hold_Button_A;
-            if (boostedJumpPower > maxJumpBoost)
-                boostedJumpPower = maxJumpBoost;
-
-            if (Settings.GameSettings.jumpOnPress)
-            {
-                boostedJumpPower = (1 + (GetAngle() / 100));
-            }
-            currentMove.Jump(this, boostedJumpPower);
-            virtualController.Time_Hold_Button_A = 1f;
+            boostedJumpPower = (1 + (GetAngle() / 100));
         }
-
+        currentMove.Jump(this, boostedJumpPower);
+        virtualController.Time_Hold_Button_A = 1f;
     }
 
     /// <summary>
@@ -392,6 +416,10 @@ public class StateMachine : MonoBehaviour
                 animationController.SetBool(this.animator, "grounded", false);
                 SwitchStates(State.AIRBORNE, airborneMove);
             }
+        }
+        if ((virtualController.GetNextKey() && !isGrounded))
+        {
+            Jump();
         }
 
 

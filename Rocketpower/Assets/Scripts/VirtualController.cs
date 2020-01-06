@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
+using System.Collections;
+using System.Linq.Expressions;
 using UnityEngine;
 using XInputDotNetPure;
 public class VirtualController : MonoBehaviour
@@ -8,23 +9,29 @@ public class VirtualController : MonoBehaviour
     private bool playerIndexSet = false;
     private GamePadState state;
     private GamePadState prevState;
-
-    public List<ButtonState> pressList_A = new List<ButtonState>();
     private float timeHold_Button_A = 0f;
 
     [SerializeField] private GameObject controllerUI;
     #region Check if controller is connected
 
 
+    public int inputQueueSize = 5;
+    public LimitedQueue<bool> inputQueue;
+
     private void Awake()
     {
-        for (int i = 0; i < 5; i++)
-            pressList_A.Add(prevState.Buttons.A);
+        inputQueue = new LimitedQueue<bool>(inputQueueSize);
     }
 
-    // Update is called once per frame
+    public bool GetNextKey()
+    {
+        if (inputQueue.Count > 0)
+            return inputQueue.Dequeue();
+        else
+            return false;
+    }
 
-    public void Update()
+    public void FixedUpdate()
     {
         // Find a PlayerIndex, for a single player game
         // Will find the first controller that is connected ans use it
@@ -34,7 +41,6 @@ public class VirtualController : MonoBehaviour
         {
             if (!playerIndexSet || !prevState.IsConnected)
             {
-                //Debug.Log(string.Format("GamePad found {0}", testPlayerIndex));
                 playerIndex = testPlayerIndex;
                 playerIndexSet = true;
             }
@@ -48,10 +54,17 @@ public class VirtualController : MonoBehaviour
         }
         prevState = state;
         state = GamePad.GetState(playerIndex);
+
+        if (JumpButtonPressedThisFrame)
+        {
+            inputQueue.Enqueue(JumpButtonPressedThisFrame);
+            Debug.Log(inputQueue.Count);
+
+        }
+
         if (JumpButtonHold && (VerticalMovement != 0 || HorizontalMovement != 0))
         {
             timeHold_Button_A += Time.deltaTime * 5;
-            //Debug.Log("jumppower: " + timeHold_Button_A);
         }
         else
         {
@@ -61,21 +74,9 @@ public class VirtualController : MonoBehaviour
                 timeHold_Button_A = 1;
         }
 
-    }
 
-    private void FixedUpdate()
-    {
-        pressList_A.RemoveAt(4);
-        pressList_A.Insert(0, state.Buttons.A);
-
-        string list = "";
-        foreach (ButtonState bState in pressList_A)
-            list += " " + bState.ToString();
 
     }
-
-
-
 
     #endregion
     #region buttons
@@ -170,4 +171,26 @@ public class VirtualController : MonoBehaviour
         }
     }
     #endregion
+}
+
+
+
+[System.Serializable]
+public class LimitedQueue<T> : Queue<T>
+{
+    public int Limit { get; set; }
+
+    public LimitedQueue(int limit) : base(limit)
+    {
+        Limit = limit;
+    }
+
+    public new void Enqueue(T item)
+    {
+        while (Count >= Limit)
+        {
+            Dequeue();
+        }
+        base.Enqueue(item);
+    }
 }
