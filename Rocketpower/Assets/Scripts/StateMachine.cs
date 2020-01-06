@@ -14,7 +14,6 @@ public class StateMachine : MonoBehaviour
     public Animator animator;
     public VirtualController virtualController;
     #endregion
-
     #region state stuff
     [Header("States: ")]
     public Move currentMove;
@@ -94,13 +93,18 @@ public class StateMachine : MonoBehaviour
     private void Awake()
     {
         virtualController = GetComponent<VirtualController>();
-
         currentMove = idleMove;
         idleMove.EnterState(this);
-        normalGravity = gravity;
+        accelRatePerSec = maxSpeed / timeZeroToMax;
+        decelRatePerSec = -maxSpeed / timeMaxToZero;
 
-        SpeedCalc();
-        JumpCalc();
+        timeToJumpApex = jumpHeight / 10;
+        gravity = -(2 * jumpHeight) / Mathf.Pow(timeToJumpApex, 2);
+
+        minimumJumpVelocity = Mathf.Abs(gravity) * timeToJumpApex;
+
+        normalGravity = gravity;
+        jumpSlider.maxValue = maxJumpBoost;
     }
 
     private void Start()
@@ -115,18 +119,7 @@ public class StateMachine : MonoBehaviour
     {
         CheckGrounded();
         SetInitVel();
-        CheckInput();
-        HandleState();
-    }
 
-    private void LateUpdate()
-    {
-        MovePlayer();
-    }
-
-
-    private void CheckInput()
-    {
         if (IsMoving())
         {
             if (playerState != State.RUN
@@ -151,6 +144,13 @@ public class StateMachine : MonoBehaviour
         {
             SwitchStates(State.RUN, runMove);
         }
+
+        HandleState();
+    }
+
+    private void LateUpdate()
+    {
+        MovePlayer();
     }
 
 
@@ -203,7 +203,6 @@ public class StateMachine : MonoBehaviour
         }
         return true;
     }
-
     /// <summary>
     /// If next state is valid -> transition to new state
     /// </summary>
@@ -229,20 +228,6 @@ public class StateMachine : MonoBehaviour
         moveDir.z = 0;
 
     }
-
-    private void JumpCalc()
-    {
-        timeToJumpApex = jumpHeight / 10;
-        gravity = -(2 * jumpHeight) / Mathf.Pow(timeToJumpApex, 2);
-        minimumJumpVelocity = Mathf.Abs(gravity) * timeToJumpApex;
-    }
-
-    private void SpeedCalc()
-    {
-        accelRatePerSec = maxSpeed / timeZeroToMax;
-        decelRatePerSec = -maxSpeed / timeMaxToZero;
-    }
-
     public void MovePlayer()
     {
         StoreGroundedThisFrame();
@@ -256,7 +241,6 @@ public class StateMachine : MonoBehaviour
         moveDir.z = stateMoveDir.z;
         cc.Move(moveDir * Time.fixedDeltaTime);
     }
-
     /// <summary>
     /// checks input from the analogstick
     /// forward velocity will increase/decrease depending on wether the input is higher or lower than zero
@@ -364,6 +348,8 @@ public class StateMachine : MonoBehaviour
         }
         currentMove.Jump(this, boostedJumpPower);
         virtualController.Time_Hold_Button_A = 1f;
+
+
     }
 
     /// <summary>
