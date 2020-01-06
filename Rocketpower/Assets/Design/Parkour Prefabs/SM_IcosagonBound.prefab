@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5747908539048184069}
   - component: {fileID: 3647822118779482931}
   - component: {fileID: 7035506112411602890}
+  - component: {fileID: 2041845710929468839}
   m_Layer: 0
   m_Name: SM_IcosagonBound
   m_TagString: Untagged
@@ -78,3 +79,17 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!64 &2041845710929468839
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8763993347723377430}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 0
+  m_CookingOptions: 14
+  m_Mesh: {fileID: -4611811050265090908, guid: ad70b86be5a0f924682687208737d430, type: 3}
