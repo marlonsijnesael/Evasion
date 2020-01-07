@@ -138,8 +138,8 @@ Light:
   m_Enabled: 1
   serializedVersion: 9
   m_Type: 1
-  m_Color: {r: 0.990566, g: 0.6064881, b: 0.3504361, a: 1}
-  m_Intensity: 1.5
+  m_Color: {r: 0.7569762, g: 0.7242346, b: 0.8773585, a: 1}
+  m_Intensity: 0.75
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -227,7 +227,7 @@ MonoBehaviour:
   useVolumetric: 1
   featuresFoldout: 1
   showAdditionalSettings: 0
-  displayLightIntensity: 1.5
+  displayLightIntensity: 0.75
   displayAreaLightEmissiveMesh: 0
   areaLightCookie: {fileID: 0}
   areaLightShadowCone: 120
@@ -315,13 +315,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7011097599336106285}
-  m_LocalRotation: {x: 0.1389657, y: -0.15772626, z: -0.2185629, w: 0.95291203}
+  m_LocalRotation: {x: 0.83000535, y: -0.08663534, z: -0.24413244, w: 0.49394822}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 7011097599932483213}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 11.297001, y: -21.622002, z: -28.000002}
+  m_LocalEulerAnglesHint: {x: 51.047, y: -128.67001, z: -142.238}
 --- !u!108 &7011097599336106449
 Light:
   m_ObjectHideFlags: 0
@@ -332,7 +332,7 @@ Light:
   m_Enabled: 1
   serializedVersion: 9
   m_Type: 1
-  m_Color: {r: 1, g: 0.9941881, b: 0.92156863, a: 1}
+  m_Color: {r: 1, g: 0.95220745, b: 0.7877358, a: 1}
   m_Intensity: 3.1415927
   m_Range: 10
   m_SpotAngle: 30
