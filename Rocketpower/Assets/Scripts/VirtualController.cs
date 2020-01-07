@@ -31,7 +31,7 @@ public class VirtualController : MonoBehaviour
             return false;
     }
 
-    public void FixedUpdate()
+    public void Update()
     {
         // Find a PlayerIndex, for a single player game
         // Will find the first controller that is connected ans use it

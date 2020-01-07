@@ -18,7 +18,7 @@ public class PauseMenu : MonoBehaviour
     public EventSystem ES;
     private GameObject StoreSelected;
 
-    void Update()
+    void LateUpdate()
     {
         if (ES.currentSelectedGameObject != StoreSelected)
         {
@@ -32,16 +32,19 @@ public class PauseMenu : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.P) || vCP1.StartPressed || vCP2.StartPressed)
+        if (Input.GetKeyDown(KeyCode.P) || (vCP1.StartPressed || vCP2.StartPressed))
         {
             isPauseMenuActive = !isPauseMenuActive;
             if (isPauseMenuActive)
             {
                 PauseGame();
+                print("pauzed");
             }
             else if (!isPauseMenuActive)
             {
                 ResumeGame();
+                print("resumed");
+
             }
         }
     }

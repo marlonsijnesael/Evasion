@@ -39,6 +39,8 @@ public class StateMachine : MonoBehaviour
     [SerializeField] public float slideForce = 10f;
     [SerializeField] private float timeZeroToMax = 2.5f;
     [SerializeField] private float timeMaxToZero = 2.5f;
+    [SerializeField] private float slopeForce = 1;
+    [SerializeField] private float slopeRayLength = 1;
     private float accelRatePerSec;
     private float decelRatePerSec;
     public float forwardVelocity = 0;
@@ -57,7 +59,7 @@ public class StateMachine : MonoBehaviour
     [HideInInspector] public float gravity = 0;
     [HideInInspector] public float normalGravity = 0f;
 
-    [HideInInspector] public float minimumJumpVelocity;
+    public float minimumJumpVelocity;
     [HideInInspector] public float forwardJumpMultiplier = 5;
     public bool isGrounded;
 
@@ -223,7 +225,7 @@ public class StateMachine : MonoBehaviour
     /// </summary>
     public void SetInitVel()
     {
-        stateMoveDir = new Vector3(0, 001f, 0);
+        stateMoveDir = new Vector3(0, 0.1f, 0);
         moveDir.x = 0;
         moveDir.z = 0;
 
@@ -231,15 +233,18 @@ public class StateMachine : MonoBehaviour
     public void MovePlayer()
     {
         StoreGroundedThisFrame();
-        if (!virtualController.GetNextKey() && cc.collisionFlags.HasFlag(CollisionFlags.Above) || !WasGroundedInBuffer() && playerState != State.CLIMB && playerState != State.WALLRUN_LEFT && playerState != State.WALLRUN_LEFT)  //|| playerState == State.WALLRUN_RIGHT || playerState == State.WALLRUN_LEFT)
-            moveDir.y += (gravity * gravityMultiplier) * Time.fixedDeltaTime;
+        if (!cc.collisionFlags.HasFlag(CollisionFlags.Above) || !WasGroundedInBuffer() && playerState != State.CLIMB && playerState != State.WALLRUN_LEFT && playerState != State.WALLRUN_LEFT)  //|| playerState == State.WALLRUN_RIGHT || playerState == State.WALLRUN_LEFT)
+            moveDir.y += (gravity * gravityMultiplier) * Time.deltaTime;
+
+        print("slope multiplier = " + SlopeMultiplier());
 
         if (jumpPressed())
             Jump();
 
         moveDir.x = stateMoveDir.x;
         moveDir.z = stateMoveDir.z;
-        cc.Move(moveDir * Time.fixedDeltaTime);
+
+        cc.Move((moveDir + SlopeMultiplier()) * Time.fixedDeltaTime * Time.timeScale);
     }
     /// <summary>
     /// checks input from the analogstick
@@ -260,6 +265,20 @@ public class StateMachine : MonoBehaviour
         }
         forwardVelocity += rate * Time.fixedDeltaTime;
         forwardVelocity = Mathf.Clamp(forwardVelocity, 0, maxSpeed);
+    }
+
+    private Vector3 SlopeMultiplier()
+    {
+        // if (!isGrounded)
+        //     return 1;
+        Debug.DrawRay(transform.position, Vector3.down, Color.red, 10f);
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, Vector3.down, out hit, slopeRayLength))
+        {
+            if (hit.normal != Vector3.up)
+                return new Vector3(0, -hit.distance * slopeForce, 0);
+        }
+        return Vector3.zero;
     }
 
     private void StoreGroundedThisFrame()
@@ -441,7 +460,7 @@ public class StateMachine : MonoBehaviour
             {
                 wallrunDir = Vector3.Cross(hit.normal, Vector3.up);
                 wallrunDir.y *= dot;
-                Debug.DrawRay(hit.point, wallrunDir, Color.red, 40f);
+                // Debug.DrawRay(hit.point, wallrunDir, Color.red, 40f);
                 isWallrun_Right = true;
                 SwitchStates(State.WALLRUN_RIGHT, wallrunMoveRight);
             }
@@ -453,7 +472,7 @@ public class StateMachine : MonoBehaviour
             {
                 wallrunDir = Vector3.Cross(hit.transform.up, hit.normal);
                 wallrunDir.y *= dot;
-                Debug.DrawRay(hit.point, wallrunDir, Color.red, 40f);
+                // Debug.DrawRay(hit.point, wallrunDir, Color.red, 40f);
                 isWallrun_Left = true;
                 SwitchStates(State.WALLRUN_LEFT, wallRunMoveLeft);
             }
