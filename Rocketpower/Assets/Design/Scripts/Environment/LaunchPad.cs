@@ -4,27 +4,38 @@ using UnityEngine;
 
 public class LaunchPad : MonoBehaviour
 {
-    public int JumpVelocity = 30;
-    private void OnTriggerEnter(Collider other) {
-        StartCoroutine(JumpRoutine(other));       
+
+    public float JumpPadVelocity;
+
+    private void OnTriggerEnter(Collider other)
+    {
+        //StartCoroutine(JumpRoutine(other));
+        Debug.Log("Are you working???");
+        other.gameObject.GetComponent<StateMachine>().jumpMultiplier = JumpPadVelocity;
+        other.gameObject.GetComponent<StateMachine>().Jump();
+        other.gameObject.GetComponent<StateMachine>().jumpMultiplier = 1.19f;
     }
 
-    private void OnTriggerExit(Collider other) {
-        StopCoroutine(JumpRoutine(other));
+    private void OnTriggerExit(Collider other)
+    {
+        //StopCoroutine(JumpRoutine(other));
     }
 
-    IEnumerator JumpRoutine(Collider other) {
+    IEnumerator JumpRoutine(Collider other)
+    {
         float timePassed = 0f;
-        while ( timePassed < 2f) {
+        other.gameObject.GetComponent<StateMachine>().jumpMultiplier = 2f;
+        while (timePassed < .4f)
+        {
             timePassed += Time.deltaTime;
-            Vector3 moveDir = (Vector3.up * Time.deltaTime);
+            //Vector3 moveDir = (Vector3.up * Time.deltaTime);
 
-            other.gameObject.GetComponent<CharacterController>().Move(moveDir * JumpVelocity);
-                
-            
+            other.gameObject.GetComponent<StateMachine>().Jump();
+            Debug.Log("Test");
 
             yield return new WaitForEndOfFrame();
-        }        
+        }
+        other.gameObject.GetComponent<StateMachine>().jumpMultiplier = 1.19f;
     }
 
 }
