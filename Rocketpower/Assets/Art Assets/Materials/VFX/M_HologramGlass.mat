@@ -67,7 +67,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Gradient:
-        m_Texture: {fileID: 2800000, guid: 5785d0714982f84438f22c1dbb451efa, type: 3}
+        m_Texture: {fileID: 2800000, guid: e8a5d0a698d48f5439c31d583cdff7b5, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _HeightMap:
@@ -75,7 +75,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _HexagonGrid:
-        m_Texture: {fileID: 2800000, guid: 31e55db4860eb6e42a2bcdc5d7557cd6, type: 3}
+        m_Texture: {fileID: 2800000, guid: b465e4506d04e964abba637dc6f657d7, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _HexagonalGrid:
@@ -83,7 +83,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _HexagonalNoise:
-        m_Texture: {fileID: 2800000, guid: bda33885ca03bb843bf150f42b74cebb, type: 3}
+        m_Texture: {fileID: 2800000, guid: 6ea6ad545e539fb428d2acc795173481, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _IridescenceMaskMap:
