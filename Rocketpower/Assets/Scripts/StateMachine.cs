@@ -288,7 +288,7 @@ public class StateMachine : MonoBehaviour
         {
             Vector3 tmp = Vector3.Cross(hit.normal, Vector3.down);
             Vector3 dir = Vector3.Cross(tmp, hit.normal);
-            Debug.Log("angle is = " + Vector3.Angle(hit.normal, Vector3.up));
+            //Debug.Log("angle is = " + Vector3.Angle(hit.normal, Vector3.up));
             return Vector3.Angle(hit.normal, Vector3.up);
         }
         return 1;
@@ -311,7 +311,7 @@ public class StateMachine : MonoBehaviour
 
     private IEnumerator OnLand(float jumpPosY, float landingPosY)
     {
-        Debug.Log(jumpPosY - landingPosY);
+        //Debug.Log(jumpPosY - landingPosY);
         animator.SetBool("B_IsRoling", false);
 
         if (jumpPosY - landingPosY > deltaFalling && forwardVelocity > 0)
@@ -328,7 +328,7 @@ public class StateMachine : MonoBehaviour
     }
 
     bool jumpPressed() => Settings.GameSettings.jumpOnPress ? virtualController.JumpButtonPressedThisFrame : virtualController.JumpButtonReleased;
-    private void Jump()
+    public void Jump()
     {
         jumpSlider.value = virtualController.Time_Hold_Button_A / jumpSlider.maxValue;
         boostedJumpPower = 1;
