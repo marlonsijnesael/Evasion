@@ -7,7 +7,6 @@ TagManager:
   - Ground
   - Action
   - wall
-  - LaunchPad
   - Fire
   - Start
   - Fin
@@ -17,6 +16,7 @@ TagManager:
   - Player2
   - FluxCollider
   - holowall
+  - JumpPad
   layers:
   - Default
   - TransparentFX
