@@ -17,6 +17,9 @@ TagManager:
   - Player2
   - FluxCollider
   - holowall
+  - Elevator
+  - GameModeManager
+  - audio
   layers:
   - Default
   - TransparentFX

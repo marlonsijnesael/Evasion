@@ -32,7 +32,8 @@ public class RunMove : Move
             _owner.isGrounded = false;
             _owner.moveDir.y = _owner.minimumJumpVelocity * _owner.jumpMultiplier + power;
             Debug.Log("JUMP POWER = " + (_owner.moveDir.y).ToString());
-
+			_owner.audioObj.GetComponent<GeneralAudio>().JumpSound();
+		
             _owner.stateMoveDir += (_owner.transform.forward + _owner.transform.up) * (1 + (_owner.GetAngle() / 100) * (_owner.forwardJumpMultiplier * power));//s
         }
     }

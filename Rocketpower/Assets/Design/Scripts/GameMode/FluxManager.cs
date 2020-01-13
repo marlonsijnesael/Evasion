@@ -1,10 +1,12 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 public class FluxManager : MonoBehaviour
 {
+	public bool gameOver = false;
+	
     #region Public Script References
     [HideInInspector] public GameObject UI;
     [HideInInspector] public GameObject canvas_D1, canvas_D2;
@@ -27,7 +29,7 @@ public class FluxManager : MonoBehaviour
     #region Flux Player + Score
     public PlayerFlux fluxPlayer;
     [HideInInspector] public SparkVFX sparkVFX;
-    private int player1score, player2score;
+    public int player1score, player2score;
     private int scoreDiff;
     private int pastPlayer1Score, pastPlayer2Score;
     [HideInInspector] public Text textFluxP1, textFluxP2;
@@ -49,7 +51,7 @@ public class FluxManager : MonoBehaviour
     [HideInInspector] public GameObject startCountdownObjectD1, startCountdownObjectD2;
     [HideInInspector] public Text startCountdownTextD1, startCountdownTextD2;
     [HideInInspector] public GameObject readyChecksD1, readyChecksD2;
-    [HideInInspector] public GameObject stasisP1, stasisP2;
+    public GameObject stasisP1, stasisP2;
     [HideInInspector] public Toggle readyToggleP1;
     [HideInInspector] public Toggle readyToggleP2;
     #endregion
@@ -137,6 +139,9 @@ public class FluxManager : MonoBehaviour
 
     private void Update()
     {
+		
+		print("fffff");
+		print(fluxPlayer);
         //Press 1 or 2 to change flux
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
@@ -555,6 +560,8 @@ public class FluxManager : MonoBehaviour
     {
         ToggleUI(inRoundUI_D1, inRoundUI_D2, false);
         ToggleUI(endScreenD1, endScreenD2, true);
+		
+		gameOver = true;
 
         if (player1score > player2score)
         {

@@ -5,6 +5,8 @@ using System.Collections;
 
 public class StateMachine : MonoBehaviour
 {
+	public GameObject audioObj;
+
     #region components
     [Header("Components: ")]
     public CharacterController cc;
@@ -105,6 +107,8 @@ public class StateMachine : MonoBehaviour
 
         normalGravity = gravity;
         jumpSlider.maxValue = maxJumpBoost;
+		
+		audioObj = GameObject.FindGameObjectWithTag("audio");
     }
 
     private void Start()
@@ -234,8 +238,9 @@ public class StateMachine : MonoBehaviour
         if (!virtualController.GetNextKey() && cc.collisionFlags.HasFlag(CollisionFlags.Above) || !WasGroundedInBuffer() && playerState != State.CLIMB && playerState != State.WALLRUN_LEFT && playerState != State.WALLRUN_LEFT)  //|| playerState == State.WALLRUN_RIGHT || playerState == State.WALLRUN_LEFT)
             moveDir.y += (gravity * gravityMultiplier) * Time.fixedDeltaTime;
 
-        if (jumpPressed())
-            Jump();
+        if (jumpPressed()) {
+			Jump();
+		}
 
         moveDir.x = stateMoveDir.x;
         moveDir.z = stateMoveDir.z;
@@ -301,6 +306,8 @@ public class StateMachine : MonoBehaviour
 
     private IEnumerator OnJump()
     {
+
+
         ClearGroundedBuffer();
         YpositionOnJump = transform.position.y + jumpHeight;
         yield return new WaitUntil(() => groundedBuffer.Contains(true));
@@ -319,6 +326,7 @@ public class StateMachine : MonoBehaviour
             Debug.Log("rolling");
             animator.SetBool("B_IsGrounded", true);
             animator.SetTrigger("roll");
+			audioObj.GetComponent<GeneralAudio>().HeadRollSound();
 
         }
         yield return new WaitForEndOfFrame();
@@ -332,8 +340,7 @@ public class StateMachine : MonoBehaviour
     {
         jumpSlider.value = virtualController.Time_Hold_Button_A / jumpSlider.maxValue;
         boostedJumpPower = 1;
-
-
+		
 
         StartCoroutine(OnJump());
         wasJump = true;
@@ -348,8 +355,6 @@ public class StateMachine : MonoBehaviour
         }
         currentMove.Jump(this, boostedJumpPower);
         virtualController.Time_Hold_Button_A = 1f;
-
-
     }
 
     /// <summary>
