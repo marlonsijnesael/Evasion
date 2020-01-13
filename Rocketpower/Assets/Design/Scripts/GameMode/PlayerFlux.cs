@@ -53,7 +53,7 @@ public class PlayerFlux : MonoBehaviour
         if (other.gameObject.CompareTag("Flux"))
         {
             gm.fluxPlayer = this;
-            gm.ColorandSpeedSwitch();
+            gm.ColorSwitch();
             gm.textFluxP1.text = "Spark: " + gm.fluxPlayer.ToString();
             gm.textFluxP2.text = "Spark: " + gm.fluxPlayer.ToString();
             Destroy(other.gameObject);
@@ -68,6 +68,7 @@ public class PlayerFlux : MonoBehaviour
             {
                 platform.ChangeColorTo(playerID, playerColor);
                 gm.updateScore();
+                gm.SpeedPlayers();
             }
         }
 
@@ -97,18 +98,17 @@ public class PlayerFlux : MonoBehaviour
                 gm.sliderCaptureTime.value = currFluxCaptureTime;
                 if (currFluxCaptureTime > gm.fluxCaptureTime)
                 {
-                    isFluxCaptured = true;
-                    if (isFluxCaptured)
-                    {
-                        gm.fluxPlayer = this;
-                        gm.ColorandSpeedSwitch();
-                        gm.sliderCaptureObject.SetActive(false);
-                        gm.textFluxP1.text = "Spark: " + gm.fluxPlayer.ToString();
-                        gm.textFluxP2.text = "Spark: " + gm.fluxPlayer.ToString();
-                        gm.StartCoroutine("FluxColliderSeconds");
-                        isFluxCaptured = false;
-                        currFluxCaptureTime = 0;
-                    }
+
+                    gm.fluxPlayer = this;
+                    gm.ColorSwitch();
+                    gm.SpeedPlayers();
+                    gm.sliderCaptureObject.SetActive(false);
+                    gm.textFluxP1.text = "Spark: " + gm.fluxPlayer.ToString();
+                    gm.textFluxP2.text = "Spark: " + gm.fluxPlayer.ToString();
+                    gm.StartCoroutine("FluxColliderSeconds");
+                    isFluxCaptured = false;
+                    currFluxCaptureTime = 0;
+
                 }
             }
             else

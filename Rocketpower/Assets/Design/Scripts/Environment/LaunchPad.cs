@@ -10,7 +10,6 @@ public class LaunchPad : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         //StartCoroutine(JumpRoutine(other));
-        Debug.Log("Are you working???");
         other.gameObject.GetComponent<StateMachine>().jumpMultiplier = JumpPadVelocity;
         other.gameObject.GetComponent<StateMachine>().Jump();
         other.gameObject.GetComponent<StateMachine>().jumpMultiplier = 1.19f;
