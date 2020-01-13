@@ -12,5 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4f06f05eb453094e8f87542d3c10237, type: 3}
   m_Name: WallrunMoveLeft
   m_EditorClassIdentifier: 
-  noGoStates: 
+  noGoStates: 04000000
   animation: 2
+  coolDownTime: 0.2
+  sideJumpMultiplier: 5

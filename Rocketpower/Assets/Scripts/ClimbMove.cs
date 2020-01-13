@@ -18,6 +18,7 @@ public class ClimbMove : Move
     public override void EnterState(StateMachine _owner)
     {
         _owner.animationController.SetBool(_owner.animator, animation.ToString(), true);
+        _owner.jumpVec = Vector3.zero;
     }
     public override void Act(StateMachine _owner)
     {

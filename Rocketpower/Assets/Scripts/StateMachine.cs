@@ -25,6 +25,7 @@ public class StateMachine : MonoBehaviour
     #region directional vectors
 
     [HideInInspector] public Vector3 wallrunDir;
+    public Vector3 wallrunSide;
     [HideInInspector] public Vector3 stateMoveDir = Vector3.zero;
     [HideInInspector] public Vector3 moveDir = Vector3.zero;
     [HideInInspector] public Vector3 lastMoveDir;
@@ -60,7 +61,7 @@ public class StateMachine : MonoBehaviour
     [HideInInspector] public float normalGravity = 0f;
 
     public float minimumJumpVelocity;
-    [HideInInspector] public float forwardJumpMultiplier = 5;
+    public float forwardJumpMultiplier = 5;
     public bool isGrounded;
 
     public Ledge ledge;
@@ -86,6 +87,8 @@ public class StateMachine : MonoBehaviour
 
     public float boostedJumpPower = 1;
     private float YpositionOnJump = 0f;
+
+    public Vector3 jumpVec = Vector3.zero;
 
     private bool IsMoving()
     {
@@ -233,18 +236,16 @@ public class StateMachine : MonoBehaviour
     public void MovePlayer()
     {
         StoreGroundedThisFrame();
-        if (!cc.collisionFlags.HasFlag(CollisionFlags.Above) || !WasGroundedInBuffer() && playerState != State.CLIMB && playerState != State.WALLRUN_LEFT && playerState != State.WALLRUN_LEFT)  //|| playerState == State.WALLRUN_RIGHT || playerState == State.WALLRUN_LEFT)
+        if (!WasGroundedInBuffer() && (playerState != State.CLIMB && playerState != State.WALLRUN_LEFT && playerState != State.WALLRUN_RIGHT))  //|| playerState == State.WALLRUN_RIGHT || playerState == State.WALLRUN_LEFT)
             moveDir.y += (gravity * gravityMultiplier) * Time.deltaTime;
 
-        print("slope multiplier = " + SlopeMultiplier());
 
         if (jumpPressed())
             Jump();
 
         moveDir.x = stateMoveDir.x;
         moveDir.z = stateMoveDir.z;
-
-        cc.Move((moveDir + SlopeMultiplier()) * Time.fixedDeltaTime * Time.timeScale);
+        cc.Move((moveDir + jumpVec + SlopeMultiplier()) * Time.fixedDeltaTime * Time.timeScale);
     }
     /// <summary>
     /// checks input from the analogstick
@@ -273,7 +274,7 @@ public class StateMachine : MonoBehaviour
         //     return 1;
         Debug.DrawRay(transform.position, Vector3.down, Color.red, 10f);
         RaycastHit hit;
-        if (Physics.Raycast(transform.position, Vector3.down, out hit, slopeRayLength))
+        if (Physics.Raycast(transform.position, Vector3.down, out hit, slopeRayLength) && playerState != State.WALLRUN_LEFT || playerState != State.WALLRUN_RIGHT)
         {
             if (hit.normal != Vector3.up)
                 return new Vector3(0, -hit.distance * slopeForce, 0);
@@ -332,6 +333,7 @@ public class StateMachine : MonoBehaviour
     {
         Debug.Log(jumpPosY - landingPosY);
         animator.SetBool("B_IsRoling", false);
+        jumpVec = Vector3.zero;
 
         if (jumpPosY - landingPosY > deltaFalling && forwardVelocity > 0)
         {
@@ -452,6 +454,7 @@ public class StateMachine : MonoBehaviour
     /// </summary>
     public void LeftRightCollisionsTest()
     {
+
         RaycastHit hit;
         if (Physics.Raycast(transform.position + Vector3.up, transform.right, out hit, 1 + cc.skinWidth) && virtualController.WallrunButtonPressed && canWallRun)
         {
@@ -459,7 +462,9 @@ public class StateMachine : MonoBehaviour
             if (dot > -0.7f && dot < 0.7f)
             {
                 wallrunDir = Vector3.Cross(hit.normal, Vector3.up);
-                wallrunDir.y *= dot;
+                wallrunSide = -transform.right;
+
+                // wallrunDir.y *= dot;
                 // Debug.DrawRay(hit.point, wallrunDir, Color.red, 40f);
                 isWallrun_Right = true;
                 SwitchStates(State.WALLRUN_RIGHT, wallrunMoveRight);
@@ -471,8 +476,10 @@ public class StateMachine : MonoBehaviour
             if (dot > -0.7f && dot < 0.7f)
             {
                 wallrunDir = Vector3.Cross(hit.transform.up, hit.normal);
-                wallrunDir.y *= dot;
+                wallrunSide = transform.right;
+                // wallrunDir.y *= dot;
                 // Debug.DrawRay(hit.point, wallrunDir, Color.red, 40f);
+
                 isWallrun_Left = true;
                 SwitchStates(State.WALLRUN_LEFT, wallRunMoveLeft);
             }
@@ -488,6 +495,14 @@ public class StateMachine : MonoBehaviour
                 isWallrun_Left = false;
             }
         }
+
+    }
+
+    public IEnumerator WallrunCoolDown(float cooldownTime)
+    {
+        canWallRun = false;
+        yield return new WaitForSeconds(cooldownTime);
+        canWallRun = true;
     }
 
     public IEnumerator ClimbCooldown(bool cooldownState, float coolDown)
