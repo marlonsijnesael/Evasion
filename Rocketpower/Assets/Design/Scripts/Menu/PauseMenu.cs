@@ -1,9 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using UnityEngine.UI;
-using UnityEngine.SceneManagement;
-using UnityEngine.EventSystems;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class PauseMenu : MonoBehaviour
 {
@@ -18,7 +18,7 @@ public class PauseMenu : MonoBehaviour
     public EventSystem ES;
     private GameObject StoreSelected;
 
-    void LateUpdate()
+    void Update()
     {
         if (ES.currentSelectedGameObject != StoreSelected)
         {
@@ -32,13 +32,12 @@ public class PauseMenu : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.P) || (vCP1.StartPressed || vCP2.StartPressed))
+        if (Input.GetKeyDown(KeyCode.P) || vCP1.StartPressed || vCP2.StartPressed)
         {
             isPauseMenuActive = !isPauseMenuActive;
             if (isPauseMenuActive)
             {
                 PauseGame();
-                print("pauzed");
             }
             else if (!isPauseMenuActive)
             {
@@ -51,17 +50,18 @@ public class PauseMenu : MonoBehaviour
 
     public void PauseGame()
     {
-        if (!gm.isGameRoundTimerRunning)
+        if (gm.isStartRoundTimer)
         {
             gm.ToggleUI(gm.preRoundD1, gm.preRoundD2, false);
             gm.ToggleUI(pauseMenuP1, pauseMenuP2, true);
             Time.timeScale = 0;
             StoreSelected = ES.firstSelectedGameObject;
         }
-        else if (gm.isGameRoundTimerRunning)
+        else if (!gm.isStartRoundTimer)
         {
             gm.ToggleUI(gm.inRoundUI_D1, gm.inRoundUI_D2, false);
             gm.ToggleUI(pauseMenuP1, pauseMenuP2, true);
+            gm.isGameRoundTimerRunning = false;
             Time.timeScale = 0;
             StoreSelected = ES.firstSelectedGameObject;
         }
@@ -70,16 +70,17 @@ public class PauseMenu : MonoBehaviour
     public void ResumeGame()
     {
         isPauseMenuActive = false;
-        if (!gm.isGameRoundTimerRunning)
+        if (gm.isStartRoundTimer)
         {
             gm.ToggleUI(gm.preRoundD1, gm.preRoundD2, true);
             gm.ToggleUI(pauseMenuP1, pauseMenuP2, false);
             Time.timeScale = 1;
         }
-        else if (gm.isGameRoundTimerRunning)
+        else if (!gm.isStartRoundTimer)
         {
             gm.ToggleUI(gm.inRoundUI_D1, gm.inRoundUI_D2, true);
             gm.ToggleUI(pauseMenuP1, pauseMenuP2, false);
+            gm.isGameRoundTimerRunning = true;
             Time.timeScale = 1;
         }
     }

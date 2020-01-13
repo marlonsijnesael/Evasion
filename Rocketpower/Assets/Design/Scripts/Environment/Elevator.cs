@@ -2,26 +2,35 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class Elevator : MonoBehaviour
 {
     public GameObject Hexagon;
+    public Transform startPoint, endPoint;
+    public float lerpTime = 3f;
 
-    private void OnTriggerStay(Collider other){
-        Hexagon.transform.position += Hexagon.transform.up * Time.deltaTime;
-
-    }
-
-    private void OnTriggerEnter(Collider other){
-        
-    }
-
-    void Start()
+    private IEnumerator MoveElevator(Transform player)
     {
-        
+        player.transform.SetParent(Hexagon.transform);
+        player.GetComponent<StateMachine>().enabled = false;
+        Vector3 start = startPoint.position;
+        float time = 0;
+
+        while (time < lerpTime)
+        {
+            Hexagon.transform.position = Vector3.Lerp(start, endPoint.position, time / lerpTime);
+            Debug.Log(time / lerpTime);
+            time += Time.deltaTime;
+            yield return null;
+        }
+        player.transform.SetParent(null);
+        player.GetComponent<StateMachine>().enabled = true;
     }
 
-    void Update()
+    private void OnTriggerEnter(Collider other)
     {
-        
+        // other.transform.SetParent(this.transform);
+        StartCoroutine(MoveElevator(other.transform));
     }
+
 }

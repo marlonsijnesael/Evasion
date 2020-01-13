@@ -1,11 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine.UI;
 using UnityEngine;
+using UnityEngine.UI;
 public class FluxManager : MonoBehaviour
 {
     #region Public Script References
+    [HideInInspector] public GameObject UI;
     [HideInInspector] public GameObject canvas_D1, canvas_D2;
     [HideInInspector] public StateMachine smP1;
     [HideInInspector] public StateMachine smP2;
@@ -18,21 +19,22 @@ public class FluxManager : MonoBehaviour
     #region Player Variables
     public Color player1color;
     public Color player2color;
-    public int mSpeed_It, mSpeed_notIt;
+    public float mSpeedDiff = 0.5f;
+    private float mSpeedBase = 9f;
     #endregion
 
     [Header("GameMode")]
     #region Flux Player + Score
     public PlayerFlux fluxPlayer;
-    public SparkVFX sparkVFX;
-    private int player1score;
-    private int player2score;
-    private int pastPlayer1Score;
-    private int pastPlayer2Score;
+    [HideInInspector] public SparkVFX sparkVFX;
+    private int player1score, player2score;
+    private int scoreDiff;
+    private int pastPlayer1Score, pastPlayer2Score;
     [HideInInspector] public Text textFluxP1, textFluxP2;
     #endregion
     #region Flux Capture
     public float fluxCaptureTime;
+    public float fluxCaptureCD;
     [HideInInspector] public bool isFluxPlayerColliderOnCD;
     [HideInInspector] public Slider sliderCaptureTime;
     [HideInInspector] public Image sliderFillImage;
@@ -56,6 +58,7 @@ public class FluxManager : MonoBehaviour
     [HideInInspector] public bool isStartRoundTimer = true;
     [HideInInspector] public bool isGameRoundTimerRunning;
     [HideInInspector] public Text roundCountdownText_D1, roundCountdownText_D2;
+    [HideInInspector] public GameObject roundCountdownObject_D1, roundCountdownObject_D2;
     [HideInInspector] public GameObject inRoundUI_D1, inRoundUI_D2;
     #endregion
 
@@ -63,11 +66,11 @@ public class FluxManager : MonoBehaviour
     #region WinCondition
     private bool stopWinCountDown;
     private IEnumerator coroutineWinTimer;
-    [HideInInspector] public bool isWinCountDownActive = true;
+    [HideInInspector] public bool isWinCountDownActive;
     public int winStartCountdownTime = 20;
     private int winCountDownTime;
-    public Text playerWinningTextD1, playerWinningTextD2;
-    public GameObject playerWinningD1, playerWinningD2;
+    [HideInInspector] public Text playerWinningTextD1, playerWinningTextD2;
+    [HideInInspector] public GameObject playerWinningD1, playerWinningD2;
     [HideInInspector] public GameObject winCountDownD1, winCountDownD2;
     [HideInInspector] public Text winCountDownTextD1, winCountDownTextD2;
     [HideInInspector] public GameObject endScreenD1, endScreenD2;
@@ -90,10 +93,15 @@ public class FluxManager : MonoBehaviour
 
     private void Awake()
     {
+        UI.SetActive(true);
         platformArray = GameObject.FindGameObjectsWithTag("ColorPlatform");
-        sliderCaptureTime.maxValue = fluxCaptureTime;
         //StartCoroutine(StartRoundCountDown());
         Time.timeScale = 1;
+
+        sliderCaptureTime.maxValue = fluxCaptureTime;
+        isWinCountDownActive = false;
+        smP1.maxSpeed = mSpeedBase;
+        smP2.maxSpeed = mSpeedBase;
     }
 
     private void Start()
@@ -143,29 +151,144 @@ public class FluxManager : MonoBehaviour
             textFluxP2.text = "Spark: " + fluxPlayer.ToString();
         }
         startRound();
+
+        //Debug.Log(isWinCountDownActive);
     }
 
-    public void ColorandSpeedSwitch()
+    public void SpeedPlayers()
+    {
+        scoreDiff = player1score - player2score;
+
+        if (scoreDiff == 0 || scoreDiff == 0)
+        {
+            smP1.maxSpeed = mSpeedBase;
+            smP2.maxSpeed = mSpeedBase;
+        }
+
+        if (fluxPlayer == player1)
+        {
+            if (player1score > player2score)
+            {
+                if (scoreDiff == 1)
+                {
+                    smP1.maxSpeed = mSpeedBase;
+                    smP2.maxSpeed = mSpeedBase + mSpeedDiff;
+                }
+                if (scoreDiff == 2)
+                {
+                    smP1.maxSpeed = mSpeedBase;
+                    smP2.maxSpeed = mSpeedBase + mSpeedDiff * 2;
+                }
+                if (scoreDiff == 3)
+                {
+                    smP1.maxSpeed = mSpeedBase;
+                    smP2.maxSpeed = mSpeedBase + mSpeedDiff * 3;
+                }
+                if (scoreDiff == 4)
+                {
+                    smP1.maxSpeed = mSpeedBase;
+                    smP2.maxSpeed = mSpeedBase + mSpeedDiff * 4;
+                }
+                if (scoreDiff == 5)
+                {
+                    smP1.maxSpeed = mSpeedBase;
+                    smP2.maxSpeed = mSpeedBase + mSpeedDiff * 5;
+                }
+                if (scoreDiff == 6)
+                {
+                    smP1.maxSpeed = mSpeedBase;
+                    smP2.maxSpeed = mSpeedBase + mSpeedDiff * 6;
+                }
+            }
+            else
+            {
+                if (scoreDiff > 0 && scoreDiff < 2)
+                {
+                    smP1.maxSpeed = mSpeedBase + mSpeedDiff;
+                    smP2.maxSpeed = mSpeedBase;
+                }
+                if (scoreDiff > 2 && scoreDiff < 4)
+                {
+                    smP1.maxSpeed = mSpeedBase + mSpeedDiff * 1.5f;
+                    smP2.maxSpeed = mSpeedBase;
+                }
+                if (scoreDiff >= 4)
+                {
+                    smP1.maxSpeed = mSpeedBase + mSpeedDiff * 1.8f;
+                    smP2.maxSpeed = mSpeedBase;
+                }
+            }
+
+        }
+
+        if (fluxPlayer == player2)
+        {
+            if (player1score < player2score)
+            {
+                if (scoreDiff == 1)
+                {
+                    smP1.maxSpeed = mSpeedBase + mSpeedDiff;
+                    smP2.maxSpeed = mSpeedBase;
+                }
+                if (scoreDiff == 2)
+                {
+                    smP1.maxSpeed = mSpeedBase + mSpeedDiff * 2;
+                    smP2.maxSpeed = mSpeedBase;
+                }
+                if (scoreDiff == 3)
+                {
+                    smP1.maxSpeed = mSpeedBase + mSpeedDiff * 3;
+                    smP2.maxSpeed = mSpeedBase;
+                }
+                if (scoreDiff == 4)
+                {
+                    smP1.maxSpeed = mSpeedBase + mSpeedDiff * 4;
+                    smP2.maxSpeed = mSpeedBase;
+                }
+                if (scoreDiff == 5)
+                {
+                    smP1.maxSpeed = mSpeedBase + mSpeedDiff * 5;
+                    smP2.maxSpeed = mSpeedBase;
+                }
+                if (scoreDiff == 6)
+                {
+                    smP1.maxSpeed = mSpeedBase + mSpeedDiff * 6;
+                    smP2.maxSpeed = mSpeedBase;
+                }
+            }
+            else
+            {
+                if (scoreDiff > 0 && scoreDiff < 2)
+                {
+                    smP1.maxSpeed = mSpeedBase;
+                    smP2.maxSpeed = mSpeedBase + mSpeedDiff;
+                }
+                if (scoreDiff > 2 && scoreDiff < 4)
+                {
+                    smP1.maxSpeed = mSpeedBase;
+                    smP2.maxSpeed = mSpeedBase + mSpeedDiff * 1.5f;
+                }
+                if (scoreDiff >= 4)
+                {
+                    smP1.maxSpeed = mSpeedBase;
+                    smP2.maxSpeed = mSpeedBase + mSpeedDiff * 1.8f;
+                }
+            }
+
+        }
+    }
+
+    public void ColorSwitch()
     {
         //Change Capture Bar Fill Color + Runspeed
         if (fluxPlayer == player1)
         {
             sliderFillImage.color = player2color;
-            smP1.maxSpeed = mSpeed_It;
-        }
-        else
-        {
-            smP1.maxSpeed = mSpeed_notIt;
         }
 
         if (fluxPlayer == player2)
         {
             sliderFillImage.color = player1color;
-            smP2.maxSpeed = mSpeed_It;
-        }
-        else
-        {
-            smP2.maxSpeed = mSpeed_notIt;
         }
 
         player1.TurnFlux(fluxPlayer == player1);
@@ -224,7 +347,7 @@ public class FluxManager : MonoBehaviour
 
     public void updateScore()
     {
-        if (winCountDownTime >= 0 && !isWinCountDownActive)
+        if (winCountDownTime >= 0 && isWinCountDownActive)
         {
             stopWinCountDown = true;
         }
@@ -353,71 +476,79 @@ public class FluxManager : MonoBehaviour
         ToggleUI(inRoundUI_D1, inRoundUI_D2, true);
         ToggleUIText(roundCountdownText_D1, roundCountdownText_D2, roundCountdownTime);
 
+        isGameRoundTimerRunning = true;
         StartCoroutine(GameRoundCountdown());
     }
 
     IEnumerator GameRoundCountdown()
     {
-        while (roundCountdownTime > 0)
+        while (roundCountdownTime > 0 && isGameRoundTimerRunning)
         {
-            isGameRoundTimerRunning = true;
             yield return new WaitForSeconds(1);
             roundCountdownTime--;
             ToggleUIText(roundCountdownText_D1, roundCountdownText_D2, roundCountdownTime);
         }
-        isGameRoundTimerRunning = false;
-        Time.timeScale = 0;
-        WinScreen();
-    }
-
-    public void WinCondition()
-    {
-        coroutineWinTimer = winCountDown();
-        if (player1score == platformsTotal || player2score == platformsTotal && isWinCountDownActive)
+        if (roundCountdownTime <= 0)
         {
-            winCountDownTime = winStartCountdownTime;
-            isWinCountDownActive = false;
-            stopWinCountDown = false;
-            StartCoroutine(winCountDown());
-            ToggleUIText(winCountDownTextD1, winCountDownTextD2, winStartCountdownTime);
-            ToggleUI(winCountDownD1, winCountDownD2, true);
-            ToggleUI(playerWinningD1, playerWinningD2, true);
+            isGameRoundTimerRunning = false;
+            Time.timeScale = 0;
+            WinScreen();
         }
-        else if (!isWinCountDownActive)
-        {
-            isWinCountDownActive = true;
-            ToggleUI(winCountDownD1, winCountDownD2, false);
-            ToggleUI(playerWinningD1, playerWinningD2, false);
-        }
+        yield return new WaitForEndOfFrame();
     }
 
     IEnumerator winCountDown()
     {
         if (player1score > player2score)
         {
-            playerWinningTextD1.text = "Orange Holds All Objectives";
-            playerWinningTextD2.text = "Orange Holds All Objectives";
+            playerWinningTextD1.text = "Orange Holds All Holofields";
+            playerWinningTextD2.text = "Orange Holds All Holofields";
         }
         else if (player2score > player1score)
         {
-            playerWinningTextD1.text = "Blue Holds All Objectives";
-            playerWinningTextD2.text = "Blue Holds All Objectives";
+            playerWinningTextD1.text = "Blue Holds All Holofields";
+            playerWinningTextD2.text = "Blue Holds All Holofields";
         }
 
-        while (winCountDownTime >= 0 && !isWinCountDownActive && !stopWinCountDown)
+        while (winCountDownTime >= 0 && isWinCountDownActive && !stopWinCountDown)
         {
             yield return new WaitForSeconds(1);
             winCountDownTime--;
             ToggleUIText(winCountDownTextD1, winCountDownTextD2, winCountDownTime);
         }
-        if (winCountDownTime <= 0 && !stopWinCountDown)
+        if (winCountDownTime < 1 && !stopWinCountDown)
         {
-            Debug.Log("End Me");
             Time.timeScale = 0;
             WinScreen();
         }
         yield return new WaitForEndOfFrame();
         //yield return new WaitWhile(() => winCountDownTime >= 0);
+    }
+
+    public void WinCondition()
+    {
+        if (player1score == platformsTotal || player2score == platformsTotal && !isWinCountDownActive)
+        {
+            winCountDownTime = winStartCountdownTime;
+            isWinCountDownActive = true;
+            stopWinCountDown = false;
+            isGameRoundTimerRunning = false;
+            StartCoroutine(winCountDown());
+            ToggleUIText(winCountDownTextD1, winCountDownTextD2, winStartCountdownTime);
+            ToggleUI(winCountDownD1, winCountDownD2, true);
+            ToggleUI(playerWinningD1, playerWinningD2, true);
+            ToggleUI(roundCountdownObject_D1, roundCountdownObject_D2, false);
+
+        }
+        else if (isWinCountDownActive)
+        {
+            isWinCountDownActive = false;
+            isGameRoundTimerRunning = true;
+            ToggleUI(winCountDownD1, winCountDownD2, false);
+            ToggleUI(playerWinningD1, playerWinningD2, false);
+            StartCoroutine(GameRoundCountdown());
+            ToggleUI(roundCountdownObject_D1, roundCountdownObject_D2, true);
+        }
     }
 
     public void WinScreen()
@@ -458,8 +589,7 @@ public class FluxManager : MonoBehaviour
     {
         //Flux Capture Cooldown
         isFluxPlayerColliderOnCD = true;
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(fluxCaptureCD);
         isFluxPlayerColliderOnCD = false;
     }
 }
-
