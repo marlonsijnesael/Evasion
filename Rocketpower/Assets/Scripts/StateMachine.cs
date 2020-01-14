@@ -89,6 +89,9 @@ public class StateMachine : MonoBehaviour
     private float YpositionOnJump = 0f;
 
     public Vector3 jumpVec = Vector3.zero;
+    public LimitedQueue<bool> groundQueue;
+    private int framesPassed = 0;
+
 
     private bool IsMoving()
     {
@@ -97,6 +100,8 @@ public class StateMachine : MonoBehaviour
 
     private void Awake()
     {
+        groundQueue = new LimitedQueue<bool>(groundedBufferSize);
+
         virtualController = GetComponent<VirtualController>();
         currentMove = idleMove;
         idleMove.EnterState(this);
@@ -122,6 +127,7 @@ public class StateMachine : MonoBehaviour
 
     private void FixedUpdate()
     {
+
         CheckGrounded();
         SetInitVel();
 
@@ -151,11 +157,14 @@ public class StateMachine : MonoBehaviour
         }
 
         HandleState();
+
     }
 
     private void LateUpdate()
     {
+
         MovePlayer();
+
     }
 
 
@@ -236,15 +245,17 @@ public class StateMachine : MonoBehaviour
     public void MovePlayer()
     {
         StoreGroundedThisFrame();
-        if (!WasGroundedInBuffer() && (playerState != State.CLIMB && playerState != State.WALLRUN_LEFT && playerState != State.WALLRUN_RIGHT))  //|| playerState == State.WALLRUN_RIGHT || playerState == State.WALLRUN_LEFT)
+        Debug.Log(WasGroundedInQueue());
+        if (!WasGroundedInQueue() && (playerState != State.CLIMB && playerState != State.WALLRUN_LEFT && playerState != State.WALLRUN_RIGHT))  //|| playerState == State.WALLRUN_RIGHT || playerState == State.WALLRUN_LEFT)
             moveDir.y += (gravity * gravityMultiplier) * Time.deltaTime;
 
 
-        if (jumpPressed())
+        if (virtualController.GetNextKey())
             Jump();
 
         moveDir.x = stateMoveDir.x;
         moveDir.z = stateMoveDir.z;
+
         if (isGrounded)
         {
             cc.Move((moveDir + jumpVec + SlopeMultiplier()) * Time.fixedDeltaTime * Time.timeScale);
@@ -294,8 +305,8 @@ public class StateMachine : MonoBehaviour
     private void StoreGroundedThisFrame()
     {
         groundedBuffer.RemoveAt(groundedBufferSize - 1);
-        groundedBuffer.Insert(0, isGrounded);
-
+        groundedBuffer.Insert(0, cc.isGrounded);
+        groundQueue.Enqueue(cc.isGrounded);
         string list = "";
         foreach (bool g in groundedBuffer)
             list += " " + g.ToString();
@@ -360,6 +371,7 @@ public class StateMachine : MonoBehaviour
     bool jumpPressed() => Settings.GameSettings.jumpOnPress ? virtualController.JumpButtonPressedThisFrame : virtualController.JumpButtonReleased;
     public void Jump()
     {
+        groundQueue.Clear();
         jumpSlider.value = virtualController.Time_Hold_Button_A / jumpSlider.maxValue;
         boostedJumpPower = 1;
 
@@ -388,7 +400,8 @@ public class StateMachine : MonoBehaviour
     /// </summary>
     public void CheckGrounded()
     {
-        if (playerState != State.CLIMB)
+        StoreGroundedThisFrame();
+        if (playerState != State.CLIMB || WasGroundedInQueue())
         {
             RaycastHit hit;
             Vector3 rayPos = transform.position + Vector3.up;
@@ -407,7 +420,7 @@ public class StateMachine : MonoBehaviour
 
             if (Physics.Raycast(rayPos, Vector3.down, out hit))  /*1 + (jumpHeight / 2))*/
             {
-                if (rayPos.y - hit.point.y > 1.1f)
+                if (rayPos.y - hit.point.y > 1.1f && !WasGroundedInQueue())
                 {
                     isGrounded = false;
                     animationController.SetBool(this.animator, "grounded", false);
@@ -520,6 +533,24 @@ public class StateMachine : MonoBehaviour
         yield return new WaitUntil(() => groundedBuffer.Contains(true));
         cooldownState = true;
         timeClimbing = 0;
+    }
+
+    public bool WasGroundedInQueue()
+    {
+        foreach (bool q in groundQueue)
+        {
+            if (q)
+                return true;
+        }
+        return false;
+    }
+
+    public bool GetNextKey()
+    {
+        if (groundQueue.Count > 0)
+            return groundQueue.Dequeue();
+        else
+            return false;
     }
 
 }
