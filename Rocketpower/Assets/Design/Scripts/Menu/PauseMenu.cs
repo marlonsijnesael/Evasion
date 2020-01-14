@@ -32,7 +32,7 @@ public class PauseMenu : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.P) || vCP1.StartPressed || vCP2.StartPressed)
+        if (Input.GetKeyDown(KeyCode.O) || vCP1.StartPressed || vCP2.StartPressed)
         {
             isPauseMenuActive = !isPauseMenuActive;
             if (isPauseMenuActive)

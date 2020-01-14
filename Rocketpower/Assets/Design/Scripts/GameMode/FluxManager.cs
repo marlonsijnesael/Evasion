@@ -33,6 +33,7 @@ public class FluxManager : MonoBehaviour
     [HideInInspector] public Text textFluxP1, textFluxP2;
     #endregion
     #region Flux Capture
+    [HideInInspector] public GameObject jumpPadOrange, jumpPadBlue;
     public float fluxCaptureTime;
     public float fluxCaptureCD;
     [HideInInspector] public bool isFluxPlayerColliderOnCD;
@@ -49,7 +50,7 @@ public class FluxManager : MonoBehaviour
     [HideInInspector] public GameObject startCountdownObjectD1, startCountdownObjectD2;
     [HideInInspector] public Text startCountdownTextD1, startCountdownTextD2;
     [HideInInspector] public GameObject readyChecksD1, readyChecksD2;
-    [HideInInspector] public GameObject stasisP1, stasisP2;
+    public GameObject stasisP1, stasisP2;
     [HideInInspector] public Toggle readyToggleP1;
     [HideInInspector] public Toggle readyToggleP2;
     #endregion
@@ -296,6 +297,7 @@ public class FluxManager : MonoBehaviour
 
         if (sparkVFX != null)
         {
+            ToggleUI(jumpPadOrange, jumpPadBlue, false);
             Color c;
             if (fluxPlayer == player1)
             {

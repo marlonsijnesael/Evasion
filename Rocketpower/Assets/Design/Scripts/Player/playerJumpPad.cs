@@ -18,11 +18,6 @@ public class playerJumpPad : MonoBehaviour
         if (Physics.Raycast(transform.position + Vector3.up, transform.TransformDirection(Vector3.down), out rayJumpPad, 2) && rayJumpPad.transform.tag == "JumpPad")
         {
             JumpPad pad = rayJumpPad.transform.GetComponent<JumpPad>();
-            if (rayJumpPad.transform.name == "JumpPadStartOrange" || rayJumpPad.transform.name == "JumpPadStartBlue" && isStartCoroutine)
-            {
-                isStartCoroutine = false;
-                StartCoroutine(pad.StartJump());
-            }
 
             if (pad != null && this.GetComponent<StateMachine>().forwardVelocity > 1)
             {
