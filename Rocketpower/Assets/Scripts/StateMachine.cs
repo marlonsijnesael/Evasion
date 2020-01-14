@@ -245,7 +245,16 @@ public class StateMachine : MonoBehaviour
 
         moveDir.x = stateMoveDir.x;
         moveDir.z = stateMoveDir.z;
-        cc.Move((moveDir + jumpVec + SlopeMultiplier()) * Time.fixedDeltaTime * Time.timeScale);
+        if (isGrounded)
+        {
+            cc.Move((moveDir + jumpVec + SlopeMultiplier()) * Time.fixedDeltaTime * Time.timeScale);
+        }
+        else
+        {
+            cc.Move((moveDir + jumpVec) * Time.fixedDeltaTime * Time.timeScale);
+
+        }
+
     }
     /// <summary>
     /// checks input from the analogstick
