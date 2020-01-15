@@ -14,6 +14,7 @@ public class FluxManager : MonoBehaviour
     [HideInInspector] public PlayerFlux player2;
     [HideInInspector] public GameObject preRoundD1, preRoundD2;
     [HideInInspector] public VirtualController vControllerP1, vControllerP2;
+    public Elevator elevatorP1, elevatorP2;
     #endregion
 
     #region Player Variables
@@ -42,8 +43,8 @@ public class FluxManager : MonoBehaviour
     [HideInInspector] public GameObject sliderCaptureObject;
     #endregion
     #region Pre-Round Variables
-    [HideInInspector] public bool readyP1;
-    [HideInInspector] public bool readyP2;
+    public bool readyP1, readyP2;
+    public bool bothPlayersReady;
     private int startCountdownTime = 5;
     #endregion
     #region Pre-Round Objects
@@ -442,29 +443,36 @@ public class FluxManager : MonoBehaviour
 
     public void startRound()
     {
-        if (vControllerP1.JumpButtonPressedThisFrame || Input.GetKeyDown(KeyCode.Q))
+        if (/*vControllerP1.JumpButtonPressedThisFrame ||*/ Input.GetKeyDown(KeyCode.Q))
         {
             readyP1 = true;
             readyToggleP1.isOn = true;
         }
-        if (vControllerP2.JumpButtonPressedThisFrame || Input.GetKeyDown(KeyCode.W))
+        if (/*vControllerP2.JumpButtonPressedThisFrame ||*/ Input.GetKeyDown(KeyCode.W))
         {
             readyP2 = true;
             readyToggleP2.isOn = true;
         }
-        if (readyToggleP1.isOn && readyToggleP2.isOn && isStartRoundTimer)
+        if (readyP1 && readyP2)
         {
-            ToggleUI(startCountdownObjectD1, startCountdownObjectD2, true);
+            bothPlayersReady = true;
             ToggleUI(readyChecksD1, readyChecksD2, false);
-            ToggleUIText(startCountdownTextD1, startCountdownTextD2, startCountdownTime);
-            isStartRoundTimer = false;
+        }
 
+        if (elevatorP1.isElevatorFinished && elevatorP2.isElevatorFinished && isStartRoundTimer)
+        {
+
+            isStartRoundTimer = false;
             StartCoroutine(StartRoundCountdown());
         }
     }
 
     IEnumerator StartRoundCountdown()
     {
+        yield return new WaitForSeconds(1.5f);
+        ToggleUI(startCountdownObjectD1, startCountdownObjectD2, true);
+        ToggleUIText(startCountdownTextD1, startCountdownTextD2, startCountdownTime);
+
         while (startCountdownTime > 0)
         {
             yield return new WaitForSeconds(1);
@@ -560,13 +568,13 @@ public class FluxManager : MonoBehaviour
 
         if (player1score > player2score)
         {
-            endTextD1.text = "Winner";
-            endTextD2.text = "Loser";
+            endTextD1.text = "You Win";
+            endTextD2.text = "You Lose";
         }
         if (player2score > player1score)
         {
-            endTextD1.text = "Loser";
-            endTextD2.text = "Winner";
+            endTextD1.text = "You Lose";
+            endTextD2.text = "You Win";
         }
         if (player1score == player2score)
         {
