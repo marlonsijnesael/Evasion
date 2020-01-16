@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3492043023579696815}
   m_Layer: 0
-  m_Name: SM_60DegreeUpwards_v1
+  m_Name: SM_60DegreeUpwards_v1_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -979,7 +979,7 @@ MeshCollider:
   serializedVersion: 3
   m_Convex: 0
   m_CookingOptions: 14
-  m_Mesh: {fileID: -3757837433146292977, guid: bec1391663c9ca84da357cd4fe250d99, type: 3}
+  m_Mesh: {fileID: -197091278733570247, guid: bec1391663c9ca84da357cd4fe250d99, type: 3}
 --- !u!1 &8051215146724738909
 GameObject:
   m_ObjectHideFlags: 0
