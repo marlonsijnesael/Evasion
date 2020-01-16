@@ -126,7 +126,7 @@ GameObject:
   - component: {fileID: 4231382087091850504}
   m_Layer: 0
   m_Name: SM_WallrunWall_Hologram_v1
-  m_TagString: Untagged
+  m_TagString: holowall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
