@@ -18,7 +18,7 @@ public class EZRotate : MonoBehaviour
     public void Rotate()
     {
         Vector3 inputVector = ezCam.ConvertMoveInputToCameraSpace(vC.HorizontalMovement, vC.VerticalMovement);
-      
+
         if (vC.HorizontalMovement != 0 || vC.VerticalMovement != 0)
         {
             print("rotating");
@@ -26,7 +26,7 @@ public class EZRotate : MonoBehaviour
             inputVector.Normalize();
             Quaternion targetRotation = Quaternion.LookRotation(inputVector, Vector3.up);
             this.transform.rotation = Quaternion.Lerp(this.transform.rotation, targetRotation, step);
-            Debug.DrawRay(transform.position, transform.forward,Color.red, 10f);
+            // Debug.DrawRay(transform.position, transform.forward,Color.red, 10f);
         }
     }
 }

@@ -42,6 +42,16 @@ public class WallrunMove : Move
 
     private void Move(StateMachine _owner)
     {
+        RaycastHit hit;
+        if (Physics.Raycast(_owner.transform.position + Vector3.up, _owner.transform.forward, out hit, 1))
+        {
+            if (hit.transform.GetComponent<Renderer>().bounds.max.y > _owner.cc.height)
+                _owner.jumpVec.y = -2;
+            else
+            {
+                _owner.jumpVec.y = 2;
+            }
+        }
         _owner.stateMoveDir = (_owner.transform.rotation * Vector3.forward - _owner.wallrunDir.normalized);
     }
 }

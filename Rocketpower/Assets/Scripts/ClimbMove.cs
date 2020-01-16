@@ -47,7 +47,7 @@ public class ClimbMove : Move
         yPosOrigin.y = _owner.ledge.hitPosition.y;
         Vector3 climbDir = _owner.ledge.hitPosition - _owner.ledge.playerPosition;
 
-        if (_owner.transform.position.y < yPosOrigin.y && _owner.virtualController.ClimbButtonPressed && _owner.timeClimbing < maxClimbTime)
+        if (_owner.transform.position.y < yPosOrigin.y && _owner.virtualController.ClimbButtonPressed && !_owner.virtualController.WallrunButtonPressed && _owner.timeClimbing < maxClimbTime)
         {
             Debug.Log("climbig");
             _owner.moveDir.y = climbDir.y + climbSpeed;
