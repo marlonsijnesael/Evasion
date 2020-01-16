@@ -26,6 +26,7 @@ public class IdleMove : Move
         {
             _owner.isGrounded = false;
             _owner.moveDir.y = _owner.minimumJumpVelocity;
+			_owner.audioObj.GetComponent<GeneralAudio>().JumpSound();
         }
     }
 

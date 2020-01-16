@@ -7,6 +7,8 @@ public class PlayerFlux : MonoBehaviour
 {
     [Header("GameMode")]
     public FluxManager gm;
+	
+	GameObject audioObj;
 
     [Header("Changing Material")]
     [Tooltip("please put the transform containing all mesh parts of the character here")]
@@ -40,6 +42,9 @@ public class PlayerFlux : MonoBehaviour
             if (part.GetComponent<Renderer>())
                 materialList.Add(part.GetComponent<Renderer>().material);
         }
+		
+		audioObj = GameObject.FindGameObjectWithTag("audio");
+
     }
 
     private void Update()
@@ -56,7 +61,9 @@ public class PlayerFlux : MonoBehaviour
             gm.ColorSwitch();
             gm.textFluxP1.text = "Spark: " + gm.fluxPlayer.ToString();
             gm.textFluxP2.text = "Spark: " + gm.fluxPlayer.ToString();
+			
             Destroy(other.gameObject);
+			audioObj.GetComponent<GeneralAudio>().SparkSound();
         }
 
         //on stepping on platform while holding flux, claim it
@@ -69,6 +76,7 @@ public class PlayerFlux : MonoBehaviour
                 platform.ChangeColorTo(playerID, playerColor);
                 gm.updateScore();
                 gm.SpeedPlayers();
+				audioObj.GetComponent<GeneralAudio>().CheckPointSound();
             }
         }
 
@@ -108,6 +116,9 @@ public class PlayerFlux : MonoBehaviour
                     gm.StartCoroutine("FluxColliderSeconds");
                     isFluxCaptured = false;
                     currFluxCaptureTime = 0;
+					
+					audioObj.GetComponent<GeneralAudio>().SparkSound();
+
 
                 }
             }

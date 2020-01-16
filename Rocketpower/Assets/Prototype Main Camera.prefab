@@ -218,4 +218,12 @@ MonoBehaviour:
   distanceZ: -5
   distanceY: 0
   sensitivity: 0
+  virtualController: {fileID: 0}
   locked: 0
+  smoothTime: 0
+  smoothLerp: 0
+  oldMove: 0
+  turnSpeed: 4
+  player: {fileID: 0}
+  height: 1
+  distance: 2
