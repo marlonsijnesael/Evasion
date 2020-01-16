@@ -11,6 +11,7 @@ public class Elevator : MonoBehaviour
     public float lerpTime = 3f;
     public bool isElevatorFinished;
     public bool isElevatorRunOnce = true;
+    public bool elevatStarted = false;
 
     IEnumerator MoveElevator(Transform player)
     {
@@ -62,6 +63,7 @@ public class Elevator : MonoBehaviour
 
         if (gm.bothPlayersReady && isElevatorRunOnce)
         {
+            elevatStarted = true;
             isElevatorRunOnce = false;
             StartCoroutine(MoveElevator(other.transform));
         }

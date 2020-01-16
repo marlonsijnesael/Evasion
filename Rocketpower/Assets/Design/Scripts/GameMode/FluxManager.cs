@@ -5,8 +5,6 @@ using UnityEngine;
 using UnityEngine.UI;
 public class FluxManager : MonoBehaviour
 {
-	public bool gameOver = false;
-	
     #region Public Script References
     [HideInInspector] public GameObject UI;
     [HideInInspector] public GameObject canvas_D1, canvas_D2;
@@ -29,6 +27,7 @@ public class FluxManager : MonoBehaviour
     [Header("GameMode")]
     #region Flux Player + Score
     public PlayerFlux fluxPlayer;
+    public bool gameOver;
     [HideInInspector] public SparkVFX sparkVFX;
     public int player1score, player2score;
     private int scoreDiff;
@@ -141,9 +140,6 @@ public class FluxManager : MonoBehaviour
 
     private void Update()
     {
-		
-		print("fffff");
-		print(fluxPlayer);
         //Press 1 or 2 to change flux
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
@@ -448,12 +444,12 @@ public class FluxManager : MonoBehaviour
 
     public void startRound()
     {
-        if (/*vControllerP1.JumpButtonPressedThisFrame ||*/ Input.GetKeyDown(KeyCode.Q))
+        if (vControllerP1.JumpButtonPressedThisFrame || Input.GetKeyDown(KeyCode.Q))
         {
             readyP1 = true;
             readyToggleP1.isOn = true;
         }
-        if (/*vControllerP2.JumpButtonPressedThisFrame ||*/ Input.GetKeyDown(KeyCode.W))
+        if (vControllerP2.JumpButtonPressedThisFrame || Input.GetKeyDown(KeyCode.W))
         {
             readyP2 = true;
             readyToggleP2.isOn = true;
@@ -507,6 +503,7 @@ public class FluxManager : MonoBehaviour
         {
             isGameRoundTimerRunning = false;
             Time.timeScale = 0;
+            gameOver = true;
             WinScreen();
         }
         yield return new WaitForEndOfFrame();
@@ -570,8 +567,6 @@ public class FluxManager : MonoBehaviour
     {
         ToggleUI(inRoundUI_D1, inRoundUI_D2, false);
         ToggleUI(endScreenD1, endScreenD2, true);
-		
-		gameOver = true;
 
         if (player1score > player2score)
         {
