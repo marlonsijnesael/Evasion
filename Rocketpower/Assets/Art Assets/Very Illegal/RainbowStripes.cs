@@ -7,7 +7,8 @@ public class RainbowStripes : MonoBehaviour {
 
 	public bool setToYellow = false;
 
-	public Material rainbowMaterial;
+	//public Material rainbowMaterial;
+	public List<Material> materialList = new List<Material>();
 	public Material officialYellowMaterial;
 
 	private Color buildColor = Color.yellow;
@@ -36,10 +37,16 @@ public class RainbowStripes : MonoBehaviour {
 		randomColor.r = Mathf.Sin(t) * .5f + .5f;
 		randomColor.g = Mathf.Sin(t + 1) * .5f + .5f;
 		randomColor.b = Mathf.Sin(t + 2) * .5f + .5f;
-
-		rainbowMaterial.SetColor("_BaseColor", randomColor);
-		rainbowMaterial.SetColor("_EmissiveColor", randomColor);
-		rainbowMaterial.SetColor("_EmissiveColorLDR", randomColor);
+		
+		foreach (Material m in materialList){
+			m.SetColor("_BaseColor", randomColor);
+			m.SetColor("_EmissiveColor", randomColor);
+			m.SetColor("_EmissiveColorLDR", randomColor);
+		}
+		//rainbowMaterial.SetColor("_BaseColor", randomColor);
+		//rainbowMaterial.SetColor("_EmissiveColor", randomColor);
+		//rainbowMaterial.SetColor("_EmissiveColorLDR", randomColor);
+		
 		//Debug.Log("set M_YellowLights colour to " + randomColor);
 	}
 
@@ -47,10 +54,16 @@ public class RainbowStripes : MonoBehaviour {
 		Color baseColor = officialYellowMaterial.GetColor("_BaseColor");
 		Color emissiveColor = officialYellowMaterial.GetColor("_EmissiveColor");
 		Color emissiveColorLDR = officialYellowMaterial.GetColor("_EmissiveColorLDR");
-
-		rainbowMaterial.SetColor("_BaseColor", baseColor);
-		rainbowMaterial.SetColor("_EmissiveColor", emissiveColor);
-		rainbowMaterial.SetColor("_EmissiveColorLDR", emissiveColorLDR);
+		
+		foreach (Material m in materialList){
+			m.SetColor("_BaseColor", baseColor);
+			m.SetColor("_EmissiveColor", emissiveColor);
+			m.SetColor("_EmissiveColorLDR", emissiveColor);
+		}
+		
+		//rainbowMaterial.SetColor("_BaseColor", baseColor);
+		//rainbowMaterial.SetColor("_EmissiveColor", emissiveColor);
+		//rainbowMaterial.SetColor("_EmissiveColorLDR", emissiveColorLDR);
 	}
 
 }
