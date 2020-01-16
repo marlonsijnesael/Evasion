@@ -7,7 +7,7 @@ public class EzCameraCollider : MonoBehaviour
     private Camera m_cameraComponent = null;
     private Transform m_cameraTransform = null;
     public bool IsOccluded { get; private set; }
-    
+
     private Vector3[] m_nearClipPlanePoints = new Vector3[4];
     private Vector3[] m_originalClipPlanePoints = new Vector3[4];
     private Vector3 m_pointBehindCamera = new Vector3();
@@ -27,7 +27,7 @@ public class EzCameraCollider : MonoBehaviour
         m_cameraTransform = this.transform;
 
         m_nearPlaneDistance = m_cameraComponent.nearClipPlane;
-        
+
         m_layermask = (1 << LayerMask.NameToLayer(m_playerLayer)) | (1 << LayerMask.NameToLayer("Ignore Raycast"));
         m_layermask = ~m_layermask;
 
@@ -74,7 +74,7 @@ public class EzCameraCollider : MonoBehaviour
 
         m_nearClipPlanePoints[0] = nearPlaneCenter + m_cameraTransform.rotation * new Vector3(-m_aspectHalfWidth, m_aspectHalfHeight);
         m_nearClipPlanePoints[1] = nearPlaneCenter + m_cameraTransform.rotation * new Vector3(m_aspectHalfWidth, m_aspectHalfHeight);
-        m_nearClipPlanePoints[2] = nearPlaneCenter + m_cameraTransform.rotation * new Vector3(m_aspectHalfWidth , -m_aspectHalfHeight);
+        m_nearClipPlanePoints[2] = nearPlaneCenter + m_cameraTransform.rotation * new Vector3(m_aspectHalfWidth, -m_aspectHalfHeight);
         m_nearClipPlanePoints[3] = nearPlaneCenter + m_cameraTransform.rotation * new Vector3(-m_aspectHalfWidth, -m_aspectHalfHeight);
     }
 
@@ -82,20 +82,20 @@ public class EzCameraCollider : MonoBehaviour
 #if UNITY_EDITOR
     private void DrawNearPlane()
     {
-        Debug.DrawLine(m_nearClipPlanePoints[0], m_nearClipPlanePoints[1], Color.red);
-        Debug.DrawLine(m_nearClipPlanePoints[1], m_nearClipPlanePoints[2], Color.red);
-        Debug.DrawLine(m_nearClipPlanePoints[2], m_nearClipPlanePoints[3], Color.red);
-        Debug.DrawLine(m_nearClipPlanePoints[3], m_nearClipPlanePoints[0], Color.red);
-        Debug.DrawLine(m_pointBehindCamera, m_controlledCamera.Target.position, Color.red);
+        // Debug.DrawLine(m_nearClipPlanePoints[0], m_nearClipPlanePoints[1], Color.red);
+        // Debug.DrawLine(m_nearClipPlanePoints[1], m_nearClipPlanePoints[2], Color.red);
+        // Debug.DrawLine(m_nearClipPlanePoints[2], m_nearClipPlanePoints[3], Color.red);
+        // Debug.DrawLine(m_nearClipPlanePoints[3], m_nearClipPlanePoints[0], Color.red);
+        // Debug.DrawLine(m_pointBehindCamera, m_controlledCamera.Target.position, Color.red);
     }
 
     private void DrawOriginalPlane()
     {
-        Debug.DrawLine(m_originalClipPlanePoints[0], m_originalClipPlanePoints[1], Color.cyan);
-        Debug.DrawLine(m_originalClipPlanePoints[1], m_originalClipPlanePoints[2], Color.cyan);
-        Debug.DrawLine(m_originalClipPlanePoints[2], m_originalClipPlanePoints[3], Color.cyan);
-        Debug.DrawLine(m_originalClipPlanePoints[3], m_originalClipPlanePoints[0], Color.cyan);
-        Debug.DrawLine(m_pointBehindCamera, m_controlledCamera.Target.position, Color.cyan);
+        // Debug.DrawLine(m_originalClipPlanePoints[0], m_originalClipPlanePoints[1], Color.cyan);
+        // Debug.DrawLine(m_originalClipPlanePoints[1], m_originalClipPlanePoints[2], Color.cyan);
+        // Debug.DrawLine(m_originalClipPlanePoints[2], m_originalClipPlanePoints[3], Color.cyan);
+        // Debug.DrawLine(m_originalClipPlanePoints[3], m_originalClipPlanePoints[0], Color.cyan);
+        // Debug.DrawLine(m_pointBehindCamera, m_controlledCamera.Target.position, Color.cyan);
     }
 #endif
     #endregion
@@ -141,7 +141,7 @@ public class EzCameraCollider : MonoBehaviour
             }
 
 #if UNITY_EDITOR
-            Debug.DrawLine(m_nearClipPlanePoints[i], m_controlledCamera.Target.position, lineColor);
+            // Debug.DrawLine(m_nearClipPlanePoints[i], m_controlledCamera.Target.position, lineColor);
 #endif
         }
 
@@ -151,13 +151,13 @@ public class EzCameraCollider : MonoBehaviour
             {
 #if UNITY_EDITOR
                 lineColor = Color.red;
-                Debug.Log("camera is occluded by " + hit.collider.gameObject.name);
+                // Debug.Log("camera is occluded by " + hit.collider.gameObject.name);
 #endif
                 IsOccluded = true;
                 m_controlledCamera.Settings.ResetPositionDistance = m_controlledCamera.Settings.OffsetDistance;
                 m_controlledCamera.Settings.DesiredDistance = hit.distance - m_nearPlaneDistance;
             }
-        }   
+        }
     }
 
     private void UpdateOriginalClipPlanePoints()
@@ -178,7 +178,7 @@ public class EzCameraCollider : MonoBehaviour
         m_pointBehindCamera = m_cameraTransform.position - m_cameraTransform.forward * m_nearPlaneDistance;
     }
 
-    
+
     private void CheckOriginalPlanePoints()
     {
         UpdateOriginalClipPlanePoints();
@@ -194,7 +194,7 @@ public class EzCameraCollider : MonoBehaviour
 #endif
             if (Physics.Linecast(m_controlledCamera.Target.position, m_originalClipPlanePoints[i], out hit, m_layermask))
             {
-             
+
                 objectWasHit = true;
 
                 if (hit.distance < closestHitDistance)

@@ -10,6 +10,7 @@ public class LedgeDetection : MonoBehaviour
     public Vector3 dir;
     public float heightAboveHead;
     public RaycastHit ledgeHit;
+    public float climbAngle = 150;
 
     private void Awake()
     {
@@ -71,10 +72,15 @@ public class LedgeDetection : MonoBehaviour
         //FORWARD FROM PLAYER
         if (Physics.Linecast(transform.position + Vector3.up, transform.position + transform.forward + Vector3.up, out forwardHit))
         {
+            float cosine = Vector3.Angle(transform.forward, forwardHit.normal);
+            print(cosine + " angle");
+            if (cosine < climbAngle)
+                return new Ledge(Vector3.zero, Vector3.one, Vector3.zero, true);
 
-            Debug.DrawLine(transform.position + Vector3.up, transform.position + transform.forward + Vector3.up, Color.red);
-            if (forwardHit.transform.CompareTag("holowall")) {
-                return new Ledge(transform.position + (Vector3.up * 10), transform.position, false);
+            Debug.DrawLine(transform.position + Vector3.up, transform.position + transform.forward + Vector3.up, Color.green);
+            if (forwardHit.transform.CompareTag("holowall"))
+            {
+                return new Ledge(transform.position + (Vector3.up), Vector3.zero, transform.position, false);
             }
             else
             {
@@ -88,23 +94,24 @@ public class LedgeDetection : MonoBehaviour
                 {
                     Debug.DrawRay(origin + dir, Vector3.down * maxDist, Color.red);
                     //UP TO SKY
-                    Debug.DrawLine(transform.position + Vector3.up, transform.position + Vector3.up * 2.5f, Color.red);
+                    Debug.DrawLine(transform.position + Vector3.up, transform.position + Vector3.up * 2.5f, Color.green);
                     if (Physics.Linecast(transform.position + Vector3.up, transform.position + Vector3.up))
                     {
 
                     }
                     else
                     {
-                        return new Ledge(ledgeHit.point, transform.position, false);
+
+                        return new Ledge(ledgeHit.point, ledgeHit.normal, transform.position, false);
                     }
                 }
             }
         }
         else
             Debug.DrawLine(transform.position + Vector3.up, transform.position + transform.forward + Vector3.up, Color.green);
-            return new Ledge(Vector3.zero, Vector3.zero, true);
-        }
+        return new Ledge(Vector3.zero, Vector3.one, Vector3.zero, true);
     }
+}
 
 
 
@@ -114,11 +121,14 @@ public class Ledge
 {
     public Vector3 hitPosition;
     public Vector3 playerPosition;
+    public Vector3 normal;
     public bool empty;
-    public Ledge(Vector3 _pos, Vector3 _playerPosition, bool _empty)
+
+    public Ledge(Vector3 _pos, Vector3 _playerPosition, Vector3 _normal, bool _empty)
     {
         hitPosition = _pos;
         playerPosition = _playerPosition;
+        normal = _normal;
         empty = _empty;
     }
 }
