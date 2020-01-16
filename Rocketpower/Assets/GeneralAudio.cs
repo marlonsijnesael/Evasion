@@ -3,15 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-
+// all general audio
 public class GeneralAudio : MonoBehaviour
 {
-	[HideInInspector] public PlayerFlux p1;
-    [HideInInspector] public PlayerFlux p2;
-	
-	GameObject obj;
-	GameObject obj2;
-	
+	// FMOD events and parameters
 	FMOD.Studio.EventInstance OST_Intro;
 	FMOD.Studio.ParameterInstance MainGame, IV;
 	
@@ -27,19 +22,32 @@ public class GeneralAudio : MonoBehaviour
 	FMOD.Studio.EventInstance Jump;
 	FMOD.Studio.ParameterInstance JV;
 	
-		
 	FMOD.Studio.EventInstance Headroll;
 	FMOD.Studio.ParameterInstance HRV;
+	
+	FMOD.Studio.EventInstance JumpPad;
+	FMOD.Studio.ParameterInstance JPV;
+	
+	FMOD.Studio.EventInstance Atmosphere;
+	FMOD.Studio.ParameterInstance AV;
+	
+	// --------------------------------
+	GameObject obj;
+	GameObject obj2;
+	
+	[HideInInspector] public PlayerFlux p1;
+    [HideInInspector] public PlayerFlux p2;
 	
 	bool eS = false;
 	bool hasGameStarted = false;
 	
 	int rCT = 0;
+	int p1score, p2score;
 	bool wSCT = false;
 	bool oldWSCT = false;
 	bool gO = false;
+	
 	public PlayerFlux fPlayer;
-	int p1score, p2score;
 	public int endGameMusicStart = 30;
 	
     void Start()
@@ -51,7 +59,7 @@ public class GeneralAudio : MonoBehaviour
 		OST_Intro.getParameter("MainGame", out MainGame);
         OST_Intro.getParameter("IV", out IV);
 		MainGame.setValue(0);
-		IV.setValue(0.8f);
+		IV.setValue(0.9f);
 	
 		OST_Intro.start();
 
@@ -65,12 +73,9 @@ public class GeneralAudio : MonoBehaviour
 		GameOver.setValue(0);
 		OV.setValue(0.9f);
 		
-		//OST_2.start();
-		
-		
 		FluxEffect = FMODUnity.RuntimeManager.CreateInstance("event:/SD/FluxCarrier");
 		FluxEffect.getParameter("FV", out FV);
-		FV.setValue(1);
+		FV.setValue(0.8f);
 		
 		Checkpoint = FMODUnity.RuntimeManager.CreateInstance("event:/SD/Hexagon");
 		Checkpoint.getParameter("HV", out HV);
@@ -84,10 +89,20 @@ public class GeneralAudio : MonoBehaviour
 		
 		Headroll = FMODUnity.RuntimeManager.CreateInstance("event:/SD/Headroll");
 		Headroll.getParameter("HRV", out HRV);
-		HRV.setValue(1);
+		HRV.setValue(0.85f);
+		
+		JumpPad = FMODUnity.RuntimeManager.CreateInstance("event:/SD/JumpPad");
+		JumpPad.getParameter("JPV", out JPV);
+		JPV.setValue(0.9f);
+		
+		Atmosphere = FMODUnity.RuntimeManager.CreateInstance("event:/SD/Atmosphere");
+		Atmosphere.getParameter("AV", out AV);
+		AV.setValue(0.7f);
+		
+		Atmosphere.start();
     }
 	
-	void StartOst()
+	private void StartOst()
 	{
 		OST_2.start();
 	}
@@ -120,6 +135,11 @@ public class GeneralAudio : MonoBehaviour
 		Headroll.start();
 	}
 	
+	public void JumpPadSound()
+	{
+		JumpPad.start();
+	}
+	
 
     void Update()
     {
@@ -134,9 +154,7 @@ public class GeneralAudio : MonoBehaviour
 		p1 = obj2.GetComponent<FluxManager>().player1;
 		p2 = obj2.GetComponent<FluxManager>().player2;
 
-		print("fplayer:");
-		print(fPlayer);
-		
+
         if (eS == true) {
 			MainGame.setValue(1);
 		}
@@ -161,6 +179,7 @@ public class GeneralAudio : MonoBehaviour
 		
 		if (gO == true) {
 			GameOver.setValue(1);
+			AV.setValue(0);
 		}
 		
 		if (Input.GetKeyDown(KeyCode.Return)) {

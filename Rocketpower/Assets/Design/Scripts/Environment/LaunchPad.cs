@@ -4,12 +4,15 @@ using UnityEngine;
 
 public class LaunchPad : MonoBehaviour
 {
+	GameObject audioObj;
 
     public float JumpPadVelocity;
-
+	
     private void OnTriggerEnter(Collider other)
     {
         //StartCoroutine(JumpRoutine(other));
+		audioObj = GameObject.FindGameObjectWithTag("audio");
+		audioObj.GetComponent<GeneralAudio>().JumpPadSound();
         other.gameObject.GetComponent<StateMachine>().jumpMultiplier = JumpPadVelocity;
         other.gameObject.GetComponent<StateMachine>().Jump();
         other.gameObject.GetComponent<StateMachine>().jumpMultiplier = 1.19f;

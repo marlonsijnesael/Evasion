@@ -6,10 +6,10 @@ public class PlayerRunningAudio : MonoBehaviour
 {
 	GameObject obj;
 	GameObject obj2;
-
 	
 	[FMODUnity.EventRef] public string inputsound;
 	[FMODUnity.EventRef] public string inputsound2;
+	
 
 	bool player1ismoving;
 	bool player2ismoving;
