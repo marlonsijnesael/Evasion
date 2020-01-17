@@ -52,7 +52,7 @@ public class GeneralAudio : MonoBehaviour
 
     void Start()
     {
-        // obj = GameObject.FindGameObjectWithTag("Elevator");
+        obj = GameObject.FindGameObjectWithTag("Elevator");
         obj2 = GameObject.FindGameObjectWithTag("GameModeManager");
 
         OST_Intro = FMODUnity.RuntimeManager.CreateInstance("event:/OST/OST_Intro");

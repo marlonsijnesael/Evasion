@@ -14,7 +14,7 @@ public class FluxManager : MonoBehaviour
     [HideInInspector] public PlayerFlux player2;
     [HideInInspector] public GameObject preRoundD1, preRoundD2;
     [HideInInspector] public VirtualController vControllerP1, vControllerP2;
-    [HideInInspector] public Elevator elevatorP1, elevatorP2;
+    public Elevator elevatorP1, elevatorP2;
     #endregion
 
     #region Player Variables
@@ -52,7 +52,7 @@ public class FluxManager : MonoBehaviour
     [HideInInspector] public GameObject startCountdownObjectD1, startCountdownObjectD2;
     [HideInInspector] public Text startCountdownTextD1, startCountdownTextD2;
     [HideInInspector] public GameObject readyChecksD1, readyChecksD2;
-    [HideInInspector] public GameObject stasisP1, stasisP2;
+    public GameObject stasisP1, stasisP2;
     [HideInInspector] public Toggle readyToggleP1;
     [HideInInspector] public Toggle readyToggleP2;
     #endregion
@@ -92,7 +92,8 @@ public class FluxManager : MonoBehaviour
     private List<ScoreUI> scoreHexagonList_D2 = new List<ScoreUI>();
     GameObject[] platformArray;
     [HideInInspector] public GameObject scoreArrow_D1, scoreArrow_D2;
-    public CanvasGroup cg_PreRound, cg_InRound;
+    public CanvasGroup cg_PreRoundP1, cg_InRoundP1;
+    public CanvasGroup cg_PreRoundP2, cg_InRoundP2;
     #endregion
 
     private void Awake()
@@ -493,7 +494,9 @@ public class FluxManager : MonoBehaviour
         ToggleUIText(roundCountdownText_D1, roundCountdownText_D2, roundCountdownTime);
         ToggleUI(inRoundUI_D1, inRoundUI_D2, true);
 
-        StartCoroutine(FadeCanvasGroup(cg_InRound, cg_InRound.alpha, 1, 1.5f));
+        StartCoroutine(FadeCanvasGroup(cg_InRoundP1, cg_InRoundP1.alpha, 1, 1.5f));
+        StartCoroutine(FadeCanvasGroup(cg_InRoundP2, cg_InRoundP2.alpha, 1, 1.5f));
+
         StartCoroutine(GameRoundCountdown());
 
 

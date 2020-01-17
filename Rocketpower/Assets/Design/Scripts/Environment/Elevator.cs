@@ -20,7 +20,9 @@ public class Elevator : MonoBehaviour
         Vector3 start = startPoint.position;
         player.transform.SetParent(Hexagon.transform);
         statemachine.maxSpeed = 0;
-        StartCoroutine(gm.FadeCanvasGroup(gm.cg_PreRound, gm.cg_PreRound.alpha, 0, 1));
+        StartCoroutine(gm.FadeCanvasGroup(gm.cg_PreRoundP1, gm.cg_PreRoundP1.alpha, 0, 1));
+        StartCoroutine(gm.FadeCanvasGroup(gm.cg_PreRoundP2, gm.cg_PreRoundP2.alpha, 0, 1));
+
         // statemachine.currentMove = statemachine.idleMove;
         // statemachine.currentMove.ExitState(statemachine);
         // statemachine.idleMove.EnterState(statemachine);
@@ -81,7 +83,7 @@ public class Elevator : MonoBehaviour
         if (other.transform.tag == "Player2")
         {
             gm.readyP2 = false;
-            gm.readyToggleP2.isOn = true;
+            gm.readyToggleP2.isOn = false;
         }
     }
 }
