@@ -34,7 +34,7 @@ public class Elevator : MonoBehaviour
         while (time < lerpTime)
         {
             Hexagon.transform.position = Vector3.Lerp(start, endPoint.position, time / lerpTime);
-            Debug.Log(time / lerpTime);
+            Debug.Log(time);
             time += Time.deltaTime;
 
             yield return null;

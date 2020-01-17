@@ -46,7 +46,7 @@ public class FluxManager : MonoBehaviour
     #region Pre-Round Variables
     public bool readyP1, readyP2;
     public bool bothPlayersReady;
-    private int startCountdownTime = 5;
+    private int startCountdownTime = 3;
     #endregion
     #region Pre-Round Objects
     [HideInInspector] public GameObject startCountdownObjectD1, startCountdownObjectD2;
@@ -444,12 +444,12 @@ public class FluxManager : MonoBehaviour
 
     public void startRound()
     {
-        if (vControllerP1.JumpButtonPressedThisFrame || Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetKeyDown(KeyCode.Q))
         {
             readyP1 = true;
             readyToggleP1.isOn = true;
         }
-        if (vControllerP2.JumpButtonPressedThisFrame || Input.GetKeyDown(KeyCode.W))
+        if (Input.GetKeyDown(KeyCode.W))
         {
             readyP2 = true;
             readyToggleP2.isOn = true;
@@ -470,13 +470,13 @@ public class FluxManager : MonoBehaviour
 
     IEnumerator StartRoundCountdown()
     {
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(4.5f);
         ToggleUI(startCountdownObjectD1, startCountdownObjectD2, true);
         ToggleUIText(startCountdownTextD1, startCountdownTextD2, startCountdownTime);
 
         while (startCountdownTime > 0)
         {
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSeconds(0.8f);
             startCountdownTime--;
             ToggleUIText(startCountdownTextD1, startCountdownTextD2, startCountdownTime);
 
