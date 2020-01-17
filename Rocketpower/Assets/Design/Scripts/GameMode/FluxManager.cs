@@ -14,13 +14,13 @@ public class FluxManager : MonoBehaviour
     [HideInInspector] public PlayerFlux player2;
     [HideInInspector] public GameObject preRoundD1, preRoundD2;
     [HideInInspector] public VirtualController vControllerP1, vControllerP2;
-    public Elevator elevatorP1, elevatorP2;
+    [HideInInspector] public Elevator elevatorP1, elevatorP2;
     #endregion
 
     #region Player Variables
     public Color player1color;
     public Color player2color;
-    public float mSpeedDiff = 0.5f;
+    public float mSpeedDiff = 0.25f;
     private float mSpeedBase = 9f;
     #endregion
 
@@ -35,7 +35,7 @@ public class FluxManager : MonoBehaviour
     [HideInInspector] public Text textFluxP1, textFluxP2;
     #endregion
     #region Flux Capture
-    [HideInInspector] public GameObject jumpPadOrange, jumpPadBlue;
+    public GameObject jumpPadOrange, jumpPadBlue;
     public float fluxCaptureTime;
     public float fluxCaptureCD;
     [HideInInspector] public bool isFluxPlayerColliderOnCD;
@@ -52,7 +52,7 @@ public class FluxManager : MonoBehaviour
     [HideInInspector] public GameObject startCountdownObjectD1, startCountdownObjectD2;
     [HideInInspector] public Text startCountdownTextD1, startCountdownTextD2;
     [HideInInspector] public GameObject readyChecksD1, readyChecksD2;
-    public GameObject stasisP1, stasisP2;
+    [HideInInspector] public GameObject stasisP1, stasisP2;
     [HideInInspector] public Toggle readyToggleP1;
     [HideInInspector] public Toggle readyToggleP2;
     #endregion
@@ -92,6 +92,7 @@ public class FluxManager : MonoBehaviour
     private List<ScoreUI> scoreHexagonList_D2 = new List<ScoreUI>();
     GameObject[] platformArray;
     [HideInInspector] public GameObject scoreArrow_D1, scoreArrow_D2;
+    public CanvasGroup cg_PreRound, cg_InRound;
     #endregion
 
     private void Awake()
@@ -161,6 +162,8 @@ public class FluxManager : MonoBehaviour
     public void SpeedPlayers()
     {
         scoreDiff = player1score - player2score;
+        Debug.Log("P1: " + smP1.maxSpeed);
+        Debug.Log("P2: " + smP2.maxSpeed);
 
         if (scoreDiff == 0 || scoreDiff == 0)
         {
@@ -212,12 +215,12 @@ public class FluxManager : MonoBehaviour
                 }
                 if (scoreDiff > 2 && scoreDiff < 4)
                 {
-                    smP1.maxSpeed = mSpeedBase + mSpeedDiff * 1.5f;
+                    smP1.maxSpeed = mSpeedBase + mSpeedDiff * 1.2f;
                     smP2.maxSpeed = mSpeedBase;
                 }
                 if (scoreDiff >= 4)
                 {
-                    smP1.maxSpeed = mSpeedBase + mSpeedDiff * 1.8f;
+                    smP1.maxSpeed = mSpeedBase + mSpeedDiff * 1.4f;
                     smP2.maxSpeed = mSpeedBase;
                 }
             }
@@ -269,12 +272,12 @@ public class FluxManager : MonoBehaviour
                 if (scoreDiff > 2 && scoreDiff < 4)
                 {
                     smP1.maxSpeed = mSpeedBase;
-                    smP2.maxSpeed = mSpeedBase + mSpeedDiff * 1.5f;
+                    smP2.maxSpeed = mSpeedBase + mSpeedDiff * 1.2f;
                 }
                 if (scoreDiff >= 4)
                 {
                     smP1.maxSpeed = mSpeedBase;
-                    smP2.maxSpeed = mSpeedBase + mSpeedDiff * 1.8f;
+                    smP2.maxSpeed = mSpeedBase + mSpeedDiff * 1.4f;
                 }
             }
 
@@ -457,12 +460,11 @@ public class FluxManager : MonoBehaviour
         if (readyP1 && readyP2)
         {
             bothPlayersReady = true;
-            ToggleUI(readyChecksD1, readyChecksD2, false);
         }
 
         if (elevatorP1.isElevatorFinished && elevatorP2.isElevatorFinished && isStartRoundTimer)
         {
-
+            ToggleUI(readyChecksD1, readyChecksD2, false);
             isStartRoundTimer = false;
             StartCoroutine(StartRoundCountdown());
         }
@@ -483,12 +485,18 @@ public class FluxManager : MonoBehaviour
         }
         stasisP1.gameObject.SetActive(false);
         stasisP2.gameObject.SetActive(false);
-        ToggleUI(startCountdownObjectD1, startCountdownObjectD2, false);
-        ToggleUI(inRoundUI_D1, inRoundUI_D2, true);
-        ToggleUIText(roundCountdownText_D1, roundCountdownText_D2, roundCountdownTime);
-
+        startCountdownTextD1.text = "GO!";
+        startCountdownTextD2.text = "GO!";
+        yield return new WaitForSeconds(0.5f);
         isGameRoundTimerRunning = true;
+        ToggleUI(startCountdownObjectD1, startCountdownObjectD2, false);
+        ToggleUIText(roundCountdownText_D1, roundCountdownText_D2, roundCountdownTime);
+        ToggleUI(inRoundUI_D1, inRoundUI_D2, true);
+
+        StartCoroutine(FadeCanvasGroup(cg_InRound, cg_InRound.alpha, 1, 1.5f));
         StartCoroutine(GameRoundCountdown());
+
+
     }
 
     IEnumerator GameRoundCountdown()
@@ -583,6 +591,32 @@ public class FluxManager : MonoBehaviour
             endTextD1.text = "Draw";
             endTextD2.text = "Draw";
         }
+    }
+
+    public IEnumerator FadeCanvasGroup(CanvasGroup canvasGroup, float start, float end, float lerpTime)
+    {
+        canvasGroup.alpha = 0;
+        float timeStartedLerping = Time.time;
+        float timeSinceStarted = Time.time - timeStartedLerping;
+        float percentComplete = timeSinceStarted / lerpTime;
+
+        while (true)
+        {
+            timeSinceStarted = Time.time - timeStartedLerping;
+            percentComplete = timeSinceStarted / lerpTime;
+
+            float currentValue = Mathf.Lerp(start, end, percentComplete);
+
+            canvasGroup.alpha = currentValue;
+
+            if (percentComplete >= 1)
+            {
+                break;
+            }
+
+            yield return new WaitForEndOfFrame();
+        }
+        print("Done");
     }
 
     public void ToggleUI(GameObject d1, GameObject d2, bool turnOn)

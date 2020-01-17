@@ -111,12 +111,10 @@ public class GeneralAudio : MonoBehaviour
     {
         if (fPlayer == p1)
         {
-            print("p1");
             HP.setValue(p1score);
         }
         else
         {
-            print("p2");
             HP.setValue(p2score);
         }
         Checkpoint.start();

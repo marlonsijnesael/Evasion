@@ -20,25 +20,26 @@ public class Elevator : MonoBehaviour
         Vector3 start = startPoint.position;
         player.transform.SetParent(Hexagon.transform);
         statemachine.maxSpeed = 0;
-
+        StartCoroutine(gm.FadeCanvasGroup(gm.cg_PreRound, gm.cg_PreRound.alpha, 0, 1));
         // statemachine.currentMove = statemachine.idleMove;
         // statemachine.currentMove.ExitState(statemachine);
         // statemachine.idleMove.EnterState(statemachine);
         statemachine.animationController.SetBool(statemachine.animator, "B_isIdle", true);
         statemachine.SwitchStates(StateMachine.State.IDLE, statemachine.idleMove);
 
-        statemachine.FOVIdle = 25f;
+        statemachine.FOVIdle = 40f;
         yield return new WaitForSeconds(1.5f);
         statemachine.enabled = false;
 
         while (time < lerpTime)
         {
             Hexagon.transform.position = Vector3.Lerp(start, endPoint.position, time / lerpTime);
-            Debug.Log(time);
+            //Debug.Log(time);
             time += Time.deltaTime;
 
             yield return null;
         }
+        yield return new WaitForEndOfFrame();
         player.transform.SetParent(null);
         statemachine.enabled = true;
         statemachine.maxSpeed = 9f;
