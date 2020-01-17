@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+﻿/*using UnityEngine;
 using UnityEditor;
 
 public class ReplaceWithPrefab : EditorWindow
@@ -54,4 +54,4 @@ public class ReplaceWithPrefab : EditorWindow
         GUI.enabled = false;
         EditorGUILayout.LabelField("Selection count: " + Selection.objects.Length);
     }
-}
+}*/

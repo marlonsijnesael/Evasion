@@ -8,7 +8,7 @@ EditorBuildSettings:
   - enabled: 0
     path: 
     guid: 00000000000000000000000000000000
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/17Dec_TestDag/MainMenu.unity
     guid: a9bbb3763c29dcb469727352d4ca0ecf
   - enabled: 0
@@ -26,10 +26,13 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/TimeTrial_Level_vMarlon.unity
     guid: 8fa15084cc484cf499bb4d4380a95a90
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/17Dec_TestDag/TimeTrial_Level_Holofields.unity
     guid: e013849b124d88346bdafa45d859cd74
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/17Dec_TestDag/TimeTrial_Level_Transitorium.unity
     guid: 35756f85f66be724d87b14509824f954
+  - enabled: 1
+    path: Assets/Scenes/TimeTrial_Level_v5.1.unity
+    guid: e8ce5fd19c14a344db713f641966586e
   m_configObjects: {}

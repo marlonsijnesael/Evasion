@@ -207,7 +207,7 @@ public class FluxManager : MonoBehaviour
                     smP2.maxSpeed = mSpeedBase + mSpeedDiff * 6;
                 }
             }
-            else
+            /*else
             {
                 if (scoreDiff > 0 && scoreDiff < 2)
                 {
@@ -224,7 +224,7 @@ public class FluxManager : MonoBehaviour
                     smP1.maxSpeed = mSpeedBase + mSpeedDiff * 1.4f;
                     smP2.maxSpeed = mSpeedBase;
                 }
-            }
+            }*/
 
         }
 
@@ -263,7 +263,7 @@ public class FluxManager : MonoBehaviour
                     smP2.maxSpeed = mSpeedBase;
                 }
             }
-            else
+            /*else
             {
                 if (scoreDiff > 0 && scoreDiff < 2)
                 {
@@ -280,7 +280,7 @@ public class FluxManager : MonoBehaviour
                     smP1.maxSpeed = mSpeedBase;
                     smP2.maxSpeed = mSpeedBase + mSpeedDiff * 1.4f;
                 }
-            }
+            }*/
 
         }
     }
