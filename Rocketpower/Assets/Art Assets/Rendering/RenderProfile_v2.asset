@@ -32,7 +32,7 @@ MonoBehaviour:
   active: 1
   m_AdvancedMode: 0
   colorMode:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: 1
   color:
     m_OverrideState: 0
@@ -64,7 +64,7 @@ MonoBehaviour:
     min: 0
   albedo:
     m_OverrideState: 1
-    m_Value: {r: 0.6933962, g: 0.93406785, b: 1, a: 1}
+    m_Value: {r: 0.93333334, g: 0.70980394, b: 0.7816168, a: 1}
     hdr: 0
     showAlpha: 1
     showEyeDropper: 1
@@ -74,10 +74,10 @@ MonoBehaviour:
     min: 1
   baseHeight:
     m_OverrideState: 1
-    m_Value: 30
+    m_Value: 0
   meanHeight:
     m_OverrideState: 1
-    m_Value: 30
+    m_Value: 100
   anisotropy:
     m_OverrideState: 1
     m_Value: -0.3
