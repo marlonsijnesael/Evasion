@@ -21,7 +21,6 @@ public class EZRotate : MonoBehaviour
 
         if (vC.HorizontalMovement != 0 || vC.VerticalMovement != 0)
         {
-            print("rotating");
             float step = m_rotateSpeed * Time.deltaTime;
             inputVector.Normalize();
             Quaternion targetRotation = Quaternion.LookRotation(inputVector, Vector3.up);

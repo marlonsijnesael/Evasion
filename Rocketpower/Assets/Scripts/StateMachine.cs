@@ -5,7 +5,7 @@ using System.Collections;
 
 public class StateMachine : MonoBehaviour
 {
-	public GameObject audioObj;
+    public GameObject audioObj;
 
     #region components
     [Header("Components: ")]
@@ -117,8 +117,8 @@ public class StateMachine : MonoBehaviour
 
         normalGravity = gravity;
         jumpSlider.maxValue = maxJumpBoost;
-		
-		audioObj = GameObject.FindGameObjectWithTag("audio");
+
+        audioObj = GameObject.FindGameObjectWithTag("audio");
     }
 
     private void Start()
@@ -249,7 +249,6 @@ public class StateMachine : MonoBehaviour
     public void MovePlayer()
     {
         StoreGroundedThisFrame();
-        Debug.Log(WasGroundedInQueue());
         if (!WasGroundedInQueue() && (playerState != State.CLIMB && playerState != State.WALLRUN_LEFT && playerState != State.WALLRUN_RIGHT))  //|| playerState == State.WALLRUN_RIGHT || playerState == State.WALLRUN_LEFT)
             moveDir.y += (gravity * gravityMultiplier) * Time.deltaTime;
 
@@ -296,7 +295,7 @@ public class StateMachine : MonoBehaviour
     {
         // if (!isGrounded)
         //     return 1;
-        Debug.DrawRay(transform.position, Vector3.down, Color.red, 10f);
+        // Debug.DrawRay(transform.position, Vector3.down, Color.red, 10f);
         RaycastHit hit;
         if (Physics.Raycast(transform.position, Vector3.down, out hit, slopeRayLength) && playerState != State.WALLRUN_LEFT || playerState != State.WALLRUN_RIGHT)
         {
@@ -366,7 +365,7 @@ public class StateMachine : MonoBehaviour
             Debug.Log("rolling");
             animator.SetBool("B_IsGrounded", true);
             animator.SetTrigger("roll");
-			audioObj.GetComponent<GeneralAudio>().HeadRollSound();
+            audioObj.GetComponent<GeneralAudio>().HeadRollSound();
 
         }
         yield return new WaitForEndOfFrame();
@@ -381,7 +380,7 @@ public class StateMachine : MonoBehaviour
         groundQueue.Clear();
         jumpSlider.value = virtualController.Time_Hold_Button_A / jumpSlider.maxValue;
         boostedJumpPower = 1;
-		
+
 
         StartCoroutine(OnJump());
         wasJump = true;
@@ -467,7 +466,7 @@ public class StateMachine : MonoBehaviour
             return;
         if (virtualController.ClimbButtonPressed && playerState != State.CLIMB && canClimb)
         {
-            ledge = ledgeDetector.CheckLedge();
+            ledge = ledgeDetector.GetLedgeV2();
             if (!ledge.empty)
             {
                 SwitchStates(State.CLIMB, ClimbMove);

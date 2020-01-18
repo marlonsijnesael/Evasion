@@ -12,9 +12,16 @@ public class LedgeDetection : MonoBehaviour
     public RaycastHit ledgeHit;
     public float climbAngle = 150;
 
+    public string nameObj = string.Empty;
+
     private void Awake()
     {
         maxHeight = cc.height + heightAboveHead;
+    }
+
+    private void Update()
+    {
+        // Debug.Log(GettotalHeight() + " total height");
     }
 
     //private void Update()
@@ -60,6 +67,44 @@ public class LedgeDetection : MonoBehaviour
     //down on ledge#
     //up to sky
 
+    public Ledge GetLedgeV2()
+    {
+        RaycastHit fwdHit;
+
+        float totalHeight = 0;
+        float playerHeight = 1.80f;
+        Vector3 tmpPos = Vector3.zero;
+        Vector3 origin = transform.position + Vector3.up;
+        float maxLedgeHeight = 10;
+
+        // Debug.DrawLine(origin, origin + (transform.forward * 1.5f), Color.green);
+
+        //check if there is an object in front of the player
+        if (Physics.Raycast(origin, transform.forward, out fwdHit, 1.5f))
+        {
+            if (fwdHit.transform.name == "outerbounds")
+            {
+                return new Ledge(Vector3.up * maxHeight, transform.position, Vector3.zero, false);
+
+            }
+            // Debug.DrawLine((Vector3.up * maxLedgeHeight) + origin, transform.position + transform.forward, Color.blue);
+            RaycastHit topHit;
+            //check if the top of the object is range of the player's max ledge height 
+            if (Physics.Raycast((Vector3.up * maxLedgeHeight) + transform.position + transform.forward, Vector3.down, out topHit, 10))
+            {
+                //check if there is room for the player to stand on top of the object
+                if (!Physics.Raycast(topHit.point, Vector3.up, playerHeight + 0.2f))
+                {
+                    // Debug.DrawLine(topHit.point, topHit.point + (Vector3.up * playerHeight), Color.green);
+                    return new Ledge(topHit.point, transform.position, topHit.normal, false);
+                }
+            }
+
+        }
+        return new Ledge(Vector3.zero, Vector3.one, Vector3.zero, true);
+    }
+
+
     public Ledge CheckLedge()
     {
         maxHeight = cc.height + heightAboveHead;
@@ -73,7 +118,6 @@ public class LedgeDetection : MonoBehaviour
         if (Physics.Linecast(transform.position + Vector3.up, transform.position + transform.forward + Vector3.up, out forwardHit))
         {
             float cosine = Vector3.Angle(transform.forward, forwardHit.normal);
-            print(cosine + " angle");
             if (cosine < climbAngle)
                 return new Ledge(Vector3.zero, Vector3.one, Vector3.zero, true);
 
@@ -102,6 +146,7 @@ public class LedgeDetection : MonoBehaviour
                     else
                     {
 
+                        nameObj = ledgeHit.transform.name;
                         return new Ledge(ledgeHit.point, ledgeHit.normal, transform.position, false);
                     }
                 }

@@ -46,11 +46,14 @@ public class ClimbMove : Move
         Vector3 yPosOrigin = _owner.ledge.playerPosition;
         yPosOrigin.y = _owner.ledge.hitPosition.y;
         Vector3 climbDir = _owner.ledge.hitPosition - _owner.ledge.playerPosition;
+        Debug.Log("climbig " + climbDir + " y: " + yPosOrigin);
+
 
         if (_owner.transform.position.y < yPosOrigin.y && _owner.virtualController.ClimbButtonPressed && !_owner.virtualController.WallrunButtonPressed && _owner.timeClimbing < maxClimbTime)
         {
-            Debug.Log("climbig");
-            _owner.moveDir.y = climbDir.y + climbSpeed;
+            // _owner.jumpVec.y = climbDir.y + climbSpeed;
+            _owner.moveDir = Vector3.zero;
+            _owner.moveDir.y = climbSpeed;
             _owner.timeClimbing += Time.deltaTime;
             //_owner.stateMoveDir = climbDir + Vector3.up + (_owner.transform.rotation * Vector3.forward) * _owner.forwardVelocity;
         }
@@ -58,13 +61,14 @@ public class ClimbMove : Move
         else
         {
             Debug.Log("stop climbing");
+            _owner.jumpVec = Vector3.zero;
             _owner.SwitchStates(StateMachine.State.AIRBORNE, _owner.airborneMove);
             _owner.StartCoroutine(_owner.ClimbCooldown(_owner.canClimb, climbCoolDown));
             _owner.animationController.SetBool(_owner.animator, animation.ToString(), false);
             _owner.ClearGroundedBuffer();
 
         }
-        Debug.DrawRay(_owner.ledge.playerPosition, climbDir, Color.red, 10f);
+        // Debug.DrawRay(_owner.ledge.playerPosition, climbDir, Color.red, 10f);
     }
 
 }

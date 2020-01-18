@@ -75,15 +75,15 @@ public class GroundChecker : MonoBehaviour
         if (Physics.Raycast(origin + rayOriginOffset1, Vector3.down, out slopeHit1, raycastLength))
         {
             // Debug line to first hit point
-            if (showDebug) { Debug.DrawLine(origin + rayOriginOffset1, slopeHit1.point, Color.red); }
-            // Get angle of slope on hit normal
+            // if (showDebug) { Debug.DrawLine(origin + rayOriginOffset1, slopeHit1.point, Color.red); }
+            // // Get angle of slope on hit normal
             float angleOne = Vector3.Angle(slopeHit1.normal, Vector3.up);
 
             // 2ND RAYCAST
             if (Physics.Raycast(origin + rayOriginOffset2, Vector3.down, out slopeHit2, raycastLength))
             {
                 // Debug line to second hit point
-                if (showDebug) { Debug.DrawLine(origin + rayOriginOffset2, slopeHit2.point, Color.red); }
+                // if (showDebug) { Debug.DrawLine(origin + rayOriginOffset2, slopeHit2.point, Color.red); }
                 // Get angle of slope of these two hit points.
                 float angleTwo = Vector3.Angle(slopeHit2.normal, Vector3.up);
                 // 3 collision points: Take the MEDIAN by sorting array and grabbing middle.

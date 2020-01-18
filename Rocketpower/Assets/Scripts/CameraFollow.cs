@@ -74,7 +74,7 @@ public class CameraFollow : MonoBehaviour
 
     public void SmoothFollow()
     {
-        Debug.DrawRay(character.transform.position + Vector3.up, character.forward, Color.red);
+        // Debug.DrawRay(character.transform.position + Vector3.up, character.forward, Color.red);
 
         Vector3 targetPosition = character.position + Quaternion.Euler(currentY, currentX, 0) * new Vector3(0, distanceY, distanceZ);
 

@@ -128,7 +128,7 @@ public class OldController : MonoBehaviour
                     isClimbing = true;
                     WallClimb();
 
-                    Debug.DrawRay(hit.point, Vector3.up, Color.blue, 10f);
+                    //                    Debug.DrawRay(hit.point, Vector3.up, Color.blue, 10f);
 
                 }
                 else
@@ -153,7 +153,7 @@ public class OldController : MonoBehaviour
             if (dot == 0)
             {
                 wallrunDir = Vector3.Cross(hit.normal, Vector3.up);
-                Debug.DrawRay(hit.point, wallrunDir, Color.red, 10f);
+                //Debug.DrawRay(hit.point, wallrunDir, Color.red, 10f);
                 isWallrun_Right = true;
 
 
