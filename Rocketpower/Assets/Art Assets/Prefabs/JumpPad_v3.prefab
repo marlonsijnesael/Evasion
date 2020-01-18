@@ -198,7 +198,6 @@ GameObject:
   - component: {fileID: 3821716428420531470}
   - component: {fileID: 7365073951381010935}
   - component: {fileID: 6621037528529007331}
-  - component: {fileID: 6621037528529007263}
   m_Layer: 0
   m_Name: JumpPad_v3
   m_TagString: Untagged
@@ -282,17 +281,3 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 14
   m_Mesh: {fileID: 8115706118656148778, guid: a764d4b08d741cb47ad305a3ce1e3e75, type: 3}
---- !u!114 &6621037528529007263
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9081835959948807467}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 84f51f4461d23c04ea7721f5978b0d50, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  JumpPadHeight: 2.4
-  JumpPadVelocity: 0

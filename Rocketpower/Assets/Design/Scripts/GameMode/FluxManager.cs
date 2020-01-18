@@ -20,8 +20,8 @@ public class FluxManager : MonoBehaviour
     #region Player Variables
     public Color player1color;
     public Color player2color;
-    public float mSpeedDiff = 0.25f;
-    private float mSpeedBase = 9f;
+    public float mSpeedDiff = 0.3f;
+    private float mSpeedBase = 9.5f;
     #endregion
 
     [Header("GameMode")]
@@ -63,6 +63,7 @@ public class FluxManager : MonoBehaviour
     [HideInInspector] public Text roundCountdownText_D1, roundCountdownText_D2;
     [HideInInspector] public GameObject roundCountdownObject_D1, roundCountdownObject_D2;
     [HideInInspector] public GameObject inRoundUI_D1, inRoundUI_D2;
+    public GameObject rings;
     #endregion
 
     [Header("WinCondition")]
@@ -473,6 +474,7 @@ public class FluxManager : MonoBehaviour
 
     IEnumerator StartRoundCountdown()
     {
+        rings.gameObject.SetActive(true);
         yield return new WaitForSeconds(4.5f);
         ToggleUI(startCountdownObjectD1, startCountdownObjectD2, true);
         ToggleUIText(startCountdownTextD1, startCountdownTextD2, startCountdownTime);
