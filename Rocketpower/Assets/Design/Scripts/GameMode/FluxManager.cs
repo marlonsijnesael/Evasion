@@ -526,8 +526,8 @@ public class FluxManager : MonoBehaviour
     {
         if (player1score > player2score)
         {
-            playerWinningTextD1.text = "Orange Holds All Holofields";
-            playerWinningTextD2.text = "Orange Holds All Holofields";
+            playerWinningTextD1.text = "Green Holds All Holofields";
+            playerWinningTextD2.text = "Green Holds All Holofields";
         }
         else if (player2score > player1score)
         {
