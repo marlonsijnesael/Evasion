@@ -11,13 +11,13 @@ GameObject:
   - component: {fileID: 1727974200568998952}
   - component: {fileID: 8569222499480110300}
   - component: {fileID: 6142258240693200468}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: SM_OuterStructure_Pattern_v1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1727974200568998952
 Transform:
   m_ObjectHideFlags: 0
@@ -89,7 +89,7 @@ GameObject:
   - component: {fileID: 300157053461998451}
   - component: {fileID: 4019583547594444910}
   - component: {fileID: 110969450940199306}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: SM_OuterStructure_Hologram_v1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -166,7 +166,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8067735063977383347}
   - component: {fileID: 4905048725915798854}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -210,7 +210,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7330645848363038208}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: SM_OuterStructure_v1_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -224,9 +224,9 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6044101556310639635}
-  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.02, y: 1, z: 1.02}
   m_Children:
   - {fileID: 300157053461998451}
   - {fileID: 120745597133876488}
@@ -246,7 +246,7 @@ GameObject:
   - component: {fileID: 120745597133876488}
   - component: {fileID: 4110412318831518554}
   - component: {fileID: 1795721712172334422}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: SM_OuterStructure_Main_v1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
