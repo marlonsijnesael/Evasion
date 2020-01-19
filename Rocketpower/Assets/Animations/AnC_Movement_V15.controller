@@ -954,9 +954,6 @@ AnimatorStateTransition:
   m_PrefabAsset: {fileID: 0}
   m_Name: 
   m_Conditions:
-  - m_ConditionMode: 2
-    m_ConditionEvent: B_IsRoling
-    m_EventTreshold: 0
   - m_ConditionMode: 1
     m_ConditionEvent: B_IsRunning
     m_EventTreshold: 0
@@ -964,10 +961,19 @@ AnimatorStateTransition:
     m_ConditionEvent: B_IsGrounded
     m_EventTreshold: 0
   - m_ConditionMode: 2
+    m_ConditionEvent: B_IsRoling
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
     m_ConditionEvent: B_IsWallrunningLeft
     m_EventTreshold: 0
   - m_ConditionMode: 2
     m_ConditionEvent: B_IsWallrunningRight
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: B_IsClimbing
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: B_IsIdle
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -6170282865610239642}
@@ -1594,7 +1600,7 @@ AnimatorStateTransition:
   - m_ConditionMode: 1
     m_ConditionEvent: B_IsIdle
     m_EventTreshold: 0
-  - m_ConditionMode: 2
+  - m_ConditionMode: 1
     m_ConditionEvent: B_IsGrounded
     m_EventTreshold: 0
   - m_ConditionMode: 2
