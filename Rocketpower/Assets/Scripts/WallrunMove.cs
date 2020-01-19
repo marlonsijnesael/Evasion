@@ -10,10 +10,11 @@ public class WallrunMove : Move
     public override void EnterState(StateMachine _owner)
     {
         // _owner.jumpVec.y = _owner.wallrunDir.y;
+        _owner.animationController.SetBool(_owner.animator, animation.ToString(), true);
+
         _owner.jumpVec = Vector3.zero;
         _owner.moveDir.y = 0;
         _owner.gravity = _owner.gravity * 0.5f;
-        _owner.animationController.SetBool(_owner.animator, animation.ToString(), true);
     }
 
     public override void Act(StateMachine _owner)
