@@ -51,10 +51,10 @@ public class FluxManager : MonoBehaviour
     #region Pre-Round Objects
     [HideInInspector] public GameObject startCountdownObjectD1, startCountdownObjectD2;
     [HideInInspector] public Text startCountdownTextD1, startCountdownTextD2;
-    [HideInInspector] public GameObject readyChecksD1, readyChecksD2;
+    public GameObject readyChecksD1, readyChecksD2;
     public GameObject stasisP1, stasisP2;
-    [HideInInspector] public Toggle readyToggleP1;
-    [HideInInspector] public Toggle readyToggleP2;
+    public Toggle readyToggleD1_P1, readyToggleD1_P2;
+    public Toggle readyToggleD2_P1, readyToggleD2_P2;
     #endregion
     #region In-Round
     public int roundCountdownTime = 120;
@@ -452,12 +452,14 @@ public class FluxManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Q))
         {
             readyP1 = true;
-            readyToggleP1.isOn = true;
+            readyToggleD1_P1.isOn = true;
+            readyToggleD2_P1.isOn = true;
         }
         if (Input.GetKeyDown(KeyCode.W))
         {
             readyP2 = true;
-            readyToggleP2.isOn = true;
+            readyToggleD1_P2.isOn = true;
+            readyToggleD2_P2.isOn = true;
         }
         if (readyP1 && readyP2)
         {

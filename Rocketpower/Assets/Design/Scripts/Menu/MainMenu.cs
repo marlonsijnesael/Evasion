@@ -8,8 +8,7 @@ public class MainMenu : MonoBehaviour
 {
     public EventSystem ES;
     private GameObject StoreSelected;
-    public string LevelToLoad = "TimeTrial_Level_v3";
-    public string LevelToLoad2 = "";
+    public string LevelToLoad = "";
 
     public UnityEngine.UI.Toggle invert_Y, jumpOnPress;
 
@@ -43,13 +42,6 @@ public class MainMenu : MonoBehaviour
     public void StartLevel1()
     {
         SceneManager.LoadScene(LevelToLoad);
-        Settings.GameSettings.invert_Y = invert_Y.isOn;
-        Settings.GameSettings.jumpOnPress = jumpOnPress.isOn;
-    }
-
-    public void StartLevel2()
-    {
-        SceneManager.LoadScene(LevelToLoad2);
         Settings.GameSettings.invert_Y = invert_Y.isOn;
         Settings.GameSettings.jumpOnPress = jumpOnPress.isOn;
     }

@@ -55,13 +55,15 @@ public class Elevator : MonoBehaviour
         if (other.transform.tag == "Player")
         {
             gm.readyP1 = true;
-            gm.readyToggleP1.isOn = true;
+            gm.readyToggleD1_P1.isOn = true;
+            gm.readyToggleD2_P1.isOn = true;
         }
 
         if (other.transform.tag == "Player2")
         {
             gm.readyP2 = true;
-            gm.readyToggleP2.isOn = true;
+            gm.readyToggleD1_P2.isOn = true;
+            gm.readyToggleD2_P2.isOn = true;
         }
 
         if (gm.bothPlayersReady && isElevatorRunOnce)
@@ -77,13 +79,15 @@ public class Elevator : MonoBehaviour
         if (other.transform.tag == "Player")
         {
             gm.readyP1 = false;
-            gm.readyToggleP1.isOn = false;
+            gm.readyToggleD1_P1.isOn = false;
+            gm.readyToggleD2_P1.isOn = false;
         }
 
         if (other.transform.tag == "Player2")
         {
             gm.readyP2 = false;
-            gm.readyToggleP2.isOn = false;
+            gm.readyToggleD1_P2.isOn = false;
+            gm.readyToggleD2_P2.isOn = false;
         }
     }
 }
