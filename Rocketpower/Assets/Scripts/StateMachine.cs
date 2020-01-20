@@ -366,7 +366,6 @@ public class StateMachine : MonoBehaviour
             animator.SetBool("B_IsGrounded", true);
             animator.SetTrigger("roll");
             audioObj.GetComponent<GeneralAudio>().HeadRollSound();
-
         }
         yield return new WaitForEndOfFrame();
 
@@ -395,7 +394,7 @@ public class StateMachine : MonoBehaviour
         }
         currentMove.Jump(this, boostedJumpPower);
         virtualController.Time_Hold_Button_A = 1f;
-    }
+	    }
 
     /// <summary>
     /// Checks for collision with ground underneath player

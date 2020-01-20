@@ -7,6 +7,13 @@ public class JumpPad : MonoBehaviour
 
     public float JumpPadHeight;
     public float JumpPadVelocity;
+	
+	GameObject audioObj;
+	
+	void Start ()
+	{
+		audioObj = GameObject.FindGameObjectWithTag("audio");
+	}
 
     public void Launch(StateMachine owner)
     {
@@ -15,7 +22,7 @@ public class JumpPad : MonoBehaviour
         owner.gameObject.GetComponent<StateMachine>().Jump();
         owner.gameObject.GetComponent<StateMachine>().jumpMultiplier = 1.19f;
         owner.gameObject.GetComponent<StateMachine>().forwardJumpMultiplier = 2.3f;
-
+        audioObj.GetComponent<GeneralAudio>().JumpPadSound();
     }
 
 }

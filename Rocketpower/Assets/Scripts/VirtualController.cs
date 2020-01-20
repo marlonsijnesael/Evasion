@@ -59,7 +59,7 @@ public class VirtualController : MonoBehaviour
         {
             inputQueue.Enqueue(JumpButtonPressedThisFrame);
             Debug.Log(inputQueue.Count);
-
+			
         }
 
         if (JumpButtonHold && (VerticalMovement != 0 || HorizontalMovement != 0))

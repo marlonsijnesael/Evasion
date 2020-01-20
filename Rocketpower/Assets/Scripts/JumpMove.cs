@@ -10,8 +10,8 @@ public class JumpMove : Move
 
     public override void Act(StateMachine _owner)
     {
-
     }
+	
     public override void ExitState(StateMachine _owner)
     {
     }

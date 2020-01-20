@@ -17,7 +17,14 @@ public class PauseMenu : MonoBehaviour
 
     public EventSystem ES;
     private GameObject StoreSelected;
-
+	
+	GameObject audioObj;
+	
+	void Start ()
+	{
+	audioObj = GameObject.FindGameObjectWithTag("audio");
+	}
+	
     void Update()
     {
         if (ES.currentSelectedGameObject != StoreSelected)
@@ -65,6 +72,8 @@ public class PauseMenu : MonoBehaviour
             Time.timeScale = 0;
             StoreSelected = ES.firstSelectedGameObject;
         }
+        audioObj.GetComponent<GeneralAudio>().OV.setValue(0.6f);
+
     }
 
     public void ResumeGame()
@@ -83,6 +92,7 @@ public class PauseMenu : MonoBehaviour
             gm.isGameRoundTimerRunning = true;
             Time.timeScale = 1;
         }
+		audioObj.GetComponent<GeneralAudio>().OV.setValue(0.9f);
     }
 
     public void RestartGame()

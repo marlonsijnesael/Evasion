@@ -11,7 +11,7 @@ public class GeneralAudio : MonoBehaviour
     FMOD.Studio.ParameterInstance MainGame, IV;
 
     FMOD.Studio.EventInstance OST_2;
-    FMOD.Studio.ParameterInstance MainGame2, EndGame, GameOver, OV;
+    public FMOD.Studio.ParameterInstance MainGame2, EndGame, GameOver, OV;
 
     FMOD.Studio.EventInstance FluxEffect;
     FMOD.Studio.ParameterInstance FV;
@@ -89,7 +89,7 @@ public class GeneralAudio : MonoBehaviour
 
         Headroll = FMODUnity.RuntimeManager.CreateInstance("event:/SD/Headroll");
         Headroll.getParameter("HRV", out HRV);
-        HRV.setValue(0.85f);
+        HRV.setValue(0.8f);
 
         JumpPad = FMODUnity.RuntimeManager.CreateInstance("event:/SD/JumpPad");
         JumpPad.getParameter("JPV", out JPV);
@@ -154,7 +154,6 @@ public class GeneralAudio : MonoBehaviour
         p1 = obj2.GetComponent<FluxManager>().player1;
         p2 = obj2.GetComponent<FluxManager>().player2;
 
-
         if (eS == true)
         {
             MainGame.setValue(1);
@@ -198,4 +197,11 @@ public class GeneralAudio : MonoBehaviour
             CheckPointSound();
         }
     }
+	
+	void OnDestroy ()
+	{
+		OST_2.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+		Atmosphere.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+        OST_Intro.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+	}
 }

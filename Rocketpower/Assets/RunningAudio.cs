@@ -35,8 +35,8 @@ public class RunningAudio : MonoBehaviour
 		// walk
         if ((int)obj.GetComponent<StateMachine>().playerState == 1 && Time.time > nextFire)
         {
-			SSV.setValue(0.62f);
-			SWV.setValue(0.4f);
+			SSV.setValue(0.72f);
+			SWV.setValue(0.5f);
 
             nextFire = Time.time + stepRate + Random.Range(0.0f, 0.1f);
 			

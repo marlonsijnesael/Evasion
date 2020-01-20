@@ -546,6 +546,7 @@ public class FluxManager : MonoBehaviour
         if (winCountDownTime < 1 && !stopWinCountDown)
         {
             Time.timeScale = 0;
+			gameOver = true;
             WinScreen();
         }
         yield return new WaitForEndOfFrame();
