@@ -18,11 +18,11 @@ public class Elevator : MonoBehaviour
         StateMachine statemachine = player.GetComponent<StateMachine>();
         float time = 0;
         Vector3 start = startPoint.position;
+        player.transform.position = startPoint.transform.position;
         player.transform.SetParent(Hexagon.transform);
         statemachine.maxSpeed = 0;
         StartCoroutine(gm.FadeCanvasGroup(gm.cg_PreRoundP1, gm.cg_PreRoundP1.alpha, 0, 1));
         StartCoroutine(gm.FadeCanvasGroup(gm.cg_PreRoundP2, gm.cg_PreRoundP2.alpha, 0, 1));
-
         // statemachine.currentMove = statemachine.idleMove;
         // statemachine.currentMove.ExitState(statemachine);
         // statemachine.idleMove.EnterState(statemachine);
@@ -41,7 +41,7 @@ public class Elevator : MonoBehaviour
 
             yield return null;
         }
-		Hexagon.transform.position = endPoint.transform.position;
+        Hexagon.transform.position = endPoint.transform.position;
         yield return new WaitForEndOfFrame();
         player.transform.SetParent(null);
         statemachine.enabled = true;
