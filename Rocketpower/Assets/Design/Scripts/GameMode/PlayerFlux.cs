@@ -13,6 +13,7 @@ public class PlayerFlux : MonoBehaviour
     [Header("Changing Material")]
     [Tooltip("please put the transform containing all mesh parts of the character here")]
     public Transform meshParent;
+	public Transform helmetMesh;
     public int transitionTime;
 
     private int playerID = 0;
@@ -42,6 +43,9 @@ public class PlayerFlux : MonoBehaviour
             if (part.GetComponent<Renderer>())
                 materialList.Add(part.GetComponent<Renderer>().material);
         }
+		if (helmetMesh.GetComponent<Renderer>()) {
+			materialList.Add(helmetMesh.GetComponent<Renderer>().material);
+		}
 		
 		audioObj = GameObject.FindGameObjectWithTag("audio");
 

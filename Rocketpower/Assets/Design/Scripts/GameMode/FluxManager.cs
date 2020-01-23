@@ -27,6 +27,7 @@ public class FluxManager : MonoBehaviour
     [Header("GameMode")]
     #region Flux Player + Score
     public PlayerFlux fluxPlayer;
+	private bool sparkIsBeingHeld = false;
     public bool gameOver;
     [HideInInspector] public SparkVFX sparkVFX;
     public int player1score, player2score;
@@ -300,8 +301,14 @@ public class FluxManager : MonoBehaviour
             sliderFillImage.color = player1color;
         }
 
-        player1.TurnFlux(fluxPlayer == player1);
-        player2.TurnFlux(fluxPlayer == player2);
+		if (sparkIsBeingHeld) {
+			player1.TurnFlux(fluxPlayer == player1);
+			player2.TurnFlux(fluxPlayer == player2);
+		}
+		else {
+			fluxPlayer.TurnFlux(true);
+			sparkIsBeingHeld = true;
+		}
 
         if (sparkVFX != null)
         {
