@@ -47,7 +47,7 @@ public class RunningAudio2 : MonoBehaviour
 		{
 			nextFire = Time.time + stepRate + Random.Range(0.0f, 0.1f);
 			SSV.setValue(0.5f);
-			SWV.setValue(0.85f);
+			SWV.setValue(0.75f);
 
 			Steps_scape.start();
             StepsWall.start();
@@ -57,7 +57,7 @@ public class RunningAudio2 : MonoBehaviour
 		{
 			nextFire = Time.time + stepRate + Random.Range(0.0f, 0.1f);
 			SSV.setValue(0.5f);
-			SWV.setValue(0.85f);
+			SWV.setValue(0.75f);
 
 			Steps_scape.start();
             StepsWall.start();
@@ -67,7 +67,7 @@ public class RunningAudio2 : MonoBehaviour
 		{
 			nextFire = Time.time + stepRate + Random.Range(0.0f, 0.1f);
 			SSV.setValue(0.5f);
-			SWV.setValue(0.85f);
+			SWV.setValue(0.75f);
 
 			Steps_scape.start();
             StepsWall.start();

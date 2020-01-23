@@ -85,7 +85,7 @@ public class GeneralAudio : MonoBehaviour
 
         Jump = FMODUnity.RuntimeManager.CreateInstance("event:/SD/Jump");
         Jump.getParameter("JV", out JV);
-        JV.setValue(1);
+        JV.setValue(0.9f);
 
         Headroll = FMODUnity.RuntimeManager.CreateInstance("event:/SD/Headroll");
         Headroll.getParameter("HRV", out HRV);

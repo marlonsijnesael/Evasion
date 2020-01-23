@@ -33,7 +33,7 @@ public class RunMove : Move
         _owner.isGrounded = false;
         _owner.jumpVec.y = _owner.minimumJumpVelocity * _owner.jumpMultiplier + power;
         _owner.jumpVec += (_owner.transform.forward.normalized) * (_owner.forwardJumpMultiplier);
-
+		_owner.audioObj.GetComponent<GeneralAudio>().JumpSound();
         // }
     }
 
