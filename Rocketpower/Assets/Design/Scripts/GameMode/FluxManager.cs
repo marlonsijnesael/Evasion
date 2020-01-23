@@ -125,13 +125,13 @@ public class FluxManager : MonoBehaviour
             hex.transform.SetParent(parentCanvas);
             hex.transform.localScale = new Vector3(1.2f, 1.2f, 1);
             RectTransform rt = hex.GetComponent<RectTransform>();
-            rt.localPosition = new Vector3(-.5f * platformsTotal * scoreHexagonSize + scoreHexagonSize * (i + .5f), 400, 0);
+            rt.localPosition = new Vector3(-.5f * platformsTotal * scoreHexagonSize + scoreHexagonSize * (i + .5f) * .85f, 400, 0);
             rt.sizeDelta = new Vector2(scoreHexagonSize, scoreHexagonSize);
             hexagonList.Add(hex.GetComponent<ScoreUI>());
         }
         GameObject newArrow = Instantiate(scoreArrowPrefab);
         newArrow.transform.SetParent(parentCanvas);
-        newArrow.transform.localScale = new Vector3(1, 1, 1);
+        newArrow.transform.localScale = new Vector3(1.1f, 1.1f, 1.1f);
         newArrow.gameObject.SetActive(false);
         newArrow.name = newArrow.name;
 

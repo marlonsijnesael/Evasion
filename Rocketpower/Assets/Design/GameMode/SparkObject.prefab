@@ -156,11 +156,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3889588447922088890}
     m_Modifications:
-    - target: {fileID: -927199367670048503, guid: f0cf8c377a9d6c54a90101cba45c1005,
-        type: 3}
-      propertyPath: m_Name
-      value: SM_Spark_v1_1
-      objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: f0cf8c377a9d6c54a90101cba45c1005,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -230,6 +225,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalScale.z
       value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: f0cf8c377a9d6c54a90101cba45c1005,
+        type: 3}
+      propertyPath: m_Name
+      value: SM_Spark_v1_1
       objectReference: {fileID: 0}
     - target: {fileID: -6057140222963153312, guid: f0cf8c377a9d6c54a90101cba45c1005,
         type: 3}
