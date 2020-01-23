@@ -65,6 +65,7 @@ public class PlayerFlux : MonoBehaviour
             gm.ColorSwitch();
             gm.textFluxP1.text = "Spark: " + gm.fluxPlayer.ToString();
             gm.textFluxP2.text = "Spark: " + gm.fluxPlayer.ToString();
+			gm.StartCoroutine("FluxColliderSeconds");
 			
             Destroy(other.gameObject);
 			audioObj.GetComponent<GeneralAudio>().SparkSound();

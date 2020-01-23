@@ -18,7 +18,6 @@ public class Elevator : MonoBehaviour
         StateMachine statemachine = player.GetComponent<StateMachine>();
         float time = 0;
         Vector3 start = startPoint.position;
-        player.transform.position = startPoint.transform.position;
         player.transform.SetParent(Hexagon.transform);
         statemachine.maxSpeed = 0;
         StartCoroutine(gm.FadeCanvasGroup(gm.cg_PreRoundP1, gm.cg_PreRoundP1.alpha, 0, 1));

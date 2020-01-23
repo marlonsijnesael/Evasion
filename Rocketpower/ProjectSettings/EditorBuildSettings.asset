@@ -36,9 +36,12 @@ EditorBuildSettings:
     path: Assets/Scenes/TimeTrial_Level_v5.1.unity
     guid: e8ce5fd19c14a344db713f641966586e
   - enabled: 0
-    path: Assets/__DELETED_GUID_Trash/dcd0261b3c36ebe4cb7d713c314ca01b
-    guid: dcd0261b3c36ebe4cb7d713c314ca01b
-  - enabled: 1
+    path: 
+    guid: 00000000000000000000000000000000
+  - enabled: 0
     path: Assets/Scenes/19Jan_Richard/TimeTrial_Level_v5.Richard.unity
     guid: 8c08aa8f687172e4896496896d58b171
+  - enabled: 1
+    path: Assets/Scenes/TimeTrial_Level_v6.unity
+    guid: dcf71fc4822dc2a41b0a016e9042d149
   m_configObjects: {}

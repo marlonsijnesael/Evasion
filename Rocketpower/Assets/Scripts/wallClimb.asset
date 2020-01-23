@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: wallClimb
   m_EditorClassIdentifier: 
   noGoStates: 0000000001000000020000000300000004000000
-  climbSpeed: 8
+  climbSpeed: 10
   climbCoolDown: 2
   maxClimbHeight: 18
   maxClimbTime: 2

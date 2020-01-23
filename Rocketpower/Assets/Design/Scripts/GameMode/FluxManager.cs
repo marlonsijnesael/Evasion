@@ -175,7 +175,7 @@ public class FluxManager : MonoBehaviour
             smP2.maxSpeed = mSpeedBase;
         }
 
-        if (fluxPlayer == player1)
+        else if (fluxPlayer == player1)
         {
             if (player1score > player2score)
             {
@@ -210,81 +210,82 @@ public class FluxManager : MonoBehaviour
                     smP2.maxSpeed = mSpeedBase + mSpeedDiff * 6;
                 }
             }
-            /*else
+            else
             {
-                if (scoreDiff > 0 && scoreDiff < 2)
-                {
-                    smP1.maxSpeed = mSpeedBase + mSpeedDiff;
-                    smP2.maxSpeed = mSpeedBase;
-                }
-                if (scoreDiff > 2 && scoreDiff < 4)
-                {
-                    smP1.maxSpeed = mSpeedBase + mSpeedDiff * 1.2f;
-                    smP2.maxSpeed = mSpeedBase;
-                }
-                if (scoreDiff >= 4)
-                {
-                    smP1.maxSpeed = mSpeedBase + mSpeedDiff * 1.4f;
-                    smP2.maxSpeed = mSpeedBase;
-                }
-            }*/
-
+                smP1.maxSpeed = mSpeedBase;
+                smP2.maxSpeed = mSpeedBase + 1;
+                // if (scoreDiff > 0 && scoreDiff < 2)
+                // {
+                //     smP1.maxSpeed = mSpeedBase + mSpeedDiff;
+                //     smP2.maxSpeed = mSpeedBase;
+                // }
+                // if (scoreDiff > 2 && scoreDiff < 4)
+                // {
+                //     smP1.maxSpeed = mSpeedBase + mSpeedDiff * 1.2f;
+                //     smP2.maxSpeed = mSpeedBase;
+                // }
+                // if (scoreDiff >= 4)
+                // {
+                //     smP1.maxSpeed = mSpeedBase + mSpeedDiff * 1.4f;
+                //     smP2.maxSpeed = mSpeedBase;
+                // }
+            }
         }
-
-        if (fluxPlayer == player2)
+        else if (fluxPlayer == player2)
         {
             if (player1score < player2score)
             {
-                if (scoreDiff == 1)
+                if (scoreDiff == -1)
                 {
                     smP1.maxSpeed = mSpeedBase + mSpeedDiff;
                     smP2.maxSpeed = mSpeedBase;
                 }
-                if (scoreDiff == 2)
+                if (scoreDiff == -2)
                 {
                     smP1.maxSpeed = mSpeedBase + mSpeedDiff * 2;
                     smP2.maxSpeed = mSpeedBase;
                 }
-                if (scoreDiff == 3)
+                if (scoreDiff == -3)
                 {
                     smP1.maxSpeed = mSpeedBase + mSpeedDiff * 3;
                     smP2.maxSpeed = mSpeedBase;
                 }
-                if (scoreDiff == 4)
+                if (scoreDiff == -4)
                 {
                     smP1.maxSpeed = mSpeedBase + mSpeedDiff * 4;
                     smP2.maxSpeed = mSpeedBase;
                 }
-                if (scoreDiff == 5)
+                if (scoreDiff == -5)
                 {
                     smP1.maxSpeed = mSpeedBase + mSpeedDiff * 5;
                     smP2.maxSpeed = mSpeedBase;
                 }
-                if (scoreDiff == 6)
+                if (scoreDiff == -6)
                 {
                     smP1.maxSpeed = mSpeedBase + mSpeedDiff * 6;
                     smP2.maxSpeed = mSpeedBase;
                 }
             }
-            /*else
+            else
             {
-                if (scoreDiff > 0 && scoreDiff < 2)
-                {
-                    smP1.maxSpeed = mSpeedBase;
-                    smP2.maxSpeed = mSpeedBase + mSpeedDiff;
-                }
-                if (scoreDiff > 2 && scoreDiff < 4)
-                {
-                    smP1.maxSpeed = mSpeedBase;
-                    smP2.maxSpeed = mSpeedBase + mSpeedDiff * 1.2f;
-                }
-                if (scoreDiff >= 4)
-                {
-                    smP1.maxSpeed = mSpeedBase;
-                    smP2.maxSpeed = mSpeedBase + mSpeedDiff * 1.4f;
-                }
-            }*/
-
+                smP1.maxSpeed = mSpeedBase + 1;
+                smP2.maxSpeed = mSpeedBase;
+                // if (scoreDiff > 0 && scoreDiff < 2)
+                // {
+                //     smP1.maxSpeed = mSpeedBase;
+                //     smP2.maxSpeed = mSpeedBase + mSpeedDiff;
+                // }
+                // if (scoreDiff > 2 && scoreDiff < 4)
+                // {
+                //     smP1.maxSpeed = mSpeedBase;
+                //     smP2.maxSpeed = mSpeedBase + mSpeedDiff * 1.2f;
+                // }
+                // if (scoreDiff >= 4)
+                // {
+                //     smP1.maxSpeed = mSpeedBase;
+                //     smP2.maxSpeed = mSpeedBase + mSpeedDiff * 1.4f;
+                // }
+            }
         }
     }
 
@@ -527,7 +528,7 @@ public class FluxManager : MonoBehaviour
         else if (roundCountdownTime <= 0 && (player1score > player2score || player2score < player1score))
         {
             isGameRoundTimerRunning = false;
-            gameOver = true;
+			Time.timeScale = 0;
             WinScreen();
         }
         yield return new WaitForEndOfFrame();
@@ -553,9 +554,8 @@ public class FluxManager : MonoBehaviour
             ToggleUIText(winCountDownTextD1, winCountDownTextD2, winCountDownTime);
         }
         if (winCountDownTime < 1 && !stopWinCountDown)
-        {
-            Time.timeScale = 0;
-            gameOver = true;
+        {   
+			Time.timeScale = 0;
             WinScreen();
         }
         yield return new WaitForEndOfFrame();
@@ -570,8 +570,7 @@ public class FluxManager : MonoBehaviour
         {
             yield return null;
         }
-        Time.timeScale = 0;
-        gameOver = true;
+		Time.timeScale = 0;
         WinScreen();
         yield return new WaitForEndOfFrame();
     }
@@ -606,7 +605,8 @@ public class FluxManager : MonoBehaviour
     {
         ToggleUI(inRoundUI_D1, inRoundUI_D2, false);
         ToggleUI(endScreenD1, endScreenD2, true);
-
+		gameOver = true;
+		
         if (player1score > player2score)
         {
             endTextD1.text = "You Win";

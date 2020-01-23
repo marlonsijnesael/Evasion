@@ -577,7 +577,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ES: {fileID: 656816500}
-  LevelToLoad: TimeTrial_Level_v5.Richard
+  LevelToLoad: TimeTrial_Level_v6
   invert_Y: {fileID: 473083064}
   jumpOnPress: {fileID: 1816693117}
 --- !u!1 &673968087
