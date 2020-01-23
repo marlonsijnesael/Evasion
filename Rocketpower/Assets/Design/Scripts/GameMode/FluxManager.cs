@@ -21,7 +21,7 @@ public class FluxManager : MonoBehaviour
     public Color player1color;
     public Color player2color;
     public float mSpeedDiff = 0.3f;
-    private float mSpeedBase = 9.5f;
+    public float mSpeedBase = 9.5f;
     #endregion
 
     [Header("GameMode")]
@@ -77,6 +77,7 @@ public class FluxManager : MonoBehaviour
     [HideInInspector] public GameObject playerWinningD1, playerWinningD2;
     [HideInInspector] public GameObject winCountDownD1, winCountDownD2;
     [HideInInspector] public Text winCountDownTextD1, winCountDownTextD2;
+    public GameObject overtimeObjD1, overtimeObjD2;
     [HideInInspector] public GameObject endScreenD1, endScreenD2;
     [HideInInspector] public Text endTextD1, endTextD2;
     #endregion
@@ -164,8 +165,8 @@ public class FluxManager : MonoBehaviour
     public void SpeedPlayers()
     {
         scoreDiff = player1score - player2score;
-        Debug.Log("P1: " + smP1.maxSpeed);
-        Debug.Log("P2: " + smP2.maxSpeed);
+        //Debug.Log("P1: " + smP1.maxSpeed);
+        //Debug.Log("P2: " + smP2.maxSpeed);
 
         if (scoreDiff == 0 || scoreDiff == 0)
         {
@@ -502,8 +503,6 @@ public class FluxManager : MonoBehaviour
         StartCoroutine(FadeCanvasGroup(cg_InRoundP2, cg_InRoundP2.alpha, 1, 1.5f));
 
         StartCoroutine(GameRoundCountdown());
-
-
     }
 
     IEnumerator GameRoundCountdown()
@@ -514,10 +513,13 @@ public class FluxManager : MonoBehaviour
             roundCountdownTime--;
             ToggleUIText(roundCountdownText_D1, roundCountdownText_D2, roundCountdownTime);
         }
-        if (roundCountdownTime <= 0)
+        if (roundCountdownTime <= 0 && player1score == player2score)
+        {
+            StartCoroutine(Overtime());
+        }
+        else if (roundCountdownTime <= 0 && (player1score > player2score || player2score < player1score))
         {
             isGameRoundTimerRunning = false;
-            Time.timeScale = 0;
             gameOver = true;
             WinScreen();
         }
@@ -546,13 +548,26 @@ public class FluxManager : MonoBehaviour
         if (winCountDownTime < 1 && !stopWinCountDown)
         {
             Time.timeScale = 0;
-			gameOver = true;
+            gameOver = true;
             WinScreen();
         }
         yield return new WaitForEndOfFrame();
         //yield return new WaitWhile(() => winCountDownTime >= 0);
     }
 
+    IEnumerator Overtime()
+    {
+        ToggleUI(roundCountdownObject_D1, roundCountdownObject_D2, false);
+        ToggleUI(overtimeObjD1, overtimeObjD2, true);
+        while (player1score == player2score)
+        {
+            yield return null;
+        }
+        Time.timeScale = 0;
+        gameOver = true;
+        WinScreen();
+        yield return new WaitForEndOfFrame();
+    }
     public void WinCondition()
     {
         if (player1score == platformsTotal || player2score == platformsTotal && !isWinCountDownActive)
@@ -578,6 +593,7 @@ public class FluxManager : MonoBehaviour
             ToggleUI(roundCountdownObject_D1, roundCountdownObject_D2, true);
         }
     }
+
 
     public void WinScreen()
     {
