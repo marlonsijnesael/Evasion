@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class CaptureField : MonoBehaviour
 {
-    public Material mat;
+    private Material mat;
+	public float maxAlpha;
     public Transform otherPlayer;
     public float minDist;
     public float maxDist;
@@ -13,7 +14,8 @@ public class CaptureField : MonoBehaviour
     
     void Start()
     {
-        alphaSlide = mat.GetFloat("_Alpha");
+        mat = transform.GetComponent<Renderer>().material;
+		alphaSlide = mat.GetFloat("_Alpha");
     }
 
     
@@ -22,19 +24,17 @@ public class CaptureField : MonoBehaviour
         if (otherPlayer)
         {
             totalDist = Vector3.Distance(otherPlayer.position, transform.position);
-            print(totalDist);
+            //print(totalDist);
+			
+			//if (totalDist < maxDist){
+				alphaSlide = Mathf.Clamp01(-(maxDist - totalDist)/(minDist - maxDist)) * maxAlpha;
+			/*}
+			else {
+				alphaSlide = 0;
+			}*/
+			mat.SetFloat("_Alpha", alphaSlide);
         }
-        /*if (totalDist >= 5)
-        {
-            alphaSlide = Mathf.Clamp01();
-            mat.SetFloat("_Alpha", alphaSlide);
-        }
-        else
-        {
-            alphaSlide = 1f;
-             mat.SetFloat("_Alpha", alphaSlide);
-        }*/
-        alphaSlide = Mathf.Clamp01(-(maxDist - totalDist)/(minDist - maxDist));
-        mat.SetFloat("_Alpha", alphaSlide);
+		
+        
     }
 }

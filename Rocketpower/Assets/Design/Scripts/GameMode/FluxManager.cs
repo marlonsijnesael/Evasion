@@ -523,9 +523,10 @@ public class FluxManager : MonoBehaviour
         }
         if (roundCountdownTime <= 0 && player1score == player2score)
         {
+			isGameRoundTimerRunning = false;
             StartCoroutine(Overtime());
         }
-        else if (roundCountdownTime <= 0 && (player1score > player2score || player2score < player1score))
+        else if(roundCountdownTime <= 0)
         {
             isGameRoundTimerRunning = false;
 			Time.timeScale = 0;
