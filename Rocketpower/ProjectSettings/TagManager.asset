@@ -21,6 +21,7 @@ TagManager:
   - GameModeManager
   - audio
   - outer
+  - noclimb
   layers:
   - Default
   - TransparentFX

@@ -7,13 +7,13 @@ public class PlayerFlux : MonoBehaviour
 {
     [Header("GameMode")]
     public FluxManager gm;
-	
-	GameObject audioObj;
+    public Camera camera;
+    GameObject audioObj;
 
     [Header("Changing Material")]
     [Tooltip("please put the transform containing all mesh parts of the character here")]
     public Transform meshParent;
-	public Transform helmetMesh;
+    public Transform helmetMesh;
     public int transitionTime;
 
     private int playerID = 0;
@@ -43,11 +43,12 @@ public class PlayerFlux : MonoBehaviour
             if (part.GetComponent<Renderer>())
                 materialList.Add(part.GetComponent<Renderer>().material);
         }
-		if (helmetMesh.GetComponent<Renderer>()) {
-			materialList.Add(helmetMesh.GetComponent<Renderer>().material);
-		}
-		
-		audioObj = GameObject.FindGameObjectWithTag("audio");
+        if (helmetMesh.GetComponent<Renderer>())
+        {
+            materialList.Add(helmetMesh.GetComponent<Renderer>().material);
+        }
+
+        audioObj = GameObject.FindGameObjectWithTag("audio");
 
     }
 
@@ -65,10 +66,11 @@ public class PlayerFlux : MonoBehaviour
             gm.ColorSwitch();
             gm.textFluxP1.text = "Spark: " + gm.fluxPlayer.ToString();
             gm.textFluxP2.text = "Spark: " + gm.fluxPlayer.ToString();
-			gm.StartCoroutine("FluxColliderSeconds");
-			
+            gm.StartCoroutine("FluxColliderSeconds");
+            Spectator._instance.SwitchCam(camera);
             Destroy(other.gameObject);
-			audioObj.GetComponent<GeneralAudio>().SparkSound();
+
+            audioObj.GetComponent<GeneralAudio>().SparkSound();
         }
 
         //on stepping on platform while holding flux, claim it
@@ -81,7 +83,7 @@ public class PlayerFlux : MonoBehaviour
                 platform.ChangeColorTo(playerID, playerColor);
                 gm.updateScore();
                 gm.SpeedPlayers();
-				audioObj.GetComponent<GeneralAudio>().CheckPointSound();
+                audioObj.GetComponent<GeneralAudio>().CheckPointSound();
             }
         }
 
@@ -121,8 +123,8 @@ public class PlayerFlux : MonoBehaviour
                     gm.StartCoroutine("FluxColliderSeconds");
                     isFluxCaptured = false;
                     currFluxCaptureTime = 0;
-					
-					audioObj.GetComponent<GeneralAudio>().SparkSound();
+                    Spectator._instance.SwitchCam(camera);
+                    audioObj.GetComponent<GeneralAudio>().SparkSound();
 
 
                 }
