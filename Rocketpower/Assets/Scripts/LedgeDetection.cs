@@ -82,6 +82,10 @@ public class LedgeDetection : MonoBehaviour
         //check if there is an object in front of the player
         if (Physics.Raycast(origin, transform.forward, out fwdHit, 1.5f))
         {
+            if (fwdHit.transform.tag == "noclimb")
+            {
+                return new Ledge(Vector3.zero, Vector3.one, Vector3.zero, true);
+            }
             if (fwdHit.transform.tag == "outer")
             {
                 return new Ledge(Vector3.up * 300, transform.position, Vector3.up, false);
