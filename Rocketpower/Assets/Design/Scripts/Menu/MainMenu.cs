@@ -10,6 +10,8 @@ public class MainMenu : MonoBehaviour
     private GameObject StoreSelected;
     public string LevelToLoad = "";
 
+    public string LevelToLoad2 = "";
+
     public UnityEngine.UI.Toggle invert_Y, jumpOnPress;
 
     public void Start()
@@ -23,8 +25,8 @@ public class MainMenu : MonoBehaviour
 
     public void Update()
     {
-        Settings.GameSettings.invert_Y = invert_Y.isOn;
-        Settings.GameSettings.jumpOnPress = jumpOnPress;
+        // Settings.GameSettings.invert_Y = invert_Y.isOn;
+        // Settings.GameSettings.jumpOnPress = jumpOnPress;
 
         if (ES.currentSelectedGameObject != StoreSelected)
         {
@@ -42,8 +44,15 @@ public class MainMenu : MonoBehaviour
     public void StartLevel1()
     {
         SceneManager.LoadScene(LevelToLoad);
-        Settings.GameSettings.invert_Y = invert_Y.isOn;
-        Settings.GameSettings.jumpOnPress = jumpOnPress.isOn;
+        // Settings.GameSettings.invert_Y = invert_Y.isOn;
+        // Settings.GameSettings.jumpOnPress = jumpOnPress.isOn;
+    }
+
+    public void StartLevel2()
+    {
+        SceneManager.LoadScene(LevelToLoad2);
+        // Settings.GameSettings.invert_Y = invert_Y.isOn;
+        // Settings.GameSettings.jumpOnPress = jumpOnPress.isOn;
     }
 
     public void QuitGame()

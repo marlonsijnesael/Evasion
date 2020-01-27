@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine;
 public class FluxManager : MonoBehaviour
 {
     #region Public Script References
@@ -27,7 +28,7 @@ public class FluxManager : MonoBehaviour
     [Header("GameMode")]
     #region Flux Player + Score
     public PlayerFlux fluxPlayer;
-	private bool sparkIsBeingHeld = false;
+    private bool sparkIsBeingHeld = false;
     public bool gameOver;
     [HideInInspector] public SparkVFX sparkVFX;
     public int player1score, player2score;
@@ -101,7 +102,10 @@ public class FluxManager : MonoBehaviour
 
     private void Awake()
     {
-        UI.SetActive(true);
+        if (SceneManager.GetActiveScene().name != "WarmUpArena")
+        {
+            UI.SetActive(true);
+        }
         platformArray = GameObject.FindGameObjectsWithTag("ColorPlatform");
         //StartCoroutine(StartRoundCountDown());
         Time.timeScale = 1;
@@ -302,14 +306,16 @@ public class FluxManager : MonoBehaviour
             sliderFillImage.color = player1color;
         }
 
-		if (sparkIsBeingHeld) {
-			player1.TurnFlux(fluxPlayer == player1);
-			player2.TurnFlux(fluxPlayer == player2);
-		}
-		else {
-			fluxPlayer.TurnFlux(true);
-			sparkIsBeingHeld = true;
-		}
+        if (sparkIsBeingHeld)
+        {
+            player1.TurnFlux(fluxPlayer == player1);
+            player2.TurnFlux(fluxPlayer == player2);
+        }
+        else
+        {
+            fluxPlayer.TurnFlux(true);
+            sparkIsBeingHeld = true;
+        }
 
         if (sparkVFX != null)
         {
@@ -523,13 +529,13 @@ public class FluxManager : MonoBehaviour
         }
         if (roundCountdownTime <= 0 && player1score == player2score)
         {
-			isGameRoundTimerRunning = false;
+            isGameRoundTimerRunning = false;
             StartCoroutine(Overtime());
         }
-        else if(roundCountdownTime <= 0)
+        else if (roundCountdownTime <= 0)
         {
             isGameRoundTimerRunning = false;
-			Time.timeScale = 0;
+            Time.timeScale = 0;
             WinScreen();
         }
         yield return new WaitForEndOfFrame();
@@ -555,8 +561,8 @@ public class FluxManager : MonoBehaviour
             ToggleUIText(winCountDownTextD1, winCountDownTextD2, winCountDownTime);
         }
         if (winCountDownTime < 1 && !stopWinCountDown)
-        {   
-			Time.timeScale = 0;
+        {
+            Time.timeScale = 0;
             WinScreen();
         }
         yield return new WaitForEndOfFrame();
@@ -571,7 +577,7 @@ public class FluxManager : MonoBehaviour
         {
             yield return null;
         }
-		Time.timeScale = 0;
+        Time.timeScale = 0;
         WinScreen();
         yield return new WaitForEndOfFrame();
     }
@@ -606,8 +612,8 @@ public class FluxManager : MonoBehaviour
     {
         ToggleUI(inRoundUI_D1, inRoundUI_D2, false);
         ToggleUI(endScreenD1, endScreenD2, true);
-		gameOver = true;
-		
+        gameOver = true;
+
         if (player1score > player2score)
         {
             endTextD1.text = "You Win";
