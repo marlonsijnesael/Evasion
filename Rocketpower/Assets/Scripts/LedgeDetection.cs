@@ -74,7 +74,7 @@ public class LedgeDetection : MonoBehaviour
         float totalHeight = 0;
         float playerHeight = 1.80f;
         Vector3 tmpPos = Vector3.zero;
-        Vector3 origin = transform.position + Vector3.up;
+        Vector3 origin = transform.position + (Vector3.up * 2);
         float maxLedgeHeight = 10;
 
         // Debug.DrawLine(origin, origin + (transform.forward * 1.5f), Color.green);
@@ -122,12 +122,13 @@ public class LedgeDetection : MonoBehaviour
         if (Physics.Linecast(transform.position + Vector3.up, transform.position + transform.forward + Vector3.up, out forwardHit))
         {
             float cosine = Vector3.Angle(transform.forward, forwardHit.normal);
-            if (cosine < climbAngle)
-                return new Ledge(Vector3.zero, Vector3.one, Vector3.zero, true);
+            // if (cosine < climbAngle)
+            //     return new Ledge(Vector3.zero, Vector3.one, Vector3.zero, true);
 
             Debug.DrawLine(transform.position + Vector3.up, transform.position + transform.forward + Vector3.up, Color.green);
             if (forwardHit.transform.CompareTag("holowall"))
             {
+                nameObj = ledgeHit.transform.name;
                 return new Ledge(transform.position + (Vector3.up), Vector3.zero, transform.position, false);
             }
             else
@@ -136,6 +137,7 @@ public class LedgeDetection : MonoBehaviour
                 if (!Physics.Raycast(origin + dir, Vector3.down, out ledgeHit, maxDist))
                 {
                     Debug.DrawRay(origin + dir, Vector3.down * maxDist, Color.green);
+                    nameObj = ledgeHit.transform.name;
                 }
 
                 else
@@ -145,7 +147,7 @@ public class LedgeDetection : MonoBehaviour
                     Debug.DrawLine(transform.position + Vector3.up, transform.position + Vector3.up * 2.5f, Color.green);
                     if (Physics.Linecast(transform.position + Vector3.up, transform.position + Vector3.up))
                     {
-
+                        nameObj = ledgeHit.transform.name;
                     }
                     else
                     {

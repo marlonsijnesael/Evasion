@@ -394,7 +394,7 @@ public class StateMachine : MonoBehaviour
         }
         currentMove.Jump(this, boostedJumpPower);
         virtualController.Time_Hold_Button_A = 1f;
-	    }
+    }
 
     /// <summary>
     /// Checks for collision with ground underneath player
@@ -468,6 +468,7 @@ public class StateMachine : MonoBehaviour
             ledge = ledgeDetector.GetLedgeV2();
             if (!ledge.empty)
             {
+                SetInitVel();
                 SwitchStates(State.CLIMB, ClimbMove);
             }
         }

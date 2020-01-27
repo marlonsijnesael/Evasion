@@ -49,7 +49,7 @@ public class ClimbMove : Move
         Debug.Log("climbig " + climbDir + " y: " + yPosOrigin);
 
 
-        if (_owner.transform.position.y < yPosOrigin.y && _owner.virtualController.ClimbButtonPressed && !_owner.virtualController.WallrunButtonPressed && _owner.timeClimbing < maxClimbTime)
+        if (_owner.transform.position.y < maxClimbHeight && _owner.transform.position.y < yPosOrigin.y && _owner.virtualController.ClimbButtonPressed && !_owner.virtualController.WallrunButtonPressed && _owner.timeClimbing < maxClimbTime)
         {
             // _owner.jumpVec.y = climbDir.y + climbSpeed;
             _owner.moveDir = Vector3.zero;
