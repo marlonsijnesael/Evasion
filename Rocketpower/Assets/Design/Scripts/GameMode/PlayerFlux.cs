@@ -70,6 +70,7 @@ public class PlayerFlux : MonoBehaviour
             gm.textFluxP2.text = "Spark: " + gm.fluxPlayer.ToString();
             gm.StartCoroutine("FluxColliderSeconds");
             Spectator._instance.SwitchCam(camera);
+            StartCoroutine(Spectator._instance.LerpCamToPos(2));
             Destroy(other.gameObject);
             GetComponent<VirtualController>().SetVibration();
 
@@ -127,6 +128,7 @@ public class PlayerFlux : MonoBehaviour
                     isFluxCaptured = false;
                     currFluxCaptureTime = 0;
                     Spectator._instance.SwitchCam(camera);
+                    StartCoroutine(Spectator._instance.LerpCamToPos(0.5f));
                     audioObj.GetComponent<GeneralAudio>().SparkSound();
                     GetComponent<VirtualController>().SetVibration();
                     other.transform.parent.GetComponent<VirtualController>().SetVibration();
