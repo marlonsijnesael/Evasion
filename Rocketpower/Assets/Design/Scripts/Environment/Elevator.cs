@@ -20,8 +20,9 @@ public class Elevator : MonoBehaviour
         Vector3 start = startPoint.position;
         player.transform.SetParent(Hexagon.transform);
         statemachine.maxSpeed = 0;
-        StartCoroutine(gm.FadeCanvasGroup(gm.cg_PreRoundP1, gm.cg_PreRoundP1.alpha, 0, 1));
-        StartCoroutine(gm.FadeCanvasGroup(gm.cg_PreRoundP2, gm.cg_PreRoundP2.alpha, 0, 1));
+        StartCoroutine(gm.FadeCanvasGroup(gm.cg_PreRoundD1, gm.cg_PreRoundD1.alpha, 0, 1));
+        StartCoroutine(gm.FadeCanvasGroup(gm.cg_PreRoundD2, gm.cg_PreRoundD2.alpha, 0, 1));
+        StartCoroutine(gm.FadeCanvasGroup(gm.cg_PreRoundD3, gm.cg_PreRoundD3.alpha, 0, 1));
         // statemachine.currentMove = statemachine.idleMove;
         // statemachine.currentMove.ExitState(statemachine);
         // statemachine.idleMove.EnterState(statemachine);
@@ -57,6 +58,7 @@ public class Elevator : MonoBehaviour
             gm.readyP1 = true;
             gm.readyToggleD1_P1.isOn = true;
             gm.readyToggleD2_P1.isOn = true;
+            gm.readyToggleD3_P1.isOn = true;
         }
 
         if (other.transform.tag == "Player2")
@@ -64,6 +66,7 @@ public class Elevator : MonoBehaviour
             gm.readyP2 = true;
             gm.readyToggleD1_P2.isOn = true;
             gm.readyToggleD2_P2.isOn = true;
+            gm.readyToggleD3_P2.isOn = true;
         }
 
         if (gm.bothPlayersReady && isElevatorRunOnce)
@@ -81,6 +84,7 @@ public class Elevator : MonoBehaviour
             gm.readyP1 = false;
             gm.readyToggleD1_P1.isOn = false;
             gm.readyToggleD2_P1.isOn = false;
+            gm.readyToggleD3_P1.isOn = false;
         }
 
         if (other.transform.tag == "Player2")
@@ -88,6 +92,7 @@ public class Elevator : MonoBehaviour
             gm.readyP2 = false;
             gm.readyToggleD1_P2.isOn = false;
             gm.readyToggleD2_P2.isOn = false;
+            gm.readyToggleD3_P2.isOn = false;
         }
     }
 }

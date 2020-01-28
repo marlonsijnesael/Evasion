@@ -66,8 +66,9 @@ public class PlayerFlux : MonoBehaviour
         {
             gm.fluxPlayer = this;
             gm.ColorSwitch();
-            gm.textFluxP1.text = "Spark: " + gm.fluxPlayer.ToString();
-            gm.textFluxP2.text = "Spark: " + gm.fluxPlayer.ToString();
+            gm.textFluxD1.text = "Spark: " + gm.fluxPlayer.ToString();
+            gm.textFluxD2.text = "Spark: " + gm.fluxPlayer.ToString();
+            gm.textFluxD3.text = "Spark: " + gm.fluxPlayer.ToString();
             gm.StartCoroutine("FluxColliderSeconds");
             Spectator._instance.SwitchCam(camera);
             StartCoroutine(Spectator._instance.LerpCamToPos(2));
@@ -117,13 +118,13 @@ public class PlayerFlux : MonoBehaviour
                 gm.sliderCaptureTime.value = currFluxCaptureTime;
                 if (currFluxCaptureTime > gm.fluxCaptureTime)
                 {
-
                     gm.fluxPlayer = this;
                     gm.ColorSwitch();
                     gm.SpeedPlayers();
                     gm.sliderCaptureObject.SetActive(false);
-                    gm.textFluxP1.text = "Spark: " + gm.fluxPlayer.ToString();
-                    gm.textFluxP2.text = "Spark: " + gm.fluxPlayer.ToString();
+                    gm.textFluxD1.text = "Spark: " + gm.fluxPlayer.ToString();
+                    gm.textFluxD2.text = "Spark: " + gm.fluxPlayer.ToString();
+                    gm.textFluxD3.text = "Spark: " + gm.fluxPlayer.ToString();
                     gm.StartCoroutine("FluxColliderSeconds");
                     isFluxCaptured = false;
                     currFluxCaptureTime = 0;
@@ -132,7 +133,6 @@ public class PlayerFlux : MonoBehaviour
                     audioObj.GetComponent<GeneralAudio>().SparkSound();
                     GetComponent<VirtualController>().SetVibration();
                     other.transform.parent.GetComponent<VirtualController>().SetVibration();
-
                 }
             }
             else

@@ -6,24 +6,23 @@ using UnityEngine.UI;
 using UnityEngine;
 public class FluxManager : MonoBehaviour
 {
-	FMOD.Studio.EventInstance Stinger;
+    FMOD.Studio.EventInstance Stinger;
     FMOD.Studio.ParameterInstance STV;
-	
-	FMOD.Studio.EventInstance Countdown;
+
+    FMOD.Studio.EventInstance Countdown;
     FMOD.Studio.ParameterInstance CV, CVC;
-	
-	float CVCvalue = 0;
-	
+
+    float CVCvalue = 0;
+
     #region Public Script References
     [HideInInspector] public GameObject UI;
-    [HideInInspector] public GameObject canvas_D1, canvas_D2;
+    public GameObject canvas_D1, canvas_D2, canvas_D3;
     [HideInInspector] public StateMachine smP1;
     [HideInInspector] public StateMachine smP2;
     [HideInInspector] public PlayerFlux player1;
     [HideInInspector] public PlayerFlux player2;
-    [HideInInspector] public GameObject preRoundD1, preRoundD2;
+    public GameObject preRoundD1, preRoundD2, preRoundD3;
     [HideInInspector] public VirtualController vControllerP1, vControllerP2;
-    public Elevator elevatorP1, elevatorP2;
     #endregion
 
     #region Player Variables
@@ -42,7 +41,7 @@ public class FluxManager : MonoBehaviour
     public int player1score, player2score;
     private int scoreDiff;
     private int pastPlayer1Score, pastPlayer2Score;
-    [HideInInspector] public Text textFluxP1, textFluxP2;
+    public Text textFluxD1, textFluxD2, textFluxD3;
     #endregion
     #region Flux Capture
     public GameObject jumpPadOrange, jumpPadBlue;
@@ -59,20 +58,23 @@ public class FluxManager : MonoBehaviour
     private int startCountdownTime = 3;
     #endregion
     #region Pre-Round Objects
-    [HideInInspector] public GameObject startCountdownObjectD1, startCountdownObjectD2;
-    [HideInInspector] public Text startCountdownTextD1, startCountdownTextD2;
-    public GameObject readyChecksD1, readyChecksD2;
-    public GameObject stasisP1, stasisP2;
+    public Elevator elevatorP1, elevatorP2;
+    public GameObject startCountdownObjectD1, startCountdownObjectD2, startCountdownObjectD3;
+    public Text startCountdownTextD1, startCountdownTextD2, startCountdownTextD3;
+    public GameObject readyChecksD1, readyChecksD2, readyChecksD3;
+    [HideInInspector] public GameObject stasisP1, stasisP2;
     public Toggle readyToggleD1_P1, readyToggleD1_P2;
     public Toggle readyToggleD2_P1, readyToggleD2_P2;
+    public Toggle readyToggleD3_P1, readyToggleD3_P2;
     #endregion
     #region In-Round
     public int roundCountdownTime = 120;
     [HideInInspector] public bool isStartRoundTimer = true;
     [HideInInspector] public bool isGameRoundTimerRunning;
-    [HideInInspector] public Text roundCountdownText_D1, roundCountdownText_D2;
-    [HideInInspector] public GameObject roundCountdownObject_D1, roundCountdownObject_D2;
-    [HideInInspector] public GameObject inRoundUI_D1, inRoundUI_D2;
+    public Text roundCountdownText_D1, roundCountdownText_D2, roundCountdownText_D3;
+    public GameObject roundCountdownObject_D1, roundCountdownObject_D2, roundCountdownObject_D3;
+    public GameObject inRoundUI_D1, inRoundUI_D2, inRoundUI_D3;
+    public GameObject floor;
     public GameObject rings;
     #endregion
 
@@ -83,13 +85,13 @@ public class FluxManager : MonoBehaviour
     [HideInInspector] public bool isWinCountDownActive;
     public int winStartCountdownTime = 20;
     private int winCountDownTime;
-    [HideInInspector] public Text playerWinningTextD1, playerWinningTextD2;
-    [HideInInspector] public GameObject playerWinningD1, playerWinningD2;
-    [HideInInspector] public GameObject winCountDownD1, winCountDownD2;
-    [HideInInspector] public Text winCountDownTextD1, winCountDownTextD2;
-    public GameObject overtimeObjD1, overtimeObjD2;
-    [HideInInspector] public GameObject endScreenD1, endScreenD2;
-    [HideInInspector] public Text endTextD1, endTextD2;
+    public Text playerWinningTextD1, playerWinningTextD2, playerWinningTextD3;
+    public GameObject playerWinningD1, playerWinningD2, playerWinningD3;
+    public GameObject winCountDownD1, winCountDownD2, winCountDownD3;
+    public Text winCountDownTextD1, winCountDownTextD2, winCountDownTextD3;
+    public GameObject overtimeObjD1, overtimeObjD2, overtimeObjD3;
+    public GameObject endScreenD1, endScreenD2, endScreenD3;
+    public Text endTextD1, endTextD2, endTextD3;
     #endregion
 
     [Header("UI")]
@@ -102,10 +104,12 @@ public class FluxManager : MonoBehaviour
     public int scoreHexagonSize = 75;
     private List<ScoreUI> scoreHexagonList_D1 = new List<ScoreUI>();
     private List<ScoreUI> scoreHexagonList_D2 = new List<ScoreUI>();
+    private List<ScoreUI> scoreHexagonList_D3 = new List<ScoreUI>();
     GameObject[] platformArray;
-    [HideInInspector] public GameObject scoreArrow_D1, scoreArrow_D2;
-    public CanvasGroup cg_PreRoundP1, cg_InRoundP1;
-    public CanvasGroup cg_PreRoundP2, cg_InRoundP2;
+    [HideInInspector] public GameObject scoreArrow_D1, scoreArrow_D2, scoreArrow_D3;
+    public CanvasGroup cg_PreRoundD1, cg_InRoundD1;
+    public CanvasGroup cg_PreRoundD2, cg_InRoundD2;
+    public CanvasGroup cg_PreRoundD3, cg_InRoundD3;
     #endregion
 
     private void Awake()
@@ -129,15 +133,17 @@ public class FluxManager : MonoBehaviour
         //hex.transform.SetParent(canvas.transform);
         CleanDualScreenTest(canvas_D1.transform, scoreHexagonList_D1, 1);
         CleanDualScreenTest(canvas_D2.transform, scoreHexagonList_D2, 2);
-		
-		Stinger = FMODUnity.RuntimeManager.CreateInstance("event:/SD/Stinger");
-		Stinger.getParameter("STV", out STV);
-		STV.setValue(0.9f);
-		
-		Countdown = FMODUnity.RuntimeManager.CreateInstance("event:/SD/Countdown");
-		Countdown.getParameter("CV", out CV);
-		Countdown.getParameter("CVC", out CVC);
-		CV.setValue(0.85f);
+        CleanDualScreenTest(canvas_D3.transform, scoreHexagonList_D3, 3);
+
+
+        Stinger = FMODUnity.RuntimeManager.CreateInstance("event:/SD/Stinger");
+        Stinger.getParameter("STV", out STV);
+        STV.setValue(0.9f);
+
+        Countdown = FMODUnity.RuntimeManager.CreateInstance("event:/SD/Countdown");
+        Countdown.getParameter("CV", out CV);
+        Countdown.getParameter("CVC", out CVC);
+        CV.setValue(0.85f);
     }
 
     private void CleanDualScreenTest(Transform parentCanvas, List<ScoreUI> hexagonList, int display)
@@ -161,24 +167,28 @@ public class FluxManager : MonoBehaviour
         if (display == 1)
             scoreArrow_D1 = newArrow;
         else
+        {
+
             scoreArrow_D2 = newArrow;
+            scoreArrow_D3 = newArrow;
+        }
     }
 
     private void Update()
     {
         //Press 1 or 2 to change flux
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            fluxPlayer = player1;
-            textFluxP1.text = "Spark: " + fluxPlayer.ToString();
-            textFluxP2.text = "Spark: " + fluxPlayer.ToString();
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            fluxPlayer = player2;
-            textFluxP1.text = "Spark: " + fluxPlayer.ToString();
-            textFluxP2.text = "Spark: " + fluxPlayer.ToString();
-        }
+        // if (Input.GetKeyDown(KeyCode.Alpha1))
+        // {
+        //     fluxPlayer = player1;
+        //     textFluxP1.text = "Spark: " + fluxPlayer.ToString();
+        //     textFluxP2.text = "Spark: " + fluxPlayer.ToString();
+        // }
+        // if (Input.GetKeyDown(KeyCode.Alpha2))
+        // {
+        //     fluxPlayer = player2;
+        //     textFluxP1.text = "Spark: " + fluxPlayer.ToString();
+        //     textFluxP2.text = "Spark: " + fluxPlayer.ToString();
+        // }
         startRound();
 
         //Debug.Log(isWinCountDownActive);
@@ -336,6 +346,7 @@ public class FluxManager : MonoBehaviour
 
         if (sparkVFX != null)
         {
+            floor.gameObject.SetActive(true);
             ToggleUI(jumpPadOrange, jumpPadBlue, false);
             Color c;
             if (fluxPlayer == player1)
@@ -352,18 +363,22 @@ public class FluxManager : MonoBehaviour
         //set scorearrow position and color
         scoreArrow_D1.SetActive(true);
         scoreArrow_D2.SetActive(true);
+        scoreArrow_D3.SetActive(true);
         if (fluxPlayer == player1)
         {
             scoreArrow_D1.GetComponent<Image>().color = player1color;
             scoreArrow_D1.transform.localRotation = Quaternion.Euler(0, 0, 0);
             scoreArrow_D1.transform.localPosition = scoreHexagonList_D1[Mathf.Clamp(player1score - 1, 0, platformsTotal - 1)].transform.localPosition;
             scoreArrow_D1.transform.localPosition = scoreHexagonList_D2[Mathf.Clamp(player1score - 1, 0, platformsTotal - 1)].transform.localPosition;
+            scoreArrow_D1.transform.localPosition = scoreHexagonList_D3[Mathf.Clamp(player1score - 1, 0, platformsTotal - 1)].transform.localPosition;
+
 
             scoreArrow_D1.GetComponent<Image>().sprite = scoreArrowSprite;
             if (player1score == 0)
             {
                 scoreArrow_D1.transform.localPosition = scoreHexagonList_D1[Mathf.Clamp(player1score - 1, 0, platformsTotal - 1)].transform.localPosition - new Vector3(scoreHexagonSize, 0, 0);
                 scoreArrow_D1.transform.localPosition = scoreHexagonList_D2[Mathf.Clamp(player1score - 1, 0, platformsTotal - 1)].transform.localPosition - new Vector3(scoreHexagonSize, 0, 0);
+                scoreArrow_D1.transform.localPosition = scoreHexagonList_D3[Mathf.Clamp(player1score - 1, 0, platformsTotal - 1)].transform.localPosition - new Vector3(scoreHexagonSize, 0, 0);
 
                 scoreArrow_D1.GetComponent<Image>().sprite = scoreArrowArrowSprite;
             }
@@ -374,12 +389,15 @@ public class FluxManager : MonoBehaviour
             scoreArrow_D1.transform.localRotation = Quaternion.Euler(0, 0, 180);
             scoreArrow_D1.transform.localPosition = scoreHexagonList_D1[Mathf.Clamp(platformsTotal - player2score, 0, platformsTotal - 1)].transform.localPosition;
             scoreArrow_D1.transform.localPosition = scoreHexagonList_D2[Mathf.Clamp(platformsTotal - player2score, 0, platformsTotal - 1)].transform.localPosition;
+            scoreArrow_D1.transform.localPosition = scoreHexagonList_D3[Mathf.Clamp(platformsTotal - player2score, 0, platformsTotal - 1)].transform.localPosition;
 
             scoreArrow_D1.GetComponent<Image>().sprite = scoreArrowSprite;
             if (player2score == 0)
             {
                 scoreArrow_D1.transform.localPosition = scoreHexagonList_D1[Mathf.Clamp(platformsTotal - player2score, 0, platformsTotal - 1)].transform.localPosition + new Vector3(scoreHexagonSize, 0, 0);
                 scoreArrow_D1.transform.localPosition = scoreHexagonList_D2[Mathf.Clamp(platformsTotal - player2score, 0, platformsTotal - 1)].transform.localPosition + new Vector3(scoreHexagonSize, 0, 0);
+                scoreArrow_D1.transform.localPosition = scoreHexagonList_D3[Mathf.Clamp(platformsTotal - player2score, 0, platformsTotal - 1)].transform.localPosition + new Vector3(scoreHexagonSize, 0, 0);
+
 
                 scoreArrow_D1.GetComponent<Image>().sprite = scoreArrowArrowSprite;
             }
@@ -416,14 +434,14 @@ public class FluxManager : MonoBehaviour
             //change white to player 1
             scoreHexagonList_D1[player1score - 1].StartChangingColor(Color.white, player1color);
             scoreHexagonList_D2[player1score - 1].StartChangingColor(Color.white, player1color);
-
+            scoreHexagonList_D3[player1score - 1].StartChangingColor(Color.white, player1color);
         }
         else if (pastPlayer1Score == player1score && pastPlayer2Score < player2score)
         {
             // change white to player 2
             scoreHexagonList_D1[platformsTotal - player2score].StartChangingColor(Color.white, player2color);
             scoreHexagonList_D2[platformsTotal - player2score].StartChangingColor(Color.white, player2color);
-
+            scoreHexagonList_D3[platformsTotal - player2score].StartChangingColor(Color.white, player2color);
         }
         else if (pastPlayer1Score < player1score && pastPlayer2Score > player2score)
         {
@@ -432,7 +450,7 @@ public class FluxManager : MonoBehaviour
                 //change one from player 2 to player 1
                 scoreHexagonList_D1[player1score - 1].StartChangingColor(player2color, player1color);
                 scoreHexagonList_D2[player1score - 1].StartChangingColor(player2color, player1color);
-
+                scoreHexagonList_D3[player1score - 1].StartChangingColor(player2color, player1color);
             }
             else
             {
@@ -441,6 +459,8 @@ public class FluxManager : MonoBehaviour
                 scoreHexagonList_D1[platformsTotal - player2score - 1].StartChangingColor(player2color, Color.white);
                 scoreHexagonList_D2[player1score - 1].StartChangingColor(Color.white, player1color);
                 scoreHexagonList_D2[platformsTotal - player2score - 1].StartChangingColor(player2color, Color.white);
+                scoreHexagonList_D3[player1score - 1].StartChangingColor(Color.white, player1color);
+                scoreHexagonList_D3[platformsTotal - player2score - 1].StartChangingColor(player2color, Color.white);
             }
         }
         else if (pastPlayer1Score > player1score && pastPlayer2Score < player2score)
@@ -450,7 +470,7 @@ public class FluxManager : MonoBehaviour
                 //change one from player 1 to player 2
                 scoreHexagonList_D1[platformsTotal - player2score].StartChangingColor(player1color, player2color);
                 scoreHexagonList_D2[platformsTotal - player2score].StartChangingColor(player1color, player2color);
-
+                scoreHexagonList_D3[platformsTotal - player2score].StartChangingColor(player1color, player2color);
             }
             else
             {
@@ -459,6 +479,8 @@ public class FluxManager : MonoBehaviour
                 scoreHexagonList_D1[player1score].StartChangingColor(player1color, Color.white);
                 scoreHexagonList_D2[platformsTotal - player2score].StartChangingColor(Color.white, player2color);
                 scoreHexagonList_D2[player1score].StartChangingColor(player1color, Color.white);
+                scoreHexagonList_D3[platformsTotal - player2score].StartChangingColor(Color.white, player2color);
+                scoreHexagonList_D3[player1score].StartChangingColor(player1color, Color.white);
             }
         }
 
@@ -467,6 +489,7 @@ public class FluxManager : MonoBehaviour
         {
             scoreArrow_D1.transform.localPosition = scoreHexagonList_D1[Mathf.Clamp(player1score - 1, 0, platformsTotal - 1)].transform.localPosition;
             scoreArrow_D1.transform.localPosition = scoreHexagonList_D2[Mathf.Clamp(player1score - 1, 0, platformsTotal - 1)].transform.localPosition;
+            scoreArrow_D1.transform.localPosition = scoreHexagonList_D3[Mathf.Clamp(player1score - 1, 0, platformsTotal - 1)].transform.localPosition;
 
             scoreArrow_D1.GetComponent<Image>().sprite = scoreArrowSprite;
         }
@@ -474,6 +497,7 @@ public class FluxManager : MonoBehaviour
         {
             scoreArrow_D1.transform.localPosition = scoreHexagonList_D1[Mathf.Clamp(platformsTotal - player2score, 0, platformsTotal - 1)].transform.localPosition;
             scoreArrow_D1.transform.localPosition = scoreHexagonList_D2[Mathf.Clamp(platformsTotal - player2score, 0, platformsTotal - 1)].transform.localPosition;
+            scoreArrow_D1.transform.localPosition = scoreHexagonList_D3[Mathf.Clamp(platformsTotal - player2score, 0, platformsTotal - 1)].transform.localPosition;
 
             scoreArrow_D1.GetComponent<Image>().sprite = scoreArrowSprite;
         }
@@ -500,7 +524,7 @@ public class FluxManager : MonoBehaviour
 
         if (elevatorP1.isElevatorFinished && elevatorP2.isElevatorFinished && isStartRoundTimer)
         {
-            ToggleUI(readyChecksD1, readyChecksD2, false);
+            ToggleUI3(readyChecksD1, readyChecksD2, readyChecksD3, false);
             isStartRoundTimer = false;
             StartCoroutine(StartRoundCountdown());
         }
@@ -510,32 +534,34 @@ public class FluxManager : MonoBehaviour
     {
         rings.gameObject.SetActive(true);
         yield return new WaitForSeconds(4.5f);
-        ToggleUI(startCountdownObjectD1, startCountdownObjectD2, true);
-        ToggleUIText(startCountdownTextD1, startCountdownTextD2, startCountdownTime);
+        ToggleUI3(startCountdownObjectD1, startCountdownObjectD2, startCountdownObjectD3, true);
+        ToggleUIText3(startCountdownTextD1, startCountdownTextD2, startCountdownTextD3, startCountdownTime);
 
         while (startCountdownTime > 0)
         {
             yield return new WaitForSeconds(0.8f);
             startCountdownTime--;
-            ToggleUIText(startCountdownTextD1, startCountdownTextD2, startCountdownTime);
+            ToggleUIText3(startCountdownTextD1, startCountdownTextD2, startCountdownTextD3, startCountdownTime);
 
         }
         stasisP1.gameObject.SetActive(false);
         stasisP2.gameObject.SetActive(false);
         startCountdownTextD1.text = "GO!";
         startCountdownTextD2.text = "GO!";
+        startCountdownTextD3.text = "GO!";
         yield return new WaitForSeconds(0.5f);
         isGameRoundTimerRunning = true;
-        ToggleUI(startCountdownObjectD1, startCountdownObjectD2, false);
-        ToggleUIText(roundCountdownText_D1, roundCountdownText_D2, roundCountdownTime);
-        ToggleUI(inRoundUI_D1, inRoundUI_D2, true);
+        ToggleUI3(startCountdownObjectD1, startCountdownObjectD2, startCountdownObjectD3, false);
+        ToggleUIText3(roundCountdownText_D1, roundCountdownText_D2, roundCountdownText_D3, roundCountdownTime);
+        ToggleUI3(inRoundUI_D1, inRoundUI_D2, inRoundUI_D3, true);
 
-        StartCoroutine(FadeCanvasGroup(cg_InRoundP1, cg_InRoundP1.alpha, 1, 1.5f));
-        StartCoroutine(FadeCanvasGroup(cg_InRoundP2, cg_InRoundP2.alpha, 1, 1.5f));
+        StartCoroutine(FadeCanvasGroup(cg_InRoundD1, cg_InRoundD1.alpha, 1, 1.5f));
+        StartCoroutine(FadeCanvasGroup(cg_InRoundD2, cg_InRoundD2.alpha, 1, 1.5f));
+        StartCoroutine(FadeCanvasGroup(cg_InRoundD3, cg_InRoundD3.alpha, 1, 1.5f));
 
         StartCoroutine(GameRoundCountdown());
     }
-	
+
 
     IEnumerator GameRoundCountdown()
     {
@@ -543,18 +569,21 @@ public class FluxManager : MonoBehaviour
         {
             yield return new WaitForSeconds(1);
             roundCountdownTime--;
-            ToggleUIText(roundCountdownText_D1, roundCountdownText_D2, roundCountdownTime);
-			
-			if (roundCountdownTime <= 5) {
-				if (roundCountdownTime == 5) {
-					CVCvalue = 0;
-				}
-				CVC.setValue(CVCvalue);
-				if (CVCvalue < 6) {
-					CVCvalue = CVCvalue + 1;
-				}
-				Countdown.start();
-			}
+            ToggleUIText3(roundCountdownText_D1, roundCountdownText_D2, roundCountdownText_D3, roundCountdownTime);
+
+            if (roundCountdownTime <= 5)
+            {
+                if (roundCountdownTime == 5)
+                {
+                    CVCvalue = 0;
+                }
+                CVC.setValue(CVCvalue);
+                if (CVCvalue < 6)
+                {
+                    CVCvalue = CVCvalue + 1;
+                }
+                Countdown.start();
+            }
         }
         if (roundCountdownTime <= 0 && player1score == player2score)
         {
@@ -576,30 +605,35 @@ public class FluxManager : MonoBehaviour
         {
             playerWinningTextD1.text = "Green Holds All Holofields";
             playerWinningTextD2.text = "Green Holds All Holofields";
+            playerWinningTextD3.text = "Green Holds All Holofields";
         }
         else if (player2score > player1score)
         {
             playerWinningTextD1.text = "Blue Holds All Holofields";
             playerWinningTextD2.text = "Blue Holds All Holofields";
+            playerWinningTextD3.text = "Blue Holds All Holofields";
         }
 
         while (winCountDownTime >= 0 && isWinCountDownActive && !stopWinCountDown)
         {
             yield return new WaitForSeconds(1);
-			
+
             winCountDownTime--;
-            ToggleUIText(winCountDownTextD1, winCountDownTextD2, winCountDownTime);
-			
-			if (winCountDownTime <= 5) {
-				if (winCountDownTime == 5) {
-					CVCvalue = 0;
-				}
-				CVC.setValue(CVCvalue);
-				if (CVCvalue < 6) {
-					CVCvalue = CVCvalue + 1;
-				}
-				Countdown.start();
-			}
+            ToggleUIText3(winCountDownTextD1, winCountDownTextD2, winCountDownTextD3, winCountDownTime);
+
+            if (winCountDownTime <= 5)
+            {
+                if (winCountDownTime == 5)
+                {
+                    CVCvalue = 0;
+                }
+                CVC.setValue(CVCvalue);
+                if (CVCvalue < 6)
+                {
+                    CVCvalue = CVCvalue + 1;
+                }
+                Countdown.start();
+            }
         }
         if (winCountDownTime < 1 && !stopWinCountDown)
         {
@@ -612,8 +646,8 @@ public class FluxManager : MonoBehaviour
 
     IEnumerator Overtime()
     {
-        ToggleUI(roundCountdownObject_D1, roundCountdownObject_D2, false);
-        ToggleUI(overtimeObjD1, overtimeObjD2, true);
+        ToggleUI3(roundCountdownObject_D1, roundCountdownObject_D2, roundCountdownObject_D3, false);
+        ToggleUI3(overtimeObjD1, overtimeObjD2, overtimeObjD3, true);
         while (player1score == player2score)
         {
             yield return null;
@@ -631,46 +665,49 @@ public class FluxManager : MonoBehaviour
             stopWinCountDown = false;
             isGameRoundTimerRunning = false;
             StartCoroutine(winCountDown());
-            ToggleUIText(winCountDownTextD1, winCountDownTextD2, winStartCountdownTime);
-            ToggleUI(winCountDownD1, winCountDownD2, true);
-            ToggleUI(playerWinningD1, playerWinningD2, true);
-            ToggleUI(roundCountdownObject_D1, roundCountdownObject_D2, false);
+            ToggleUIText3(winCountDownTextD1, winCountDownTextD2, winCountDownTextD3, winStartCountdownTime);
+            ToggleUI3(winCountDownD1, winCountDownD2, winCountDownD3, true);
+            ToggleUI3(playerWinningD1, playerWinningD2, playerWinningD3, true);
+            ToggleUI3(roundCountdownObject_D1, roundCountdownObject_D2, roundCountdownObject_D3, false);
 
         }
         else if (isWinCountDownActive)
         {
             isWinCountDownActive = false;
             isGameRoundTimerRunning = true;
-            ToggleUI(winCountDownD1, winCountDownD2, false);
-            ToggleUI(playerWinningD1, playerWinningD2, false);
+            ToggleUI3(winCountDownD1, winCountDownD2, winCountDownD3, false);
+            ToggleUI3(playerWinningD1, playerWinningD2, playerWinningD3, false);
             StartCoroutine(GameRoundCountdown());
-            ToggleUI(roundCountdownObject_D1, roundCountdownObject_D2, true);
+            ToggleUI3(roundCountdownObject_D1, roundCountdownObject_D2, roundCountdownObject_D3, true);
         }
     }
 
 
     public void WinScreen()
     {
-        ToggleUI(inRoundUI_D1, inRoundUI_D2, false);
-        ToggleUI(endScreenD1, endScreenD2, true);
+        ToggleUI3(inRoundUI_D1, inRoundUI_D2, inRoundUI_D3, false);
+        ToggleUI3(endScreenD1, endScreenD2, endScreenD3, true);
         gameOver = true;
-		
-		Stinger.start();
+
+        Stinger.start();
 
         if (player1score > player2score)
         {
             endTextD1.text = "You Win";
             endTextD2.text = "You Lose";
+            endTextD3.text = "Green Wins";
         }
         if (player2score > player1score)
         {
             endTextD1.text = "You Lose";
             endTextD2.text = "You Win";
+            endTextD3.text = "Blue Wins";
         }
         if (player1score == player2score)
         {
             endTextD1.text = "Draw";
             endTextD2.text = "Draw";
+            endTextD3.text = "Draw";
         }
     }
 
@@ -706,10 +743,24 @@ public class FluxManager : MonoBehaviour
         d2.SetActive(turnOn);
     }
 
+    public void ToggleUI3(GameObject d1, GameObject d2, GameObject d3, bool turnOn)
+    {
+        d1.SetActive(turnOn);
+        d2.SetActive(turnOn);
+        d3.SetActive(turnOn);
+    }
+
     private void ToggleUIText(Text d1, Text d2, int integer)
     {
         d1.text = integer.ToString();
         d2.text = integer.ToString();
+    }
+
+    private void ToggleUIText3(Text d1, Text d2, Text d3, int integer)
+    {
+        d1.text = integer.ToString();
+        d2.text = integer.ToString();
+        d3.text = integer.ToString();
     }
 
     IEnumerator FluxColliderSeconds()
