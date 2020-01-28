@@ -30,6 +30,9 @@ public class GeneralAudio : MonoBehaviour
 
     FMOD.Studio.EventInstance Atmosphere;
     FMOD.Studio.ParameterInstance AV;
+	
+	FMOD.Studio.EventInstance Stinger;
+    FMOD.Studio.ParameterInstance STV;
 
     // --------------------------------
     public GameObject obj;
@@ -80,26 +83,30 @@ public class GeneralAudio : MonoBehaviour
         Checkpoint = FMODUnity.RuntimeManager.CreateInstance("event:/SD/Hexagon");
         Checkpoint.getParameter("HV", out HV);
         Checkpoint.getParameter("HP", out HP);
-        HV.setValue(1);
+        HV.setValue(0.95f);
         HP.setValue(0);
 
         Jump = FMODUnity.RuntimeManager.CreateInstance("event:/SD/Jump");
         Jump.getParameter("JV", out JV);
-        JV.setValue(0.9f);
+        JV.setValue(0.8f);
 
         Headroll = FMODUnity.RuntimeManager.CreateInstance("event:/SD/Headroll");
         Headroll.getParameter("HRV", out HRV);
-        HRV.setValue(0.8f);
+        HRV.setValue(0.75f);
 
         JumpPad = FMODUnity.RuntimeManager.CreateInstance("event:/SD/JumpPad");
         JumpPad.getParameter("JPV", out JPV);
-        JPV.setValue(0.9f);
+        JPV.setValue(0.74f);
 
         Atmosphere = FMODUnity.RuntimeManager.CreateInstance("event:/SD/Atmosphere");
         Atmosphere.getParameter("AV", out AV);
         AV.setValue(0.7f);
 
         Atmosphere.start();
+		
+		Stinger = FMODUnity.RuntimeManager.CreateInstance("event:/SD/Stinger");
+        Stinger.getParameter("STV", out STV);
+        STV.setValue(0.8f);
     }
 
     private void StartOst()
@@ -123,6 +130,11 @@ public class GeneralAudio : MonoBehaviour
     public void SparkSound()
     {
         FluxEffect.start();
+    }
+	
+	public void StingerSound()
+    {
+        Stinger.start();
     }
 
     public void JumpSound()
@@ -180,21 +192,17 @@ public class GeneralAudio : MonoBehaviour
             EndGame.setValue(0);
             oldWSCT = false;
         }
+		
+		if (Input.GetKeyDown(KeyCode.Space))
+        {
+			Stinger.start();
+        }
 
         if (gO == true)
         {
+			Stinger.start();
             GameOver.setValue(1);
             AV.setValue(0);
-        }
-
-        if (Input.GetKeyDown(KeyCode.Return))
-        {
-            FluxEffect.start();
-        }
-
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            CheckPointSound();
         }
     }
 	

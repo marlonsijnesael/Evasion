@@ -15,7 +15,7 @@ MonoBehaviour:
   noGoStates: 0000000001000000020000000300000004000000
   climbSpeed: 10
   climbCoolDown: 2
-  maxClimbHeight: 18
-  maxClimbTime: 2
+  maxClimbHeight: 35
+  maxClimbTime: 0.9
   animation: 7
   canClimb: 0

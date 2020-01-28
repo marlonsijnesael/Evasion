@@ -128,7 +128,7 @@ public class PlayerFlux : MonoBehaviour
                     isFluxCaptured = false;
                     currFluxCaptureTime = 0;
                     Spectator._instance.SwitchCam(camera);
-                    StartCoroutine(Spectator._instance.LerpCamToPos(0.5f));
+                    StartCoroutine(Spectator._instance.LerpCamToPos(2f));
                     audioObj.GetComponent<GeneralAudio>().SparkSound();
                     GetComponent<VirtualController>().SetVibration();
                     other.transform.parent.GetComponent<VirtualController>().SetVibration();

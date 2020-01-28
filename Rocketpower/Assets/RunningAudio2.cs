@@ -34,7 +34,7 @@ public class RunningAudio2 : MonoBehaviour
 		// walk
         if ((int)obj.GetComponent<StateMachine>().playerState == 1 && Time.time > nextFire)
         {
-			SSV.setValue(0.72f);
+			SSV.setValue(0.68f);
 			SWV.setValue(0.4f);
 
             nextFire = Time.time + stepRate + Random.Range(0.0f, 0.1f);
@@ -47,7 +47,7 @@ public class RunningAudio2 : MonoBehaviour
 		{
 			nextFire = Time.time + stepRate + Random.Range(0.0f, 0.1f);
 			SSV.setValue(0.5f);
-			SWV.setValue(0.75f);
+			SWV.setValue(0.7f);
 
 			Steps_scape.start();
             StepsWall.start();
@@ -57,7 +57,7 @@ public class RunningAudio2 : MonoBehaviour
 		{
 			nextFire = Time.time + stepRate + Random.Range(0.0f, 0.1f);
 			SSV.setValue(0.5f);
-			SWV.setValue(0.75f);
+			SWV.setValue(0.7f);
 
 			Steps_scape.start();
             StepsWall.start();
@@ -67,7 +67,7 @@ public class RunningAudio2 : MonoBehaviour
 		{
 			nextFire = Time.time + stepRate + Random.Range(0.0f, 0.1f);
 			SSV.setValue(0.5f);
-			SWV.setValue(0.75f);
+			SWV.setValue(0.7f);
 
 			Steps_scape.start();
             StepsWall.start();

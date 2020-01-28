@@ -6,6 +6,14 @@ using UnityEngine.UI;
 using UnityEngine;
 public class FluxManager : MonoBehaviour
 {
+	FMOD.Studio.EventInstance Stinger;
+    FMOD.Studio.ParameterInstance STV;
+	
+	FMOD.Studio.EventInstance Countdown;
+    FMOD.Studio.ParameterInstance CV, CVC;
+	
+	float CVCvalue = 0;
+	
     #region Public Script References
     [HideInInspector] public GameObject UI;
     [HideInInspector] public GameObject canvas_D1, canvas_D2;
@@ -121,6 +129,15 @@ public class FluxManager : MonoBehaviour
         //hex.transform.SetParent(canvas.transform);
         CleanDualScreenTest(canvas_D1.transform, scoreHexagonList_D1, 1);
         CleanDualScreenTest(canvas_D2.transform, scoreHexagonList_D2, 2);
+		
+		Stinger = FMODUnity.RuntimeManager.CreateInstance("event:/SD/Stinger");
+		Stinger.getParameter("STV", out STV);
+		STV.setValue(0.9f);
+		
+		Countdown = FMODUnity.RuntimeManager.CreateInstance("event:/SD/Countdown");
+		Countdown.getParameter("CV", out CV);
+		Countdown.getParameter("CVC", out CVC);
+		CV.setValue(0.85f);
     }
 
     private void CleanDualScreenTest(Transform parentCanvas, List<ScoreUI> hexagonList, int display)
@@ -131,7 +148,7 @@ public class FluxManager : MonoBehaviour
             hex.transform.SetParent(parentCanvas);
             hex.transform.localScale = new Vector3(1.2f, 1.2f, 1);
             RectTransform rt = hex.GetComponent<RectTransform>();
-            rt.localPosition = new Vector3(-.5f * platformsTotal * scoreHexagonSize + scoreHexagonSize * (i + .5f) * .85f, 400, 0);
+            rt.localPosition = new Vector3(-.5f * platformsTotal * scoreHexagonSize * .88f + scoreHexagonSize * (i + .5f) * .85f, 400, 0);
             rt.sizeDelta = new Vector2(scoreHexagonSize, scoreHexagonSize);
             hexagonList.Add(hex.GetComponent<ScoreUI>());
         }
@@ -518,6 +535,7 @@ public class FluxManager : MonoBehaviour
 
         StartCoroutine(GameRoundCountdown());
     }
+	
 
     IEnumerator GameRoundCountdown()
     {
@@ -526,6 +544,17 @@ public class FluxManager : MonoBehaviour
             yield return new WaitForSeconds(1);
             roundCountdownTime--;
             ToggleUIText(roundCountdownText_D1, roundCountdownText_D2, roundCountdownTime);
+			
+			if (roundCountdownTime <= 5) {
+				if (roundCountdownTime == 5) {
+					CVCvalue = 0;
+				}
+				CVC.setValue(CVCvalue);
+				if (CVCvalue < 6) {
+					CVCvalue = CVCvalue + 1;
+				}
+				Countdown.start();
+			}
         }
         if (roundCountdownTime <= 0 && player1score == player2score)
         {
@@ -557,8 +586,20 @@ public class FluxManager : MonoBehaviour
         while (winCountDownTime >= 0 && isWinCountDownActive && !stopWinCountDown)
         {
             yield return new WaitForSeconds(1);
+			
             winCountDownTime--;
             ToggleUIText(winCountDownTextD1, winCountDownTextD2, winCountDownTime);
+			
+			if (winCountDownTime <= 5) {
+				if (winCountDownTime == 5) {
+					CVCvalue = 0;
+				}
+				CVC.setValue(CVCvalue);
+				if (CVCvalue < 6) {
+					CVCvalue = CVCvalue + 1;
+				}
+				Countdown.start();
+			}
         }
         if (winCountDownTime < 1 && !stopWinCountDown)
         {
@@ -613,6 +654,8 @@ public class FluxManager : MonoBehaviour
         ToggleUI(inRoundUI_D1, inRoundUI_D2, false);
         ToggleUI(endScreenD1, endScreenD2, true);
         gameOver = true;
+		
+		Stinger.start();
 
         if (player1score > player2score)
         {
