@@ -84,10 +84,12 @@ public class LedgeDetection : MonoBehaviour
         {
             if (fwdHit.transform.tag == "noclimb")
             {
+                Debug.Log("no climb");
                 return new Ledge(Vector3.zero, Vector3.one, Vector3.zero, true);
             }
             if (fwdHit.transform.tag == "outer")
             {
+                Debug.Log("outer wall");
                 return new Ledge(Vector3.up * 300, transform.position, Vector3.up, false);
 
             }

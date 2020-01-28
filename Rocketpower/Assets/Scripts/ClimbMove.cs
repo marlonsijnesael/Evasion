@@ -26,7 +26,10 @@ public class ClimbMove : Move
         {
             _owner.SwitchStates(StateMachine.State.AIRBORNE, _owner.airborneMove);
         }
-        //owner.SetInitVel();
+        RaycastHit hit;
+        if (Physics.Raycast(_owner.transform.position + Vector3.up, Vector3.up, out hit, 5))
+            //owner.SetInitVel();
+            Debug.Log("hit: " + hit.transform.name);
         Move(_owner);
     }
 
@@ -46,14 +49,16 @@ public class ClimbMove : Move
         Vector3 yPosOrigin = _owner.ledge.playerPosition;
         yPosOrigin.y = _owner.ledge.hitPosition.y;
         Vector3 climbDir = _owner.ledge.hitPosition - _owner.ledge.playerPosition;
-        Debug.Log("climbig " + climbDir + " y: " + yPosOrigin);
-
 
         if (_owner.transform.position.y < maxClimbHeight && _owner.transform.position.y < yPosOrigin.y && _owner.virtualController.ClimbButtonPressed && !_owner.virtualController.WallrunButtonPressed && _owner.timeClimbing < maxClimbTime)
         {
             // _owner.jumpVec.y = climbDir.y + climbSpeed;
-            _owner.moveDir = Vector3.zero;
-            _owner.moveDir.y = climbSpeed;
+            // _owner.moveDir = Vector3.zero;
+
+
+
+
+            _owner.moveDir = climbSpeed * climbDir.normalized;
             _owner.timeClimbing += Time.deltaTime;
             //_owner.stateMoveDir = climbDir + Vector3.up + (_owner.transform.rotation * Vector3.forward) * _owner.forwardVelocity;
         }

@@ -468,7 +468,7 @@ public class StateMachine : MonoBehaviour
             ledge = ledgeDetector.GetLedgeV2();
             if (!ledge.empty)
             {
-                SetInitVel();
+
                 SwitchStates(State.CLIMB, ClimbMove);
             }
         }

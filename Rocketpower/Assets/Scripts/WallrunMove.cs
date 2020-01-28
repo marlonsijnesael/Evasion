@@ -6,7 +6,7 @@ public class WallrunMove : Move
     public AnimationManager.AnimationStates animation;
     public float coolDownTime = 0.2f;
     public float sideJumpMultiplier = 5;
-		
+
 
     public override void EnterState(StateMachine _owner)
     {
@@ -38,8 +38,8 @@ public class WallrunMove : Move
         _owner.jumpVec.y = _owner.minimumJumpVelocity * _owner.jumpMultiplier;
 
         _owner.StartCoroutine(_owner.WallrunCoolDown(coolDownTime));
-		
-		_owner.audioObj.GetComponent<GeneralAudio>().JumpSound();
+
+        _owner.audioObj.GetComponent<GeneralAudio>().JumpSound();
     }
 
     private void Move(StateMachine _owner)

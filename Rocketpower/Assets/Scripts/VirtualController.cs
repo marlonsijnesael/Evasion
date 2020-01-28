@@ -31,6 +31,18 @@ public class VirtualController : MonoBehaviour
             return false;
     }
 
+    public void SetVibration()
+    {
+        StartCoroutine(Vibrate());
+    }
+
+    private IEnumerator Vibrate()
+    {
+        GamePad.SetVibration(playerIndex, 1f, 1f);
+        yield return new WaitForSeconds(0.2f);
+        GamePad.SetVibration(playerIndex, 0, 0);
+    }
+
     public void Update()
     {
         // Find a PlayerIndex, for a single player game
@@ -59,7 +71,7 @@ public class VirtualController : MonoBehaviour
         {
             inputQueue.Enqueue(JumpButtonPressedThisFrame);
             Debug.Log(inputQueue.Count);
-			
+
         }
 
         if (JumpButtonHold && (VerticalMovement != 0 || HorizontalMovement != 0))

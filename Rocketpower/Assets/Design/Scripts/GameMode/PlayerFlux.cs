@@ -30,12 +30,14 @@ public class PlayerFlux : MonoBehaviour
             playerID = 1;
             gm.player1 = this;
             playerColor = gm.player1color;
+
         }
         else if (this.transform.tag == "Player2")
         {
             playerID = 2;
             gm.player2 = this;
             playerColor = gm.player2color;
+
         }
 
         foreach (Transform part in meshParent)
@@ -69,6 +71,7 @@ public class PlayerFlux : MonoBehaviour
             gm.StartCoroutine("FluxColliderSeconds");
             Spectator._instance.SwitchCam(camera);
             Destroy(other.gameObject);
+            GetComponent<VirtualController>().SetVibration();
 
             audioObj.GetComponent<GeneralAudio>().SparkSound();
         }
@@ -125,7 +128,8 @@ public class PlayerFlux : MonoBehaviour
                     currFluxCaptureTime = 0;
                     Spectator._instance.SwitchCam(camera);
                     audioObj.GetComponent<GeneralAudio>().SparkSound();
-
+                    GetComponent<VirtualController>().SetVibration();
+                    other.transform.parent.GetComponent<VirtualController>().SetVibration();
 
                 }
             }
