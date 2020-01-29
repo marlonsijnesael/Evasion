@@ -127,6 +127,13 @@ public class VirtualController : MonoBehaviour
             return prevState.Buttons.A == ButtonState.Released && state.Buttons.A == ButtonState.Pressed;
         }
     }
+	public bool XButtonPressedThisFrame
+    {
+        get
+        {
+            return prevState.Buttons.X == ButtonState.Released && state.Buttons.X == ButtonState.Pressed;
+        }
+    }
     public bool JumpButtonHold
     {
         get

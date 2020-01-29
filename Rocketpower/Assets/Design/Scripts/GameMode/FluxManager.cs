@@ -164,11 +164,11 @@ public class FluxManager : MonoBehaviour
         newArrow.gameObject.SetActive(false);
         newArrow.name = newArrow.name;
 
-        if (display == 1)
+        if (display == 1){
             scoreArrow_D1 = newArrow;
+		}
         else
         {
-
             scoreArrow_D2 = newArrow;
             scoreArrow_D3 = newArrow;
         }
@@ -176,6 +176,9 @@ public class FluxManager : MonoBehaviour
 
     private void Update()
     {
+		if(gameOver && (vControllerP1.XButtonPressedThisFrame || vControllerP2.XButtonPressedThisFrame)){
+			Scene scene = SceneManager.GetActiveScene(); SceneManager.LoadScene(scene.name);
+		}
         //Press 1 or 2 to change flux
         // if (Input.GetKeyDown(KeyCode.Alpha1))
         // {
@@ -364,44 +367,71 @@ public class FluxManager : MonoBehaviour
         scoreArrow_D1.SetActive(true);
         scoreArrow_D2.SetActive(true);
         scoreArrow_D3.SetActive(true);
+		
+		//DISPLAY 1
         if (fluxPlayer == player1)
         {
             scoreArrow_D1.GetComponent<Image>().color = player1color;
+            scoreArrow_D2.GetComponent<Image>().color = player1color;
+            scoreArrow_D3.GetComponent<Image>().color = player1color;
+			
             scoreArrow_D1.transform.localRotation = Quaternion.Euler(0, 0, 0);
+            scoreArrow_D2.transform.localRotation = Quaternion.Euler(0, 0, 0);
+            scoreArrow_D3.transform.localRotation = Quaternion.Euler(0, 0, 0);
+			
             scoreArrow_D1.transform.localPosition = scoreHexagonList_D1[Mathf.Clamp(player1score - 1, 0, platformsTotal - 1)].transform.localPosition;
-            scoreArrow_D1.transform.localPosition = scoreHexagonList_D2[Mathf.Clamp(player1score - 1, 0, platformsTotal - 1)].transform.localPosition;
-            scoreArrow_D1.transform.localPosition = scoreHexagonList_D3[Mathf.Clamp(player1score - 1, 0, platformsTotal - 1)].transform.localPosition;
+            scoreArrow_D2.transform.localPosition = scoreHexagonList_D2[Mathf.Clamp(player1score - 1, 0, platformsTotal - 1)].transform.localPosition;
+            scoreArrow_D3.transform.localPosition = scoreHexagonList_D3[Mathf.Clamp(player1score - 1, 0, platformsTotal - 1)].transform.localPosition;
 
 
             scoreArrow_D1.GetComponent<Image>().sprite = scoreArrowSprite;
+            scoreArrow_D2.GetComponent<Image>().sprite = scoreArrowSprite;
+            scoreArrow_D3.GetComponent<Image>().sprite = scoreArrowSprite;
+			
+			
             if (player1score == 0)
             {
                 scoreArrow_D1.transform.localPosition = scoreHexagonList_D1[Mathf.Clamp(player1score - 1, 0, platformsTotal - 1)].transform.localPosition - new Vector3(scoreHexagonSize, 0, 0);
-                scoreArrow_D1.transform.localPosition = scoreHexagonList_D2[Mathf.Clamp(player1score - 1, 0, platformsTotal - 1)].transform.localPosition - new Vector3(scoreHexagonSize, 0, 0);
-                scoreArrow_D1.transform.localPosition = scoreHexagonList_D3[Mathf.Clamp(player1score - 1, 0, platformsTotal - 1)].transform.localPosition - new Vector3(scoreHexagonSize, 0, 0);
+                scoreArrow_D2.transform.localPosition = scoreHexagonList_D2[Mathf.Clamp(player1score - 1, 0, platformsTotal - 1)].transform.localPosition - new Vector3(scoreHexagonSize, 0, 0);
+                scoreArrow_D3.transform.localPosition = scoreHexagonList_D3[Mathf.Clamp(player1score - 1, 0, platformsTotal - 1)].transform.localPosition - new Vector3(scoreHexagonSize, 0, 0);
 
                 scoreArrow_D1.GetComponent<Image>().sprite = scoreArrowArrowSprite;
+                scoreArrow_D2.GetComponent<Image>().sprite = scoreArrowArrowSprite;
+                scoreArrow_D3.GetComponent<Image>().sprite = scoreArrowArrowSprite;
             }
         }
         else
         {
             scoreArrow_D1.GetComponent<Image>().color = player2color;
+            scoreArrow_D2.GetComponent<Image>().color = player2color;
+            scoreArrow_D3.GetComponent<Image>().color = player2color;
+			
             scoreArrow_D1.transform.localRotation = Quaternion.Euler(0, 0, 180);
+            scoreArrow_D2.transform.localRotation = Quaternion.Euler(0, 0, 180);
+            scoreArrow_D3.transform.localRotation = Quaternion.Euler(0, 0, 180);
+			
             scoreArrow_D1.transform.localPosition = scoreHexagonList_D1[Mathf.Clamp(platformsTotal - player2score, 0, platformsTotal - 1)].transform.localPosition;
-            scoreArrow_D1.transform.localPosition = scoreHexagonList_D2[Mathf.Clamp(platformsTotal - player2score, 0, platformsTotal - 1)].transform.localPosition;
-            scoreArrow_D1.transform.localPosition = scoreHexagonList_D3[Mathf.Clamp(platformsTotal - player2score, 0, platformsTotal - 1)].transform.localPosition;
+            scoreArrow_D2.transform.localPosition = scoreHexagonList_D2[Mathf.Clamp(platformsTotal - player2score, 0, platformsTotal - 1)].transform.localPosition;
+            scoreArrow_D3.transform.localPosition = scoreHexagonList_D3[Mathf.Clamp(platformsTotal - player2score, 0, platformsTotal - 1)].transform.localPosition;
 
             scoreArrow_D1.GetComponent<Image>().sprite = scoreArrowSprite;
+            scoreArrow_D2.GetComponent<Image>().sprite = scoreArrowSprite;
+            scoreArrow_D3.GetComponent<Image>().sprite = scoreArrowSprite;
+			
+			
             if (player2score == 0)
             {
                 scoreArrow_D1.transform.localPosition = scoreHexagonList_D1[Mathf.Clamp(platformsTotal - player2score, 0, platformsTotal - 1)].transform.localPosition + new Vector3(scoreHexagonSize, 0, 0);
-                scoreArrow_D1.transform.localPosition = scoreHexagonList_D2[Mathf.Clamp(platformsTotal - player2score, 0, platformsTotal - 1)].transform.localPosition + new Vector3(scoreHexagonSize, 0, 0);
-                scoreArrow_D1.transform.localPosition = scoreHexagonList_D3[Mathf.Clamp(platformsTotal - player2score, 0, platformsTotal - 1)].transform.localPosition + new Vector3(scoreHexagonSize, 0, 0);
-
+                scoreArrow_D2.transform.localPosition = scoreHexagonList_D2[Mathf.Clamp(platformsTotal - player2score, 0, platformsTotal - 1)].transform.localPosition + new Vector3(scoreHexagonSize, 0, 0);
+                scoreArrow_D3.transform.localPosition = scoreHexagonList_D3[Mathf.Clamp(platformsTotal - player2score, 0, platformsTotal - 1)].transform.localPosition + new Vector3(scoreHexagonSize, 0, 0);
 
                 scoreArrow_D1.GetComponent<Image>().sprite = scoreArrowArrowSprite;
+                scoreArrow_D2.GetComponent<Image>().sprite = scoreArrowArrowSprite;
+                scoreArrow_D3.GetComponent<Image>().sprite = scoreArrowArrowSprite;
             }
         }
+		
+		
     }
 
     public void updateScore()
@@ -488,24 +518,28 @@ public class FluxManager : MonoBehaviour
         if (fluxPlayer == player1)
         {
             scoreArrow_D1.transform.localPosition = scoreHexagonList_D1[Mathf.Clamp(player1score - 1, 0, platformsTotal - 1)].transform.localPosition;
-            scoreArrow_D1.transform.localPosition = scoreHexagonList_D2[Mathf.Clamp(player1score - 1, 0, platformsTotal - 1)].transform.localPosition;
-            scoreArrow_D1.transform.localPosition = scoreHexagonList_D3[Mathf.Clamp(player1score - 1, 0, platformsTotal - 1)].transform.localPosition;
+            scoreArrow_D2.transform.localPosition = scoreHexagonList_D2[Mathf.Clamp(player1score - 1, 0, platformsTotal - 1)].transform.localPosition;
+            scoreArrow_D3.transform.localPosition = scoreHexagonList_D3[Mathf.Clamp(player1score - 1, 0, platformsTotal - 1)].transform.localPosition;
 
             scoreArrow_D1.GetComponent<Image>().sprite = scoreArrowSprite;
+            scoreArrow_D2.GetComponent<Image>().sprite = scoreArrowSprite;
+            scoreArrow_D3.GetComponent<Image>().sprite = scoreArrowSprite;
         }
         else
         {
             scoreArrow_D1.transform.localPosition = scoreHexagonList_D1[Mathf.Clamp(platformsTotal - player2score, 0, platformsTotal - 1)].transform.localPosition;
-            scoreArrow_D1.transform.localPosition = scoreHexagonList_D2[Mathf.Clamp(platformsTotal - player2score, 0, platformsTotal - 1)].transform.localPosition;
-            scoreArrow_D1.transform.localPosition = scoreHexagonList_D3[Mathf.Clamp(platformsTotal - player2score, 0, platformsTotal - 1)].transform.localPosition;
+            scoreArrow_D2.transform.localPosition = scoreHexagonList_D2[Mathf.Clamp(platformsTotal - player2score, 0, platformsTotal - 1)].transform.localPosition;
+            scoreArrow_D3.transform.localPosition = scoreHexagonList_D3[Mathf.Clamp(platformsTotal - player2score, 0, platformsTotal - 1)].transform.localPosition;
 
             scoreArrow_D1.GetComponent<Image>().sprite = scoreArrowSprite;
+            scoreArrow_D2.GetComponent<Image>().sprite = scoreArrowSprite;
+            scoreArrow_D3.GetComponent<Image>().sprite = scoreArrowSprite;
         }
     }
 
     public void startRound()
     {
-        if (Input.GetKeyDown(KeyCode.Q))
+        /*if (Input.GetKeyDown(KeyCode.Q))
         {
             readyP1 = true;
             readyToggleD1_P1.isOn = true;
@@ -516,7 +550,7 @@ public class FluxManager : MonoBehaviour
             readyP2 = true;
             readyToggleD1_P2.isOn = true;
             readyToggleD2_P2.isOn = true;
-        }
+        }*/
         if (readyP1 && readyP2)
         {
             bothPlayersReady = true;
@@ -693,12 +727,18 @@ public class FluxManager : MonoBehaviour
 
         if (player1score > player2score)
         {
+			endTextD1.color = player1color;
+			endTextD2.color = player2color;
+			endTextD3.color = player1color;
             endTextD1.text = "You Win";
             endTextD2.text = "You Lose";
             endTextD3.text = "Green Wins";
         }
         if (player2score > player1score)
         {
+			endTextD1.color = player1color;
+			endTextD2.color = player2color;
+			endTextD3.color = player2color;
             endTextD1.text = "You Lose";
             endTextD2.text = "You Win";
             endTextD3.text = "Blue Wins";
