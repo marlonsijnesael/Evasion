@@ -42,6 +42,7 @@ public class Elevator : MonoBehaviour
             yield return null;
         }
         Hexagon.transform.position = endPoint.transform.position;
+        player.transform.position = endPoint.transform.position + Vector3.up;
         yield return new WaitForEndOfFrame();
         player.transform.SetParent(null);
         statemachine.enabled = true;
