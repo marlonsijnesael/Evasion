@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37bcdaac6aa0e8f4b880045eb451c0ff, type: 3}
+  m_Name: AirMove
+  m_EditorClassIdentifier: 
+  noGoStates: 
+  animation: 4
+  timeFallingToRoll: 2
+  friction: 1.47
