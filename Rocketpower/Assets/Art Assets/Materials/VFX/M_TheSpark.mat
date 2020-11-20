@@ -31,7 +31,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Albedo:
-        m_Texture: {fileID: 2800000, guid: 3a47813795467ba48829e8fa220fd98c, type: 3}
+        m_Texture: {fileID: 2800000, guid: 0042e01c3bba6314d9df57b09185870d, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _AnisotropyMap:
@@ -168,7 +168,7 @@ Material:
     - _DoubleSidedEnable: 0
     - _DoubleSidedNormalMode: 1
     - _DstBlend: 0
-    - _EmissionMultiplier: 3
+    - _EmissionMultiplier: 4
     - _EmissiveColorMode: 1
     - _EmissiveExposureWeight: 1
     - _EmissiveIntensity: 1
@@ -247,6 +247,8 @@ Material:
     - _ZTestTransparent: 4
     - _ZWrite: 1
     m_Colors:
+    - Color_13712B20: {r: 0, g: 0, b: 0, a: 0}
+    - Color_A16187E9: {r: 0, g: 0, b: 0, a: 0}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _BaseColorMap_MipInfo: {r: 0, g: 0, b: 0, a: 0}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
@@ -257,6 +259,8 @@ Material:
     - _EmissiveColorLDR: {r: 0, g: 0, b: 0, a: 1}
     - _InvPrimScale: {r: 1, g: 1, b: 0, a: 0}
     - _IridescenceThicknessRemap: {r: 0, g: 1, b: 0, a: 0}
+    - _MainColor: {r: 1, g: 0.69803923, b: 0, a: 0}
+    - _SecondaryColor: {r: 1, g: 0, b: 0, a: 0}
     - _SpecularColor: {r: 1, g: 1, b: 1, a: 1}
     - _ThicknessRemap: {r: 0, g: 1, b: 0, a: 0}
     - _TransmittanceColor: {r: 1, g: 1, b: 1, a: 1}
